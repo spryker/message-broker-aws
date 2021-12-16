@@ -9,23 +9,21 @@ namespace Spryker\Zed\MessageBrokerAws\Communication\Plugin\Receiver;
 
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageReceiverPluginInterface;
-use Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsReceiver;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Transport\Receiver\QueueReceiverInterface;
 
 /**
  * @method \Spryker\Zed\MessageBroker\MessageBrokerConfig getConfig()
- * @method \Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface getFacade()
+ * @method \Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsFacadeInterface getFacade()
  */
-class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageReceiverPluginInterface
+class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageReceiverPluginInterface, QueueReceiverInterface
 {
-    protected AmazonSqsReceiver $receiver;
-
     /**
-     * @param \Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsReceiver $receiver
+     * @return string
      */
-    public function __construct(AmazonSqsReceiver $receiver)
+    public function getClientName(): string
     {
-        $this->receiver = $receiver;
+        return 'sqs';
     }
 
     /**
@@ -33,11 +31,15 @@ class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRecei
      *
      * @api
      *
-     * @return string
+     * @param array $queueNames
+     *
+     * @return iterable
      */
-    public function getChannelName(): string
+    public function getFromQueues(array $queueNames): iterable
     {
-        return 'async';
+        foreach ($queueNames as $channelName) {
+            yield from $this->getFacade()->getSqs($channelName);
+        }
     }
 
     /**
@@ -49,7 +51,7 @@ class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRecei
      */
     public function get(): iterable
     {
-        return $this->receiver->get();
+        throw new \Exception(sprintf('Since we are using channels we can only get messages through the "%s" interface.', QueueReceiverInterface::class));
     }
 
     /**
@@ -63,7 +65,7 @@ class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRecei
      */
     public function ack(Envelope $envelope): void
     {
-        $this->receiver->ack($envelope);
+        $this->getFacade()->ack($envelope);
     }
 
     /**
@@ -77,6 +79,6 @@ class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRecei
      */
     public function reject(Envelope $envelope): void
     {
-        $this->receiver->reject($envelope);
+        $this->getFacade()->reject($envelope);
     }
 }

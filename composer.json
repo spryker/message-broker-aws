@@ -18,7 +18,9 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "SprykerTest\\": "tests/SprykerTest/"
+            "SprykerTest\\": "tests/SprykerTest/",
+            "SprykerTest\\Zed\\MessageBrokerAws\\Helper\\": "tests/SprykerTest/Zed/MessageBrokerAws/_support/Helper/",
+            "SprykerTest\\Zed\\MessageBrokerAws\\Messages\\": "tests/SprykerTest/Zed/MessageBrokerAws/_support/Messages/"
         }
     },
     "minimum-stability": "dev",

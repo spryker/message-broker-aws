@@ -11,14 +11,35 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageReceiverPluginInterface;
 use Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsReceiver;
 use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Transport\SetupableTransportInterface;
 
 /**
  * @method \Spryker\Zed\MessageBroker\MessageBrokerConfig getConfig()
- * @method \Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsFacadeInterface getFacade()
+ * @method \Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface getFacade()
  */
-class AwsMessageReceiverPlugin extends AbstractPlugin implements MessageReceiverPluginInterface
+class OLDAwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageReceiverPluginInterface
 {
+    protected AmazonSqsReceiver $receiver;
+
+    /**
+     * @param \Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsReceiver $receiver
+     */
+    public function __construct(AmazonSqsReceiver $receiver)
+    {
+        $this->receiver = $receiver;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @return string
+     */
+    public function getChannelName(): string
+    {
+        return 'async';
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -28,7 +49,7 @@ class AwsMessageReceiverPlugin extends AbstractPlugin implements MessageReceiver
      */
     public function get(): iterable
     {
-        return $this->getFacade()->get();
+        return $this->receiver->get();
     }
 
     /**
@@ -42,7 +63,7 @@ class AwsMessageReceiverPlugin extends AbstractPlugin implements MessageReceiver
      */
     public function ack(Envelope $envelope): void
     {
-        $this->getFacade()->ack($envelope);
+        $this->receiver->ack($envelope);
     }
 
     /**
@@ -56,6 +77,6 @@ class AwsMessageReceiverPlugin extends AbstractPlugin implements MessageReceiver
      */
     public function reject(Envelope $envelope): void
     {
-        $this->getFacade()->reject($envelope);
+        $this->receiver->reject($envelope);
     }
 }
