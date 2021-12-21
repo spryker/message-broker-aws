@@ -10,6 +10,8 @@ namespace Spryker\Zed\MessageBrokerAws\Business;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 use Spryker\Zed\MessageBrokerAws\Business\Config\ConfigFormatterInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Config\StringToArrayConfigFormatter;
+use Spryker\Zed\MessageBrokerAws\Business\Receiver\Channel\ReceiverChannelNameResolver;
+use Spryker\Zed\MessageBrokerAws\Business\Receiver\Channel\ReceiverChannelNameResolverInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Locator\ReceiverClientLocator;
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Locator\ReceiverClientLocatorInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\ReceiverClientInterface;
@@ -22,8 +24,14 @@ use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SenderClientInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SnsSenderClient;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Sender;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\SenderInterface;
+use Spryker\Zed\MessageBrokerAws\Business\Serializer\Normalizer\TransferNormalizer;
 use Symfony\Component\Messenger\Transport\Serialization\Serializer;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer as SymfonySerializer;
 
 /**
  * @method \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig getConfig()
@@ -120,9 +128,72 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
      */
     public function createSerializer(): SerializerInterface
     {
-        return new Serializer(); // TODO this one does not work Transfer objects
+        return new Serializer($this->createTransferAwareSerializer());
+    }
 
-        // return new PhpSerializer(); // TODO this one does not create the required header
+    /**
+     * @return \Symfony\Component\Serializer\Serializer
+     */
+    public function createTransferAwareSerializer(): SymfonySerializer
+    {
+        return new SymfonySerializer(
+            $this->getSerializerNormalizer(),
+            $this->getSerializerEncoders(),
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function getSerializerNormalizer(): array
+    {
+        return [
+            $this->createArrayDenormalizer(),
+            $this->createTransferNormalizer(),
+            $this->createObjectNormalizer(),
+        ];
+    }
+
+    /**
+     * @return \Symfony\Component\Serializer\Normalizer\ArrayDenormalizer
+     */
+    public function createArrayDenormalizer(): ArrayDenormalizer
+    {
+        return new ArrayDenormalizer();
+    }
+
+    /**
+     * @return \Symfony\Component\Serializer\Normalizer\NormalizerInterface
+     */
+    public function createTransferNormalizer(): NormalizerInterface
+    {
+        return new TransferNormalizer();
+    }
+
+    /**
+     * @return \Symfony\Component\Serializer\Normalizer\NormalizerInterface
+     */
+    public function createObjectNormalizer(): NormalizerInterface
+    {
+        return new ObjectNormalizer();
+    }
+
+    /**
+     * @return array
+     */
+    public function getSerializerEncoders(): array
+    {
+        return [
+            $this->createJsonEncoder(),
+        ];
+    }
+
+    /**
+     * @return \Symfony\Component\Serializer\Encoder\JsonEncoder
+     */
+    public function createJsonEncoder(): JsonEncoder
+    {
+        return new JsonEncoder();
     }
 
     /**
@@ -131,5 +202,16 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
     public function createConfigFormatter(): ConfigFormatterInterface
     {
         return new StringToArrayConfigFormatter();
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBrokerAws\Business\Receiver\Channel\ReceiverChannelNameResolverInterface
+     */
+    public function createReceiverChannelNameResolver(): ReceiverChannelNameResolverInterface
+    {
+        return new ReceiverChannelNameResolver(
+            $this->getConfig(),
+            $this->createConfigFormatter(),
+        );
     }
 }

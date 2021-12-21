@@ -9,7 +9,7 @@ namespace Spryker\Zed\MessageBrokerAws\Business\Sender\Stamp;
 
 use Symfony\Component\Messenger\Stamp\StampInterface;
 
-class ChannelNameStamp implements StampInterface
+class ReceiverChannelNameStamp implements StampInterface
 {
     /**
      * @var string|null

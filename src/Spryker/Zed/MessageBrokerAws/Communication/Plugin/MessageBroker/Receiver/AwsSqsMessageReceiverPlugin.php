@@ -5,27 +5,25 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Zed\MessageBrokerAws\Communication\Plugin\Receiver;
+namespace Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Receiver;
 
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageReceiverPluginInterface;
-use Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsReceiver;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Transport\Receiver\QueueReceiverInterface;
 
 /**
  * @method \Spryker\Zed\MessageBroker\MessageBrokerConfig getConfig()
- * @method \Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface getFacade()
+ * @method \Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsFacadeInterface getFacade()
  */
-class OLDAwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageReceiverPluginInterface
+class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageReceiverPluginInterface, QueueReceiverInterface
 {
-    protected AmazonSqsReceiver $receiver;
-
     /**
-     * @param \Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsReceiver $receiver
+     * @return string
      */
-    public function __construct(AmazonSqsReceiver $receiver)
+    public function getClientName(): string
     {
-        $this->receiver = $receiver;
+        return 'sqs';
     }
 
     /**
@@ -33,15 +31,21 @@ class OLDAwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRe
      *
      * @api
      *
-     * @return string
+     * @param array $queueNames
+     *
+     * @return iterable
      */
-    public function getChannelName(): string
+    public function getFromQueues(array $queueNames): iterable
     {
-        return 'async';
+        foreach ($queueNames as $channelName) {
+            yield from $this->getFacade()->getSqs($channelName);
+        }
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @codeCoverageIgnore
      *
      * @api
      *
@@ -49,7 +53,7 @@ class OLDAwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRe
      */
     public function get(): iterable
     {
-        return $this->receiver->get();
+        throw new \Exception(sprintf('Since we are using channels we can only get messages through the "%s" interface.', QueueReceiverInterface::class));
     }
 
     /**
@@ -63,7 +67,7 @@ class OLDAwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRe
      */
     public function ack(Envelope $envelope): void
     {
-        $this->receiver->ack($envelope);
+        $this->getFacade()->ack($envelope);
     }
 
     /**
@@ -77,6 +81,6 @@ class OLDAwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRe
      */
     public function reject(Envelope $envelope): void
     {
-        $this->receiver->reject($envelope);
+        $this->getFacade()->reject($envelope);
     }
 }

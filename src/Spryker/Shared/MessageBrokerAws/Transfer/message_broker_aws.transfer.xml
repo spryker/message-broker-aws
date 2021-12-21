@@ -3,6 +3,7 @@
 
     <transfer name="MessageBrokerTestMessage">
         <property name="key" type="string"/>
+        <property name="empty" type="string"/>
     </transfer>
 
     <transfer name="CorrelationId">

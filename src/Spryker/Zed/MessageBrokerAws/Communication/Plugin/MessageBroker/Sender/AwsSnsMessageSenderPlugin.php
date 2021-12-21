@@ -5,7 +5,7 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Zed\MessageBrokerAws\Communication\Plugin\Sender;
+namespace Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender;
 
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageSenderPluginInterface;

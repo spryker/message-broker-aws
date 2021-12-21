@@ -105,7 +105,7 @@ class SnsSenderClient implements SenderClientInterface
             throw new TransportException('Could not add a message to the SNS topic');
         }
 
-        return $envelope->with(new SentStamp(static::class, 'sns'));
+        return $envelope;
     }
 
     /**

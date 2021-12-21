@@ -48,7 +48,7 @@ class Sender implements SenderInterface
      */
     public function send(Envelope $envelope): Envelope
     {
-        $channelName = $this->getChannelNameForMessage($envelope);
+        $channelName = $this->getSenderChannelNameForMessage($envelope);
 
         if (!$channelName) {
             return $envelope;
@@ -64,9 +64,9 @@ class Sender implements SenderInterface
      *
      * @return string|null
      */
-    public function getChannelNameForMessage(Envelope $envelope): ?string
+    public function getSenderChannelNameForMessage(Envelope $envelope): ?string
     {
-        $messageToChannelMap = $this->config->getMessageToChannelMap();
+        $messageToChannelMap = $this->config->getMessageToSenderChannelMap();
 
         if (is_string($messageToChannelMap)) {
             $messageToChannelMap = $this->configFormatter->format($messageToChannelMap);

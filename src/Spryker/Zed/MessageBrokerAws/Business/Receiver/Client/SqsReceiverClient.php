@@ -41,6 +41,11 @@ class SqsReceiverClient implements ReceiverClientInterface
     protected ConfigFormatterInterface $configFormatter;
 
     /**
+     * @var array|null
+     */
+    protected ?array $sqsConfiguration = null;
+
+    /**
      * @param \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig $config
      * @param \Symfony\Component\Messenger\Transport\Serialization\SerializerInterface $serializer
      */
@@ -81,16 +86,25 @@ class SqsReceiverClient implements ReceiverClientInterface
     protected function createReceiverClient(): AmazonSqsReceiver
     {
         $configuration = $this->getConfiguration();
-        $queueName = $configuration['queueName'];
-        unset($configuration['queueName']);
-
-        $sqsClient = new SqsClient($configuration);
-
-        $connection = new Connection([
-            'queue_name' => $queueName,
-        ], $sqsClient);
+        $connection = new Connection($configuration, $this->createSqsClient(), $connectionConfiguration['queueUrl'] ?? null);
 
         return new AmazonSqsReceiver($connection, $this->serializer);
+    }
+
+    /**
+     * @return SqsClient
+     */
+    protected function createSqsClient(): SqsClient
+    {
+        $configuration = $this->getConfiguration();
+        $options = [
+            'endpoint' => null,
+            'accessKeyId' => null,
+            'accessKeySecret' => null,
+            'region' => null,
+        ];
+
+        return new SqsClient(array_intersect_key($configuration, $options));
     }
 
     /**
@@ -98,14 +112,18 @@ class SqsReceiverClient implements ReceiverClientInterface
      */
     protected function getConfiguration(): array
     {
-        $sqsReceiverConfig = $this->config->getSqsReceiverConfig();
+        if (!$this->sqsConfiguration){
+            $sqsReceiverConfig = $this->config->getSqsReceiverConfig();
 
-        if (is_string($sqsReceiverConfig)) {
-            $sqsReceiverConfig = $this->configFormatter->format($sqsReceiverConfig);
+            if (is_string($sqsReceiverConfig)) {
+                $sqsReceiverConfig = $this->configFormatter->format($sqsReceiverConfig);
+            }
+
+            $sqsReceiverConfig['debug'] = $this->config->getIsDebugEnabled();
+
+            $this->sqsConfiguration = $sqsReceiverConfig;
         }
 
-        $sqsReceiverConfig['debug'] = $this->config->getIsDebugEnabled();
-
-        return $sqsReceiverConfig;
+        return $this->sqsConfiguration;
     }
 }

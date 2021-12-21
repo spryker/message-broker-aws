@@ -5,11 +5,11 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace SprykerTest\Zed\MessageBrokerAws\Communication\Plugin\Receiver;
+namespace SprykerTest\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Receiver;
 
 use Codeception\Test\Unit;
 use Generated\Shared\Transfer\MessageBrokerTestMessageTransfer;
-use Spryker\Zed\MessageBrokerAws\Communication\Plugin\Receiver\AwsSqsMessageReceiverPlugin;
+use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Receiver\AwsSqsMessageReceiverPlugin;
 use SprykerTest\Zed\MessageBrokerAws\MessageBrokerAwsCommunicationTester;
 
 /**
@@ -69,5 +69,42 @@ class AwsMessageReceiverPluginTest extends Unit
         $this->assertInstanceOf(MessageBrokerTestMessageTransfer::class, $currentMessage->getMessage());
 
         $awsMessageReceiverPlugin->ack($currentMessage);
+    }
+
+    /**
+     * @return void
+     */
+    public function testRejectReceivedMessage(): void
+    {
+        $this->tester->haveMessage();
+
+        $this->tester->setChannelNameReceiverClientMap(static::CHANNEL_NAME, 'sqs');
+        $this->tester->setSqsReceiverClientConfiguration();
+
+        $awsMessageReceiverPlugin = new AwsSqsMessageReceiverPlugin();
+        $awsMessageReceiverPlugin->setFacade($this->tester->getFacade());
+
+        /** @var \Generator $result */
+        $result = $awsMessageReceiverPlugin->getFromQueues([static::CHANNEL_NAME]);
+
+        $currentMessage = $result->current();
+        $this->assertInstanceOf(MessageBrokerTestMessageTransfer::class, $currentMessage->getMessage());
+
+        $awsMessageReceiverPlugin->reject($currentMessage);
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetClientNameReturnNameOfTheSupportedClient(): void
+    {
+        // Arrange
+        $awsMessageReceiverPlugin = new AwsSqsMessageReceiverPlugin();
+
+        // Act
+        $clientName = $awsMessageReceiverPlugin->getClientName();
+
+        // Assert
+        $this->assertSame('sqs', $clientName, sprintf('Expected to get "sqs" as client name but got "%s"', $clientName));
     }
 }

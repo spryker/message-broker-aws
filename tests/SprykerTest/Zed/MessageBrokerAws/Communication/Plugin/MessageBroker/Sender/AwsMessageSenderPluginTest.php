@@ -5,11 +5,11 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace SprykerTest\Zed\MessageBrokerAws\Communication\Plugin\Sender;
+namespace SprykerTest\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender;
 
 use Codeception\Test\Unit;
 use Generated\Shared\Transfer\MessageBrokerTestMessageTransfer;
-use Spryker\Zed\MessageBrokerAws\Communication\Plugin\Sender\AwsSnsMessageSenderPlugin;
+use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender\AwsSnsMessageSenderPlugin;
 use SprykerTest\Zed\MessageBrokerAws\MessageBrokerAwsCommunicationTester;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\TransportException;
@@ -23,6 +23,7 @@ use Symfony\Component\Messenger\Stamp\SentStamp;
  * @group MessageBrokerAws
  * @group Communication
  * @group Plugin
+ * @group MessageBroker
  * @group Sender
  * @group AwsMessageSenderPluginTest
  * Add your own group annotations below this line
@@ -53,9 +54,9 @@ class AwsMessageSenderPluginTest extends Unit
         $envelope = Envelope::wrap($messageBrokerTestMessageTransfer);
 
         // Act
-        $awsMessageSenderPlugin = new AwsSnsMessageSenderPlugin();
-        $awsMessageSenderPlugin->setFacade($this->tester->getFacade());
-        $envelope = $awsMessageSenderPlugin->send($envelope);
+        $awsSnsMessageSenderPlugin = new AwsSnsMessageSenderPlugin();
+        $awsSnsMessageSenderPlugin->setFacade($this->tester->getFacade());
+        $envelope = $awsSnsMessageSenderPlugin->send($envelope);
 
         // Assert
         /** @var \Symfony\Component\Messenger\Stamp\SentStamp $sentStamp */
@@ -83,9 +84,9 @@ class AwsMessageSenderPluginTest extends Unit
         $this->tester->mockSuccessfulSnsClientSendResponse();
 
         // Act
-        $awsMessageSenderPlugin = new AwsSnsMessageSenderPlugin();
-        $awsMessageSenderPlugin->setFacade($this->tester->getFacade());
-        $envelope = $awsMessageSenderPlugin->send($envelope);
+        $awsSnsMessageSenderPlugin = new AwsSnsMessageSenderPlugin();
+        $awsSnsMessageSenderPlugin->setFacade($this->tester->getFacade());
+        $envelope = $awsSnsMessageSenderPlugin->send($envelope);
 
         // Assert
         /** @var \Symfony\Component\Messenger\Stamp\SentStamp $sentStamp */
@@ -116,9 +117,9 @@ class AwsMessageSenderPluginTest extends Unit
         $this->expectException(TransportException::class);
 
         // Act
-        $awsMessageSenderPlugin = new AwsSnsMessageSenderPlugin();
-        $awsMessageSenderPlugin->setFacade($this->tester->getFacade());
-        $awsMessageSenderPlugin->send($envelope);
+        $awsSnsMessageSenderPlugin = new AwsSnsMessageSenderPlugin();
+        $awsSnsMessageSenderPlugin->setFacade($this->tester->getFacade());
+        $awsSnsMessageSenderPlugin->send($envelope);
     }
 
     /**
@@ -145,8 +146,23 @@ class AwsMessageSenderPluginTest extends Unit
         $this->expectException(TransportException::class);
 
         // Act
-        $awsMessageSenderPlugin = new AwsSnsMessageSenderPlugin();
-        $awsMessageSenderPlugin->setFacade($this->tester->getFacade());
-        $awsMessageSenderPlugin->send($envelope);
+        $awsSnsMessageSenderPlugin = new AwsSnsMessageSenderPlugin();
+        $awsSnsMessageSenderPlugin->setFacade($this->tester->getFacade());
+        $awsSnsMessageSenderPlugin->send($envelope);
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetClientNameReturnNameOfTheSupportedClient(): void
+    {
+        // Arrange
+        $awsSnsMessageSenderPlugin = new AwsSnsMessageSenderPlugin();
+
+        // Act
+        $clientName = $awsSnsMessageSenderPlugin->getClientName();
+
+        // Assert
+        $this->assertSame('sns', $clientName, sprintf('Expected to get "sns" as client name but got "%s"', $clientName));
     }
 }

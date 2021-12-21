@@ -65,12 +65,12 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
      */
     public function getChannelToSenderClientMap()
     {
-        if (getenv('AOP_MESSAGE_CHANNEL_TO_SENDER_CLIENT_MAP') !== false) {
-            return getenv('AOP_MESSAGE_CHANNEL_TO_SENDER_CLIENT_MAP');
+        if (getenv('AOP_CHANNEL_TO_SENDER_CLIENT_MAP') !== false) {
+            return getenv('AOP_CHANNEL_TO_SENDER_CLIENT_MAP');
         }
 
-        if ($this->getConfig()->hasKey(MessageBrokerAwsConstants::MESSAGE_CHANNEL_TO_SENDER_CLIENT_MAP)) {
-            return $this->get(MessageBrokerAwsConstants::MESSAGE_CHANNEL_TO_SENDER_CLIENT_MAP);
+        if ($this->getConfig()->hasKey(MessageBrokerAwsConstants::CHANNEL_TO_SENDER_CLIENT_MAP)) {
+            return $this->get(MessageBrokerAwsConstants::CHANNEL_TO_SENDER_CLIENT_MAP);
         }
 
         return [];
@@ -81,12 +81,12 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
      */
     public function getChannelToReceiverClientMap()
     {
-        if (getenv('AOP_MESSAGE_CHANNEL_TO_RECEIVER_CLIENT_MAP') !== false) {
-            return getenv('AOP_MESSAGE_CHANNEL_TO_RECEIVER_CLIENT_MAP');
+        if (getenv('AOP_CHANNEL_TO_RECEIVER_CLIENT_MAP') !== false) {
+            return getenv('AOP_CHANNEL_TO_RECEIVER_CLIENT_MAP');
         }
 
-        if ($this->getConfig()->hasKey(MessageBrokerAwsConstants::MESSAGE_CHANNEL_TO_RECEIVER_CLIENT_MAP)) {
-            return $this->get(MessageBrokerAwsConstants::MESSAGE_CHANNEL_TO_RECEIVER_CLIENT_MAP);
+        if ($this->getConfig()->hasKey(MessageBrokerAwsConstants::CHANNEL_TO_RECEIVER_CLIENT_MAP)) {
+            return $this->get(MessageBrokerAwsConstants::CHANNEL_TO_RECEIVER_CLIENT_MAP);
         }
 
         return [];
@@ -95,14 +95,30 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
     /**
      * @return string|array
      */
-    public function getMessageToChannelMap()
+    public function getMessageToSenderChannelMap()
     {
-        if (getenv('AOP_MESSAGE_TO_CHANNEL_MAP') !== false) {
-            return getenv('AOP_MESSAGE_TO_CHANNEL_MAP');
+        if (getenv('AOP_MESSAGE_TO_SENDER_CHANNEL_MAP') !== false) {
+            return getenv('AOP_MESSAGE_TO_SENDER_CHANNEL_MAP');
         }
 
         if ($this->getConfig()->hasKey(MessageBrokerAwsConstants::MESSAGE_TO_SENDER_CHANNEL_MAP)) {
             return $this->get(MessageBrokerAwsConstants::MESSAGE_TO_SENDER_CHANNEL_MAP);
+        }
+
+        return [];
+    }
+
+    /**
+     * @return string|array
+     */
+    public function getMessageToReceiverChannelMap()
+    {
+        if (getenv('AOP_MESSAGE_TO_RECEIVER_CHANNEL_MAP') !== false) {
+            return getenv('AOP_MESSAGE_TO_RECEIVER_CHANNEL_MAP');
+        }
+
+        if ($this->getConfig()->hasKey(MessageBrokerAwsConstants::MESSAGE_TO_RECEIVER_CHANNEL_MAP)) {
+            return $this->get(MessageBrokerAwsConstants::MESSAGE_TO_RECEIVER_CHANNEL_MAP);
         }
 
         return [];
