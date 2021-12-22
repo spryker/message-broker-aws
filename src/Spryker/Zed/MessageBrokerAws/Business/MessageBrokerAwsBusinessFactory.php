@@ -92,6 +92,9 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
         );
     }
 
+    /**
+     * @return ReceiverClientLocatorInterface
+     */
     public function createReceiverClientLocator(): ReceiverClientLocatorInterface
     {
         return new ReceiverClientLocator(
@@ -202,16 +205,5 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
     public function createConfigFormatter(): ConfigFormatterInterface
     {
         return new StringToArrayConfigFormatter();
-    }
-
-    /**
-     * @return \Spryker\Zed\MessageBrokerAws\Business\Receiver\Channel\ReceiverChannelNameResolverInterface
-     */
-    public function createReceiverChannelNameResolver(): ReceiverChannelNameResolverInterface
-    {
-        return new ReceiverChannelNameResolver(
-            $this->getConfig(),
-            $this->createConfigFormatter(),
-        );
     }
 }

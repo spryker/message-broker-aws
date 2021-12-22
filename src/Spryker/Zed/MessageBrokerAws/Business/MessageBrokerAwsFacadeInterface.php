@@ -54,15 +54,4 @@ interface MessageBrokerAwsFacadeInterface
      * @return void
      */
     public function reject(Envelope $envelope): void;
-
-    /**
-     * Specification:
-     *
-     * @api
-     *
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     *
-     * @return string
-     */
-    public function getReceiverChannelNameForMessage(Envelope $envelope): string;
 }

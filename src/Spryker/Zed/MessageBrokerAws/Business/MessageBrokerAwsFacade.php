@@ -66,18 +66,4 @@ class MessageBrokerAwsFacade extends AbstractFacade implements MessageBrokerAwsF
     {
         $this->getFactory()->createReceiver()->reject($envelope);
     }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @api
-     *
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     *
-     * @return string
-     */
-    public function getReceiverChannelNameForMessage(Envelope $envelope): string
-    {
-        return $this->getFactory()->createReceiverChannelNameResolver()->getReceiverChannelNameForMessage($envelope);
-    }
 }

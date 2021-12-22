@@ -7,14 +7,14 @@
 
 namespace Spryker\Zed\MessageBrokerAws\Business\Receiver;
 
-use Spryker\Zed\MessageBrokerAws\Business\Sender\Stamp\ReceiverChannelNameStamp;
+use Spryker\Zed\MessageBroker\Business\Stamp\ChannelNameStamp;
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Locator\ReceiverClientLocatorInterface;
 use Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig;
 use Symfony\Component\Messenger\Envelope;
 
 class Receiver implements ReceiverInterface
 {
-    protected $currentChannelName = null;
+    protected $currentChannelName;
 
     /**
      * @var \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig
@@ -55,12 +55,12 @@ class Receiver implements ReceiverInterface
      */
     public function ack(Envelope $envelope): void
     {
-        /** @var \Spryker\Zed\MessageBrokerAws\Business\Sender\Stamp\ReceiverChannelNameStamp $receiverChannelNameStamp */
-        $receiverChannelNameStamp = $envelope->last(ReceiverChannelNameStamp::class);
+        /** @var \Spryker\Zed\MessageBroker\Business\Stamp\ChannelNameStamp $channelNameStamp */
+        $channelNameStamp = $envelope->last(ChannelNameStamp::class);
 
-        if ($receiverChannelNameStamp) {
+        if ($channelNameStamp) {
             $this->receiverClientResolver
-                ->getReceiverClientByChannelName($receiverChannelNameStamp->getChannelName())
+                ->getReceiverClientByChannelName($channelNameStamp->getChannelName())
                 ->ack($envelope);
         }
     }
@@ -72,12 +72,12 @@ class Receiver implements ReceiverInterface
      */
     public function reject(Envelope $envelope): void
     {
-        /** @var \Spryker\Zed\MessageBrokerAws\Business\Sender\Stamp\ReceiverChannelNameStamp $receiverChannelNameStamp */
-        $receiverChannelNameStamp = $envelope->last(ReceiverChannelNameStamp::class);
+        /** @var \Spryker\Zed\MessageBroker\Business\Stamp\ChannelNameStamp $channelNameStamp */
+        $channelNameStamp = $envelope->last(ChannelNameStamp::class);
 
-        if ($receiverChannelNameStamp) {
+        if ($channelNameStamp) {
             $this->receiverClientResolver
-                ->getReceiverClientByChannelName($receiverChannelNameStamp->getChannelName())
+                ->getReceiverClientByChannelName($channelNameStamp->getChannelName())
                 ->reject($envelope);
         }
     }

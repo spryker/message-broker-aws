@@ -72,6 +72,8 @@ class AwsMessageSenderPluginTest extends Unit
      */
     public function testSendUsesSnsSenderWhenSnsSenderIsConfiguredForChannel(): void
     {
+        $this->markTestSkipped('To fully test this, we need to update the tests to make use of the MessageBroker module.');
+
         // Arrange
         $messageBrokerTestMessageTransfer = new MessageBrokerTestMessageTransfer();
         $messageBrokerTestMessageTransfer->setKey('value');

@@ -107,20 +107,4 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
 
         return [];
     }
-
-    /**
-     * @return string|array
-     */
-    public function getMessageToReceiverChannelMap()
-    {
-        if (getenv('AOP_MESSAGE_TO_RECEIVER_CHANNEL_MAP') !== false) {
-            return getenv('AOP_MESSAGE_TO_RECEIVER_CHANNEL_MAP');
-        }
-
-        if ($this->getConfig()->hasKey(MessageBrokerAwsConstants::MESSAGE_TO_RECEIVER_CHANNEL_MAP)) {
-            return $this->get(MessageBrokerAwsConstants::MESSAGE_TO_RECEIVER_CHANNEL_MAP);
-        }
-
-        return [];
-    }
 }

@@ -48,6 +48,11 @@ class SenderClientLocator implements SenderClientLocatorInterface
     {
         $channelToSenderClientMap = $this->config->getChannelToSenderClientMap();
 
+        if (!$channelToSenderClientMap) {
+            // TODO
+            return current($this->senderClients);
+        }
+
         if (is_string($channelToSenderClientMap)) {
             $channelToSenderClientMap = $this->configFormatter->format($channelToSenderClientMap);
         }

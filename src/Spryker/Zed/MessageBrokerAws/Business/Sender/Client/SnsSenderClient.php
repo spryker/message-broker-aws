@@ -119,6 +119,8 @@ class SnsSenderClient implements SenderClientInterface
     }
 
     /**
+     * TODO This method should be aware of configurations for channels.
+     *
      * @return array
      */
     protected function getConfiguration(): array

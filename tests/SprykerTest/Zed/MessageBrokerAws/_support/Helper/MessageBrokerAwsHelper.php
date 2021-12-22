@@ -15,7 +15,7 @@ use Codeception\TestInterface;
 use Exception;
 use Generated\Shared\Transfer\MessageBrokerTestMessageTransfer;
 use Ramsey\Uuid\Uuid;
-use Spryker\Zed\MessageBrokerAws\Business\Sender\Stamp\ReceiverChannelNameStamp;
+use Spryker\Zed\MessageBroker\Business\Stamp\ChannelNameStamp;
 use Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsBusinessFactory;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SnsSenderClient;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender\AwsSnsMessageSenderPlugin;
@@ -52,7 +52,7 @@ class MessageBrokerAwsHelper extends Module
         $messageBrokerTestMessageTransfer = new MessageBrokerTestMessageTransfer();
         $messageBrokerTestMessageTransfer->setKey('value');
 
-        $channelNameStamp = new ReceiverChannelNameStamp($channelName);
+        $channelNameStamp = new ChannelNameStamp($channelName);
         $envelope = Envelope::wrap($messageBrokerTestMessageTransfer, [$channelNameStamp]);
 
         $this->setMessageSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, $channelName);
