@@ -7,8 +7,8 @@
 
 namespace Spryker\Zed\MessageBrokerAws\Business\Receiver;
 
-use Spryker\Zed\MessageBroker\Business\Stamp\ChannelNameStamp;
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Locator\ReceiverClientLocatorInterface;
+use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Stamp\ChannelNameStamp;
 use Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig;
 use Symfony\Component\Messenger\Envelope;
 
@@ -45,7 +45,7 @@ class Receiver implements ReceiverInterface
     {
         return $this->receiverClientResolver
             ->getReceiverClientByChannelName($channelName)
-            ->get();
+            ->get($channelName);
     }
 
     /**
@@ -55,7 +55,7 @@ class Receiver implements ReceiverInterface
      */
     public function ack(Envelope $envelope): void
     {
-        /** @var \Spryker\Zed\MessageBroker\Business\Stamp\ChannelNameStamp $channelNameStamp */
+        /** @var \Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Stamp\ChannelNameStamp $channelNameStamp */
         $channelNameStamp = $envelope->last(ChannelNameStamp::class);
 
         if ($channelNameStamp) {
@@ -72,7 +72,7 @@ class Receiver implements ReceiverInterface
      */
     public function reject(Envelope $envelope): void
     {
-        /** @var \Spryker\Zed\MessageBroker\Business\Stamp\ChannelNameStamp $channelNameStamp */
+        /** @var \Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Stamp\ChannelNameStamp $channelNameStamp */
         $channelNameStamp = $envelope->last(ChannelNameStamp::class);
 
         if ($channelNameStamp) {

@@ -12,9 +12,11 @@ use Symfony\Component\Messenger\Envelope;
 interface ReceiverClientInterface
 {
     /**
+     * @param string $channelName
+     *
      * @return iterable
      */
-    public function get(): iterable;
+    public function get(string $channelName): iterable;
 
     /**
      * @param \Symfony\Component\Messenger\Envelope $envelope

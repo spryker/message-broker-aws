@@ -7,15 +7,13 @@
 
 namespace Spryker\Zed\MessageBrokerAws\Business\Receiver\Client;
 
-use AsyncAws\Sns\SnsClient;
-use AsyncAws\Sns\SnsClient as AsyncAwsSnsClient;
 use AsyncAws\Sqs\SqsClient;
 use Spryker\Zed\MessageBrokerAws\Business\Config\ConfigFormatterInterface;
+use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Stamp\ChannelNameStamp;
 use Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig;
 use Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsReceiver;
 use Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\Connection;
 use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 
 class SqsReceiverClient implements ReceiverClientInterface
@@ -57,11 +55,17 @@ class SqsReceiverClient implements ReceiverClientInterface
     }
 
     /**
+     * @param string $channelName
+     *
      * @return iterable
      */
-    public function get(): iterable
+    public function get(string $channelName): iterable
     {
-        return $this->createReceiverClient()->get();
+        // TODO the receiver client should be loaded with configuration matching the channel name
+        // Channel name is added here
+        foreach ($this->createReceiverClient()->get() as $envelope) {
+            yield $envelope->with(new ChannelNameStamp($channelName));
+        }
     }
 
     /**
@@ -69,6 +73,8 @@ class SqsReceiverClient implements ReceiverClientInterface
      */
     public function ack(Envelope $envelope): void
     {
+        // TODO the receiver client should be loaded with configuration matching the channel name
+        // Channel name is added in get method
         $this->createReceiverClient()->ack($envelope);
     }
 
@@ -77,11 +83,13 @@ class SqsReceiverClient implements ReceiverClientInterface
      */
     public function reject(Envelope $envelope): void
     {
+        // TODO the receiver client should be loaded with configuration matching the channel name
+        // Channel name is added in get method
         $this->createReceiverClient()->reject($envelope);
     }
 
     /**
-     * @return AmazonSqsReceiver
+     * @return \Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsReceiver
      */
     protected function createReceiverClient(): AmazonSqsReceiver
     {
@@ -92,7 +100,7 @@ class SqsReceiverClient implements ReceiverClientInterface
     }
 
     /**
-     * @return SqsClient
+     * @return \AsyncAws\Sqs\SqsClient
      */
     protected function createSqsClient(): SqsClient
     {
@@ -112,7 +120,7 @@ class SqsReceiverClient implements ReceiverClientInterface
      */
     protected function getConfiguration(): array
     {
-        if (!$this->sqsConfiguration){
+        if (!$this->sqsConfiguration) {
             $sqsReceiverConfig = $this->config->getSqsReceiverConfig();
 
             if (is_string($sqsReceiverConfig)) {
