@@ -19,7 +19,7 @@ class TransferNormalizer implements NormalizerInterface
      *
      * @return array
      */
-    public function normalize(TransferInterface $object, ?string $format = null, array $context = []): array
+    public function normalize($object, ?string $format = null, array $context = []): array
     {
         return $object->modifiedToArray();
     }
