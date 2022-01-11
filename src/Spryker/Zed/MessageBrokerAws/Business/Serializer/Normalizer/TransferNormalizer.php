@@ -13,13 +13,13 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 class TransferNormalizer implements NormalizerInterface
 {
     /**
-     * @param TransferInterface $object
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $object
      * @param string|null $format
      * @param array $context
      *
      * @return array
      */
-    public function normalize($object, ?string $format = null, array $context = [])
+    public function normalize(TransferInterface $object, ?string $format = null, array $context = []): array
     {
         return $object->modifiedToArray();
     }
@@ -30,7 +30,7 @@ class TransferNormalizer implements NormalizerInterface
      *
      * @return bool
      */
-    public function supportsNormalization($data, ?string $format = null)
+    public function supportsNormalization($data, ?string $format = null): bool
     {
         return is_object($data) && $data instanceof TransferInterface;
     }

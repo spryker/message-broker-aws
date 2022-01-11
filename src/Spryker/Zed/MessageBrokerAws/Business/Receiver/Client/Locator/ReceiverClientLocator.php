@@ -31,6 +31,7 @@ class ReceiverClientLocator implements ReceiverClientLocatorInterface
     /**
      * @param \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig $config
      * @param array<string, \Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\ReceiverClientInterface> $receiverClients
+     * @param \Spryker\Zed\MessageBrokerAws\Business\Config\ConfigFormatterInterface $configFormatter
      */
     public function __construct(MessageBrokerAwsConfig $config, array $receiverClients, ConfigFormatterInterface $configFormatter)
     {

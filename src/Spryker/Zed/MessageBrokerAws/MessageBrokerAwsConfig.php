@@ -1,9 +1,9 @@
 <?php
 
 /**
-* Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
-* Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
-*/
+ * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
+ * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
+ */
 
 namespace Spryker\Zed\MessageBrokerAws;
 
@@ -13,7 +13,9 @@ use Spryker\Zed\Kernel\AbstractBundleConfig;
 class MessageBrokerAwsConfig extends AbstractBundleConfig
 {
     /**
-     * @return string|array
+     * @api
+     *
+     * @return array|string
      */
     public function getSnsSenderConfig()
     {
@@ -29,7 +31,9 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
     }
 
     /**
-     * @return string|array
+     * @api
+     *
+     * @return array|string
      */
     public function getSqsReceiverConfig()
     {
@@ -45,6 +49,8 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
     }
 
     /**
+     * @api
+     *
      * @return bool
      */
     public function getIsDebugEnabled(): bool
@@ -61,7 +67,9 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
     }
 
     /**
-     * @return string|array
+     * @api
+     *
+     * @return array|string
      */
     public function getChannelToSenderClientMap()
     {
@@ -77,7 +85,9 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
     }
 
     /**
-     * @return string|array
+     * @api
+     *
+     * @return array|string
      */
     public function getChannelToReceiverClientMap()
     {
@@ -93,16 +103,18 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
     }
 
     /**
-     * @return string|array
+     * @api
+     *
+     * @return array|string
      */
-    public function getMessageToSenderChannelMap()
+    public function getMessageToChannelMap()
     {
-        if (getenv('AOP_MESSAGE_TO_SENDER_CHANNEL_MAP') !== false) {
-            return getenv('AOP_MESSAGE_TO_SENDER_CHANNEL_MAP');
+        if (getenv('AOP_MESSAGE_TO_CHANNEL_MAP') !== false) {
+            return getenv('AOP_MESSAGE_TO_CHANNEL_MAP');
         }
 
-        if ($this->getConfig()->hasKey(MessageBrokerAwsConstants::MESSAGE_TO_SENDER_CHANNEL_MAP)) {
-            return $this->get(MessageBrokerAwsConstants::MESSAGE_TO_SENDER_CHANNEL_MAP);
+        if ($this->getConfig()->hasKey(MessageBrokerAwsConstants::MESSAGE_TO_CHANNEL_MAP)) {
+            return $this->get(MessageBrokerAwsConstants::MESSAGE_TO_CHANNEL_MAP);
         }
 
         return [];

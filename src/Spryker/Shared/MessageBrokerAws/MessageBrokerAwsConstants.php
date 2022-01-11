@@ -33,16 +33,11 @@ interface MessageBrokerAwsConstants
     public const CHANNEL_TO_RECEIVER_CLIENT_MAP = 'MESSAGE_BROKER:CHANNEL_TO_RECEIVER_CLIENT_MAP';
 
     /**
-     * @uses \Spryker\Shared\MessageBroker\MessageBrokerConstants::MESSAGE_TO_SENDER_CHANNEL_MAP
+     * @uses \Spryker\Shared\MessageBroker\MessageBrokerConstants::MESSAGE_TO_CHANNEL_MAP
      *
      * @var string
      */
-    public const MESSAGE_TO_SENDER_CHANNEL_MAP = 'MESSAGE_BROKER:MESSAGE_TO_SENDER_CHANNEL_MAP';
-
-    /**
-     * @var string
-     */
-    public const MESSAGE_TO_RECEIVER_CHANNEL_MAP = 'MESSAGE_BROKER:MESSAGE_TO_RECEIVER_CHANNEL_MAP';
+    public const MESSAGE_TO_CHANNEL_MAP = 'MESSAGE_BROKER:MESSAGE_TO_CHANNEL_MAP';
 
     /**
      * @var string

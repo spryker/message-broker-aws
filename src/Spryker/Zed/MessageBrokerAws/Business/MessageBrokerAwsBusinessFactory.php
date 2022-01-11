@@ -9,9 +9,7 @@ namespace Spryker\Zed\MessageBrokerAws\Business;
 
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 use Spryker\Zed\MessageBrokerAws\Business\Config\ConfigFormatterInterface;
-use Spryker\Zed\MessageBrokerAws\Business\Config\StringToArrayConfigFormatter;
-use Spryker\Zed\MessageBrokerAws\Business\Receiver\Channel\ReceiverChannelNameResolver;
-use Spryker\Zed\MessageBrokerAws\Business\Receiver\Channel\ReceiverChannelNameResolverInterface;
+use Spryker\Zed\MessageBrokerAws\Business\Config\JsonToArrayConfigFormatter;
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Locator\ReceiverClientLocator;
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Locator\ReceiverClientLocatorInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\ReceiverClientInterface;
@@ -50,6 +48,9 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
         );
     }
 
+    /**
+     * @return \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Locator\SenderClientLocatorInterface
+     */
     public function createSenderClientLocator(): SenderClientLocatorInterface
     {
         return new SenderClientLocator(
@@ -93,7 +94,7 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return ReceiverClientLocatorInterface
+     * @return \Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Locator\ReceiverClientLocatorInterface
      */
     public function createReceiverClientLocator(): ReceiverClientLocatorInterface
     {
@@ -204,6 +205,6 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
      */
     public function createConfigFormatter(): ConfigFormatterInterface
     {
-        return new StringToArrayConfigFormatter();
+        return new JsonToArrayConfigFormatter();
     }
 }

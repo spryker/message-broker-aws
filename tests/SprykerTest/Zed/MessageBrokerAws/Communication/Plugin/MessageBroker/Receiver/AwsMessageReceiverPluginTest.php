@@ -20,34 +20,22 @@ use SprykerTest\Zed\MessageBrokerAws\MessageBrokerAwsCommunicationTester;
  * @group MessageBrokerAws
  * @group Communication
  * @group Plugin
+ * @group MessageBroker
  * @group Receiver
  * @group AwsMessageReceiverPluginTest
  * Add your own group annotations below this line
  */
 class AwsMessageReceiverPluginTest extends Unit
 {
+    /**
+     * @var string
+     */
     public const CHANNEL_NAME = 'channel';
+
     /**
      * @var \SprykerTest\Zed\MessageBrokerAws\MessageBrokerAwsCommunicationTester
      */
     protected MessageBrokerAwsCommunicationTester $tester;
-
-    /**
-     * @return void
-     */
-//    public function testGetReturnsEmptyIterableWhenNoMessageFound(): void
-//    {
-//        $this->tester->setChannelNameReceiverClientMap(static::CHANNEL_NAME, 'sqs');
-//        $this->tester->setSqsReceiverClientConfiguration();
-//
-//        $awsMessageReceiverPlugin = new AwsMessageReceiverPlugin();
-//        $awsMessageReceiverPlugin->setFacade($this->tester->getFacade());
-//
-//        /** @var \Generator $result */
-//        $result = $awsMessageReceiverPlugin->getFromQueues([static::CHANNEL_NAME]);
-//
-//        $this->assertFalse($result->valid());
-//    }
 
     /**
      * @return void

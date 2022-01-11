@@ -48,6 +48,8 @@ class MessageBrokerAwsFacade extends AbstractFacade implements MessageBrokerAwsF
      *
      * @api
      *
+     * @param \Symfony\Component\Messenger\Envelope $envelope
+     *
      * @return void
      */
     public function ack(Envelope $envelope): void
@@ -59,6 +61,8 @@ class MessageBrokerAwsFacade extends AbstractFacade implements MessageBrokerAwsF
      * {@inheritDoc}
      *
      * @api
+     *
+     * @param \Symfony\Component\Messenger\Envelope $envelope
      *
      * @return void
      */

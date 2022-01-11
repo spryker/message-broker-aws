@@ -7,24 +7,25 @@
 
 namespace Spryker\Zed\MessageBrokerAws\Business\Config;
 
-class StringToArrayConfigFormatter implements ConfigFormatterInterface
+use Exception;
+
+class JsonToArrayConfigFormatter implements ConfigFormatterInterface
 {
     /**
      * @param string $config
+     *
+     * @throws \Exception
      *
      * @return array
      */
     public function format(string $config): array
     {
-        $formattedConfiguration = [];
+        $formattedConfig = json_decode($config, true);
 
-        $configOptions = explode('&', rtrim($config, '&'));
-
-        foreach ($configOptions as $configOption) {
-            [$key, $value] = explode('=', $configOption);
-            $formattedConfiguration[$key] = $value;
+        if (json_last_error()) {
+            throw new Exception(json_last_error_msg());
         }
 
-        return $formattedConfiguration;
+        return $formattedConfig;
     }
 }

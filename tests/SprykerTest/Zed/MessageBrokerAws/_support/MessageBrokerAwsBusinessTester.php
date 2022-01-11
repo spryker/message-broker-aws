@@ -1,10 +1,16 @@
 <?php
+/**
+ * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
+ * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
+ */
+
 namespace SprykerTest\Zed\MessageBrokerAws;
 
-use Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsFacadeInterface;
+use Codeception\Actor;
 
 /**
  * Inherited Methods
+ *
  * @method void wantToTest($text)
  * @method void wantTo($text)
  * @method void execute($callable)
@@ -18,9 +24,9 @@ use Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsFacadeInterface;
  *
  * @SuppressWarnings(PHPMD)
  *
- * @method MessageBrokerAwsFacadeInterface getFacade()
+ * @method \Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsFacadeInterface getFacade()
  */
-class MessageBrokerAwsBusinessTester extends \Codeception\Actor
+class MessageBrokerAwsBusinessTester extends Actor
 {
     use _generated\MessageBrokerAwsBusinessTesterActions;
 }

@@ -46,6 +46,7 @@ class SqsReceiverClient implements ReceiverClientInterface
     /**
      * @param \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig $config
      * @param \Symfony\Component\Messenger\Transport\Serialization\SerializerInterface $serializer
+     * @param \Spryker\Zed\MessageBrokerAws\Business\Config\ConfigFormatterInterface $configFormatter
      */
     public function __construct(MessageBrokerAwsConfig $config, SerializerInterface $serializer, ConfigFormatterInterface $configFormatter)
     {
@@ -69,6 +70,8 @@ class SqsReceiverClient implements ReceiverClientInterface
     }
 
     /**
+     * @param \Symfony\Component\Messenger\Envelope $envelope
+     *
      * @return void
      */
     public function ack(Envelope $envelope): void
@@ -79,6 +82,8 @@ class SqsReceiverClient implements ReceiverClientInterface
     }
 
     /**
+     * @param \Symfony\Component\Messenger\Envelope $envelope
+     *
      * @return void
      */
     public function reject(Envelope $envelope): void

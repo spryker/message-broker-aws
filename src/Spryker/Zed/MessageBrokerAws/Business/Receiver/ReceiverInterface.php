@@ -19,14 +19,14 @@ interface ReceiverInterface
     public function get(string $channelName): iterable;
 
     /**
-     * @var \Symfony\Component\Messenger\Envelope $envelope
+     * @param \Symfony\Component\Messenger\Envelope $envelope
      *
      * @return void
      */
     public function ack(Envelope $envelope): void;
 
     /**
-     * @var \Symfony\Component\Messenger\Envelope $envelope
+     * @param \Symfony\Component\Messenger\Envelope $envelope
      *
      * @return void
      */

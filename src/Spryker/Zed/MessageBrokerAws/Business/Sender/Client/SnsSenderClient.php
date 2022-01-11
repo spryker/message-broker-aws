@@ -14,7 +14,6 @@ use Spryker\Zed\MessageBrokerAws\Business\Config\ConfigFormatterInterface;
 use Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\TransportException;
-use Symfony\Component\Messenger\Stamp\SentStamp;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Throwable;
 
@@ -43,6 +42,7 @@ class SnsSenderClient implements SenderClientInterface
     /**
      * @param \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig $config
      * @param \Symfony\Component\Messenger\Transport\Serialization\SerializerInterface $serializer
+     * @param \Spryker\Zed\MessageBrokerAws\Business\Config\ConfigFormatterInterface $configFormatter
      */
     public function __construct(MessageBrokerAwsConfig $config, SerializerInterface $serializer, ConfigFormatterInterface $configFormatter)
     {
@@ -87,7 +87,7 @@ class SnsSenderClient implements SenderClientInterface
             ]);
         }
 
-        if (!empty($specialHeaders)) {
+        if ($specialHeaders) {
             $arguments['MessageAttributes'][static::MESSAGE_ATTRIBUTE_NAME] = new MessageAttributeValue([
                 'DataType' => 'String',
                 'StringValue' => json_encode($specialHeaders),

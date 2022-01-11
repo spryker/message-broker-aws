@@ -7,6 +7,7 @@
 
 namespace Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Receiver;
 
+use Exception;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageReceiverPluginInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -19,6 +20,10 @@ use Symfony\Component\Messenger\Transport\Receiver\QueueReceiverInterface;
 class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageReceiverPluginInterface, QueueReceiverInterface
 {
     /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
      * @return string
      */
     public function getClientName(): string
@@ -53,7 +58,7 @@ class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRecei
      */
     public function get(): iterable
     {
-        throw new \Exception(sprintf('Since we are using channels we can only get messages through the "%s" interface.', QueueReceiverInterface::class));
+        throw new Exception(sprintf('Since we are using channels we can only get messages through the "%s" interface.', QueueReceiverInterface::class));
     }
 
     /**

@@ -14,7 +14,7 @@ use Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig;
 class SenderClientLocator implements SenderClientLocatorInterface
 {
     /**
-     * @var MessageBrokerAwsConfig
+     * @var \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig
      */
     protected MessageBrokerAwsConfig $config;
 
@@ -29,8 +29,9 @@ class SenderClientLocator implements SenderClientLocatorInterface
     protected ConfigFormatterInterface $configFormatter;
 
     /**
-     * @param MessageBrokerAwsConfig $config
-     * @param array<string, SenderClientInterface> $senderClients
+     * @param \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig $config
+     * @param array<string, \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SenderClientInterface> $senderClients
+     * @param \Spryker\Zed\MessageBrokerAws\Business\Config\ConfigFormatterInterface $configFormatter
      */
     public function __construct(MessageBrokerAwsConfig $config, array $senderClients, ConfigFormatterInterface $configFormatter)
     {

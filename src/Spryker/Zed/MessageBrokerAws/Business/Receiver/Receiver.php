@@ -14,7 +14,10 @@ use Symfony\Component\Messenger\Envelope;
 
 class Receiver implements ReceiverInterface
 {
-    protected $currentChannelName;
+    /**
+     * @var string
+     */
+    protected string $currentChannelName;
 
     /**
      * @var \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig

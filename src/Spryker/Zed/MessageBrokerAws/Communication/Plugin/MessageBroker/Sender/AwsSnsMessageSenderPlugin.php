@@ -18,6 +18,10 @@ use Symfony\Component\Messenger\Envelope;
 class AwsSnsMessageSenderPlugin extends AbstractPlugin implements MessageSenderPluginInterface
 {
     /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
      * @return string
      */
     public function getClientName(): string

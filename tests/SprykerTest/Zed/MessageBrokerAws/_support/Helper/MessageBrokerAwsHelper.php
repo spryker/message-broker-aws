@@ -35,7 +35,7 @@ class MessageBrokerAwsHelper extends Module
     {
         parent::_before($test);
 
-        putenv('AOP_MESSAGE_TO_SENDER_CHANNEL_MAP');
+        putenv('AOP_MESSAGE_TO_CHANNEL_MAP');
         putenv('AOP_CHANNEL_TO_SENDER_CLIENT_MAP');
         putenv('AOP_CHANNEL_TO_RECEIVER_CLIENT_MAP');
         putenv('AOP_MESSAGE_BROKER_SNS_SENDER_CONFIG');
@@ -44,6 +44,8 @@ class MessageBrokerAwsHelper extends Module
 
     /**
      * This needs proper localstack setup!
+     *
+     * @param string $channelName
      *
      * @return \Symfony\Component\Messenger\Envelope
      */
@@ -74,7 +76,7 @@ class MessageBrokerAwsHelper extends Module
      */
     public function setMessageToReceiverSenderChannelNameMap(string $messageClassName, string $channelName): void
     {
-        putenv(sprintf('AOP_MESSAGE_TO_RECEIVER_CHANNEL_MAP=%s=%s', $messageClassName, $channelName));
+        putenv(sprintf('AOP_MESSAGE_TO_CHANNEL_MAP={"%s": "%s"}', str_replace('\\', '\\\\', $messageClassName), $channelName));
     }
 
     /**
@@ -99,7 +101,7 @@ class MessageBrokerAwsHelper extends Module
     public function mockFailingSnsClient(): void
     {
         $awsSnsSenderClientMock = Stub::make(SnsClient::class, [
-            'publish' => function () {
+            'publish' => function (): void {
                 throw new Exception('Some connection error.');
             },
         ]);
@@ -162,17 +164,17 @@ class MessageBrokerAwsHelper extends Module
      */
     public function setSnsSenderClientConfiguration(string $topic = 'arn:aws:sns:eu-central-1:000000000000:message-broker'): void
     {
-        putenv(sprintf('AOP_MESSAGE_BROKER_SNS_SENDER_CONFIG=endpoint=http://localhost.localstack.cloud:4566&accessKeyId=test&accessKeySecret=test&region=eu-central-1&topic=%s', $topic));
+        putenv(sprintf('AOP_MESSAGE_BROKER_SNS_SENDER_CONFIG={"endpoint": "http://localhost.localstack.cloud:4566", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "topic": "%s"}', $topic));
     }
 
     /**
-     * @param string $topic
+     * @param string $queueName
      *
      * @return void
      */
     public function setSqsReceiverClientConfiguration(string $queueName = 'message-broker'): void
     {
-        putenv(sprintf('AOP_MESSAGE_BROKER_SQS_RECEIVER_CONFIG=endpoint=http://localhost.localstack.cloud:4566&accessKeyId=test&accessKeySecret=test&region=eu-central-1&queue_name=%s', $queueName));
+        putenv(sprintf('AOP_MESSAGE_BROKER_SQS_RECEIVER_CONFIG={"endpoint": "http://localhost.localstack.cloud:4566", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "queue_name": "%s"}', $queueName));
     }
 
     /**
@@ -183,7 +185,7 @@ class MessageBrokerAwsHelper extends Module
      */
     public function setMessageSenderChannelNameMap(string $messageClassName, string $channelName): void
     {
-        putenv(sprintf('AOP_MESSAGE_TO_SENDER_CHANNEL_MAP=%s=%s', $messageClassName, $channelName));
+        putenv(sprintf('AOP_MESSAGE_TO_CHANNEL_MAP={"%s": "%s"}', str_replace('\\', '\\\\', $messageClassName), $channelName));
     }
 
     /**
@@ -194,7 +196,7 @@ class MessageBrokerAwsHelper extends Module
      */
     public function setChannelNameSenderClientMap(string $channelName, string $client): void
     {
-        putenv(sprintf('AOP_CHANNEL_TO_SENDER_CLIENT_MAP=%s=%s', $channelName, $client));
+        putenv(sprintf('AOP_CHANNEL_TO_SENDER_CLIENT_MAP={"%s": "%s"}', $channelName, $client));
     }
 
     /**
@@ -205,7 +207,7 @@ class MessageBrokerAwsHelper extends Module
      */
     public function setChannelNameReceiverClientMap(string $channelName, string $client): void
     {
-        putenv(sprintf('AOP_CHANNEL_TO_RECEIVER_CLIENT_MAP=%s=%s', $channelName, $client));
+        putenv(sprintf('AOP_CHANNEL_TO_RECEIVER_CLIENT_MAP={"%s": "%s"}', $channelName, $client));
     }
 
     /**
