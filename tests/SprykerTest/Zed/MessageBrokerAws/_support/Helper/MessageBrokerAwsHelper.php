@@ -54,8 +54,7 @@ class MessageBrokerAwsHelper extends Module
         $messageBrokerTestMessageTransfer = new MessageBrokerTestMessageTransfer();
         $messageBrokerTestMessageTransfer->setKey('value');
 
-        $channelNameStamp = new ChannelNameStamp($channelName);
-        $envelope = Envelope::wrap($messageBrokerTestMessageTransfer, [$channelNameStamp]);
+        $envelope = Envelope::wrap($messageBrokerTestMessageTransfer);
 
         $this->setMessageSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, $channelName);
         $this->setChannelNameSenderClientMap($channelName, 'sns');

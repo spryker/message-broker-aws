@@ -62,8 +62,6 @@ class SqsReceiverClient implements ReceiverClientInterface
      */
     public function get(string $channelName): iterable
     {
-        // TODO the receiver client should be loaded with configuration matching the channel name
-        // Channel name is added here
         foreach ($this->createReceiverClient()->get() as $envelope) {
             yield $envelope->with(new ChannelNameStamp($channelName));
         }
@@ -76,8 +74,6 @@ class SqsReceiverClient implements ReceiverClientInterface
      */
     public function ack(Envelope $envelope): void
     {
-        // TODO the receiver client should be loaded with configuration matching the channel name
-        // Channel name is added in get method
         $this->createReceiverClient()->ack($envelope);
     }
 
@@ -88,8 +84,6 @@ class SqsReceiverClient implements ReceiverClientInterface
      */
     public function reject(Envelope $envelope): void
     {
-        // TODO the receiver client should be loaded with configuration matching the channel name
-        // Channel name is added in get method
         $this->createReceiverClient()->reject($envelope);
     }
 
