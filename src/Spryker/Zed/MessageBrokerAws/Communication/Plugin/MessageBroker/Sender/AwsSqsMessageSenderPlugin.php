@@ -15,7 +15,7 @@ use Symfony\Component\Messenger\Envelope;
  * @method \Spryker\Zed\MessageBroker\MessageBrokerConfig getConfig()
  * @method \Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsFacadeInterface getFacade()
  */
-class AwsSnsMessageSenderPlugin extends AbstractPlugin implements MessageSenderPluginInterface
+class AwsSqsMessageSenderPlugin extends AbstractPlugin implements MessageSenderPluginInterface
 {
     /**
      * {@inheritDoc}
@@ -26,7 +26,7 @@ class AwsSnsMessageSenderPlugin extends AbstractPlugin implements MessageSenderP
      */
     public function getClientName(): string
     {
-        return 'sns';
+        return 'sqs';
     }
 
     /**

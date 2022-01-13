@@ -30,10 +30,10 @@ class Receiver implements ReceiverInterface
     protected ReceiverClientLocatorInterface $receiverClientResolver;
 
     /**
-     * @param \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig|null $config
-     * @param \Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Locator\ReceiverClientLocatorInterface|null $receiverClientResolver
+     * @param \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig $config
+     * @param \Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Locator\ReceiverClientLocatorInterface $receiverClientResolver
      */
-    public function __construct(?MessageBrokerAwsConfig $config, ?ReceiverClientLocatorInterface $receiverClientResolver)
+    public function __construct(MessageBrokerAwsConfig $config, ReceiverClientLocatorInterface $receiverClientResolver)
     {
         $this->config = $config;
         $this->receiverClientResolver = $receiverClientResolver;
@@ -42,7 +42,7 @@ class Receiver implements ReceiverInterface
     /**
      * @param string $channelName
      *
-     * @return iterable
+     * @return array<\Symfony\Component\Messenger\Envelope>
      */
     public function get(string $channelName): iterable
     {
@@ -58,7 +58,7 @@ class Receiver implements ReceiverInterface
      */
     public function ack(Envelope $envelope): void
     {
-        /** @var \Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Stamp\ChannelNameStamp $channelNameStamp */
+        /** @var \Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Stamp\ChannelNameStamp|null $channelNameStamp */
         $channelNameStamp = $envelope->last(ChannelNameStamp::class);
 
         if ($channelNameStamp) {
@@ -75,7 +75,7 @@ class Receiver implements ReceiverInterface
      */
     public function reject(Envelope $envelope): void
     {
-        /** @var \Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Stamp\ChannelNameStamp $channelNameStamp */
+        /** @var \Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Stamp\ChannelNameStamp|null $channelNameStamp */
         $channelNameStamp = $envelope->last(ChannelNameStamp::class);
 
         if ($channelNameStamp) {

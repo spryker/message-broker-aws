@@ -19,7 +19,7 @@ class ReceiverClientLocator implements ReceiverClientLocatorInterface
     protected MessageBrokerAwsConfig $config;
 
     /**
-     * @var array<string, \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SenderClientInterface>
+     * @var array<string, \Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\ReceiverClientInterface>
      */
     protected array $receiverClients = [];
 

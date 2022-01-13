@@ -5,24 +5,19 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Zed\MessageBrokerAws\Business\Receiver\Client;
+namespace Spryker\Zed\MessageBrokerAws\Business\Sender\Client;
 
 use AsyncAws\Sqs\SqsClient;
 use Spryker\Zed\MessageBrokerAws\Business\Config\ConfigFormatterInterface;
-use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Stamp\ChannelNameStamp;
+use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Stamp\SenderClientStamp;
 use Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig;
-use Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsReceiver;
+use Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsSender;
 use Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\Connection;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 
-class SqsReceiverClient implements ReceiverClientInterface
+class SqsSenderClient implements SenderClientInterface
 {
-    /**
-     * @var string
-     */
-    protected const MESSAGE_ATTRIBUTE_NAME = 'X-Symfony-Messenger';
-
     /**
      * @var \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig
      */
@@ -56,46 +51,24 @@ class SqsReceiverClient implements ReceiverClientInterface
     }
 
     /**
-     * @param string $channelName
-     *
-     * @return array<\Symfony\Component\Messenger\Envelope>
-     */
-    public function get(string $channelName): iterable
-    {
-        foreach ($this->createReceiverClient()->get() as $envelope) {
-            yield $envelope->with(new ChannelNameStamp($channelName));
-        }
-    }
-
-    /**
      * @param \Symfony\Component\Messenger\Envelope $envelope
      *
-     * @return void
+     * @return \Symfony\Component\Messenger\Envelope
      */
-    public function ack(Envelope $envelope): void
+    public function send(Envelope $envelope): Envelope
     {
-        $this->createReceiverClient()->ack($envelope);
+        return $this->createSenderClient()->send($envelope)->with(new SenderClientStamp(static::class));
     }
 
     /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     *
-     * @return void
+     * @return \Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsSender
      */
-    public function reject(Envelope $envelope): void
-    {
-        $this->createReceiverClient()->reject($envelope);
-    }
-
-    /**
-     * @return \Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsReceiver
-     */
-    protected function createReceiverClient(): AmazonSqsReceiver
+    protected function createSenderClient(): AmazonSqsSender
     {
         $configuration = $this->getConfiguration();
         $connection = new Connection($configuration, $this->createSqsClient());
 
-        return new AmazonSqsReceiver($connection, $this->serializer);
+        return new AmazonSqsSender($connection, $this->serializer);
     }
 
     /**
@@ -120,7 +93,7 @@ class SqsReceiverClient implements ReceiverClientInterface
     protected function getConfiguration(): array
     {
         if (!$this->sqsConfiguration) {
-            $sqsReceiverConfig = $this->config->getSqsReceiverConfig();
+            $sqsReceiverConfig = $this->config->getSqsSenderConfig();
 
             if (is_string($sqsReceiverConfig)) {
                 $sqsReceiverConfig = $this->configFormatter->format($sqsReceiverConfig);

@@ -15,7 +15,7 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
     /**
      * @api
      *
-     * @return array|string
+     * @return array<string, mixed>|string
      */
     public function getSnsSenderConfig()
     {
@@ -23,17 +23,39 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
             return getenv('AOP_MESSAGE_BROKER_SNS_SENDER_CONFIG');
         }
 
+        // @codeCoverageIgnoreStart
         if ($this->getConfig()->hasKey(MessageBrokerAwsConstants::SNS_SENDER_CONFIG)) {
             return $this->get(MessageBrokerAwsConstants::SNS_SENDER_CONFIG);
         }
 
         return [];
+        // @codeCoverageIgnoreEnd
     }
 
     /**
      * @api
      *
-     * @return array|string
+     * @return array<string, mixed>|string
+     */
+    public function getSqsSenderConfig()
+    {
+        if (getenv('AOP_MESSAGE_BROKER_SQS_SENDER_CONFIG') !== false) {
+            return getenv('AOP_MESSAGE_BROKER_SQS_SENDER_CONFIG');
+        }
+
+        // @codeCoverageIgnoreStart
+        if ($this->getConfig()->hasKey(MessageBrokerAwsConstants::SQS_SENDER_CONFIG)) {
+            return $this->get(MessageBrokerAwsConstants::SQS_SENDER_CONFIG);
+        }
+
+        return [];
+        // @codeCoverageIgnoreEnd
+    }
+
+    /**
+     * @api
+     *
+     * @return array<string, mixed>|string
      */
     public function getSqsReceiverConfig()
     {
@@ -41,11 +63,13 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
             return getenv('AOP_MESSAGE_BROKER_SQS_RECEIVER_CONFIG');
         }
 
+        // @codeCoverageIgnoreStart
         if ($this->getConfig()->hasKey(MessageBrokerAwsConstants::SQS_RECEIVER_CONFIG)) {
             return $this->get(MessageBrokerAwsConstants::SQS_RECEIVER_CONFIG);
         }
 
         return [];
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -56,20 +80,22 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
     public function getIsDebugEnabled(): bool
     {
         if (getenv('SPRYKER_DEBUG_ENABLED') !== false) {
-            return getenv('SPRYKER_DEBUG_ENABLED');
+            return (bool)getenv('SPRYKER_DEBUG_ENABLED');
         }
 
+        // @codeCoverageIgnoreStart
         if ($this->getConfig()->hasKey(MessageBrokerAwsConstants::DEBUG_ENABLED)) {
             return $this->get(MessageBrokerAwsConstants::DEBUG_ENABLED);
         }
 
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
      * @api
      *
-     * @return array|string
+     * @return array<string, string>|string
      */
     public function getChannelToSenderClientMap()
     {
@@ -77,17 +103,19 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
             return getenv('AOP_CHANNEL_TO_SENDER_CLIENT_MAP');
         }
 
+        // @codeCoverageIgnoreStart
         if ($this->getConfig()->hasKey(MessageBrokerAwsConstants::CHANNEL_TO_SENDER_CLIENT_MAP)) {
             return $this->get(MessageBrokerAwsConstants::CHANNEL_TO_SENDER_CLIENT_MAP);
         }
 
         return [];
+        // @codeCoverageIgnoreEnd
     }
 
     /**
      * @api
      *
-     * @return array|string
+     * @return array<string, string>|string
      */
     public function getChannelToReceiverClientMap()
     {
@@ -95,17 +123,19 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
             return getenv('AOP_CHANNEL_TO_RECEIVER_CLIENT_MAP');
         }
 
+        // @codeCoverageIgnoreStart
         if ($this->getConfig()->hasKey(MessageBrokerAwsConstants::CHANNEL_TO_RECEIVER_CLIENT_MAP)) {
             return $this->get(MessageBrokerAwsConstants::CHANNEL_TO_RECEIVER_CLIENT_MAP);
         }
 
         return [];
+        // @codeCoverageIgnoreEnd
     }
 
     /**
      * @api
      *
-     * @return array|string
+     * @return array<string, string>|string
      */
     public function getMessageToChannelMap()
     {
@@ -113,10 +143,12 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
             return getenv('AOP_MESSAGE_TO_CHANNEL_MAP');
         }
 
+        // @codeCoverageIgnoreStart
         if ($this->getConfig()->hasKey(MessageBrokerAwsConstants::MESSAGE_TO_CHANNEL_MAP)) {
             return $this->get(MessageBrokerAwsConstants::MESSAGE_TO_CHANNEL_MAP);
         }
 
         return [];
+        // @codeCoverageIgnoreStart
     }
 }

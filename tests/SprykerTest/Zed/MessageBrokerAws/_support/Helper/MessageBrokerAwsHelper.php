@@ -15,8 +15,8 @@ use Codeception\TestInterface;
 use Exception;
 use Generated\Shared\Transfer\MessageBrokerTestMessageTransfer;
 use Ramsey\Uuid\Uuid;
-use Spryker\Zed\MessageBroker\Business\Stamp\ChannelNameStamp;
 use Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsBusinessFactory;
+use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Stamp\ChannelNameStamp;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SnsSenderClient;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender\AwsSnsMessageSenderPlugin;
 use SprykerTest\Zed\Testify\Helper\Business\BusinessHelperTrait;
@@ -39,6 +39,7 @@ class MessageBrokerAwsHelper extends Module
         putenv('AOP_CHANNEL_TO_SENDER_CLIENT_MAP');
         putenv('AOP_CHANNEL_TO_RECEIVER_CLIENT_MAP');
         putenv('AOP_MESSAGE_BROKER_SNS_SENDER_CONFIG');
+        putenv('AOP_MESSAGE_BROKER_SQS_SENDER_CONFIG');
         putenv('AOP_MESSAGE_BROKER_SQS_RECEIVER_CONFIG');
     }
 
@@ -54,7 +55,8 @@ class MessageBrokerAwsHelper extends Module
         $messageBrokerTestMessageTransfer = new MessageBrokerTestMessageTransfer();
         $messageBrokerTestMessageTransfer->setKey('value');
 
-        $envelope = Envelope::wrap($messageBrokerTestMessageTransfer);
+        $channelNameStamp = new ChannelNameStamp($channelName);
+        $envelope = Envelope::wrap($messageBrokerTestMessageTransfer, [$channelNameStamp]);
 
         $this->setMessageSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, $channelName);
         $this->setChannelNameSenderClientMap($channelName, 'sns');
@@ -164,6 +166,16 @@ class MessageBrokerAwsHelper extends Module
     public function setSnsSenderClientConfiguration(string $topic = 'arn:aws:sns:eu-central-1:000000000000:message-broker'): void
     {
         putenv(sprintf('AOP_MESSAGE_BROKER_SNS_SENDER_CONFIG={"endpoint": "http://localhost.localstack.cloud:4566", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "topic": "%s"}', $topic));
+    }
+
+    /**
+     * @param string $queueName
+     *
+     * @return void
+     */
+    public function setSqsSenderClientConfiguration(string $queueName = 'message-broker'): void
+    {
+        putenv(sprintf('AOP_MESSAGE_BROKER_SQS_SENDER_CONFIG={"endpoint": "http://localhost.localstack.cloud:4566", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "queue_name": "%s"}', $queueName));
     }
 
     /**

@@ -14,7 +14,7 @@ interface ReceiverClientInterface
     /**
      * @param string $channelName
      *
-     * @return iterable
+     * @return array<\Symfony\Component\Messenger\Envelope>
      */
     public function get(string $channelName): iterable;
 

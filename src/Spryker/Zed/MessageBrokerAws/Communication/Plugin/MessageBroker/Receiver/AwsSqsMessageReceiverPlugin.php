@@ -36,9 +36,9 @@ class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRecei
      *
      * @api
      *
-     * @param array $queueNames
+     * @param array<string> $queueNames
      *
-     * @return iterable
+     * @return array<\Symfony\Component\Messenger\Envelope>
      */
     public function getFromQueues(array $queueNames): iterable
     {
@@ -54,7 +54,7 @@ class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRecei
      *
      * @api
      *
-     * @return iterable
+     * @return array<\Symfony\Component\Messenger\Envelope>
      */
     public function get(): iterable
     {

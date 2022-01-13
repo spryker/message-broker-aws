@@ -20,6 +20,11 @@ interface MessageBrokerAwsConstants
     /**
      * @var string
      */
+    public const SQS_SENDER_CONFIG = 'MESSAGE_BROKER:AWS_SQS_SENDER_CONFIG';
+
+    /**
+     * @var string
+     */
     public const SQS_RECEIVER_CONFIG = 'MESSAGE_BROKER:AWS_SQS_RECEIVER_CONFIG';
 
     /**

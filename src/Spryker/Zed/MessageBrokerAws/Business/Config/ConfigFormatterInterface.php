@@ -12,7 +12,7 @@ interface ConfigFormatterInterface
     /**
      * @param string $config
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function format(string $config): array;
 }

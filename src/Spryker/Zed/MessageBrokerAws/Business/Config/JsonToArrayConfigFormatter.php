@@ -16,7 +16,7 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
      *
      * @throws \Exception
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function format(string $config): array
     {

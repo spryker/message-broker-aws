@@ -9,6 +9,8 @@ namespace SprykerTest\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Se
 
 use Codeception\Test\Unit;
 use Generated\Shared\Transfer\MessageBrokerTestMessageTransfer;
+use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SnsSenderClient;
+use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Stamp\SenderClientStamp;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender\AwsSnsMessageSenderPlugin;
 use SprykerTest\Zed\MessageBrokerAws\MessageBrokerAwsCommunicationTester;
 use Symfony\Component\Messenger\Envelope;
@@ -25,10 +27,10 @@ use Symfony\Component\Messenger\Stamp\SentStamp;
  * @group Plugin
  * @group MessageBroker
  * @group Sender
- * @group AwsMessageSenderPluginTest
+ * @group AwsSnsMessageSenderPluginTest
  * Add your own group annotations below this line
  */
-class AwsMessageSenderPluginTest extends Unit
+class AwsSnsMessageSenderPluginTest extends Unit
 {
     /**
      * @var string
@@ -41,11 +43,11 @@ class AwsMessageSenderPluginTest extends Unit
     protected MessageBrokerAwsCommunicationTester $tester;
 
     /**
-     * The message will have a SendStamp only when handled properly.
+     * The message will have a SentStamp only when handled properly.
      *
      * @return void
      */
-    public function testSendReturnsUnHandledEnvelopeWhenChannelNameStampDoesNotExist(): void
+    public function testSendReturnsUnHandledEnvelopeWhenSentStampDoesNotExist(): void
     {
         // Arrange
         $messageBrokerTestMessageTransfer = new MessageBrokerTestMessageTransfer();
@@ -72,8 +74,6 @@ class AwsMessageSenderPluginTest extends Unit
      */
     public function testSendUsesSnsSenderWhenSnsSenderIsConfiguredForChannel(): void
     {
-        $this->markTestSkipped('To fully test this, we need to update the tests to make use of the MessageBroker module.');
-
         // Arrange
         $messageBrokerTestMessageTransfer = new MessageBrokerTestMessageTransfer();
         $messageBrokerTestMessageTransfer->setKey('value');
@@ -83,7 +83,7 @@ class AwsMessageSenderPluginTest extends Unit
         $this->tester->setMessageSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
         $this->tester->setChannelNameSenderClientMap(static::CHANNEL_NAME, 'sns');
         $this->tester->setSnsSenderClientConfiguration();
-        $this->tester->mockSuccessfulSnsClientSendResponse();
+//        $this->tester->mockSuccessfulSnsClientSendResponse();
 
         // Act
         $awsSnsMessageSenderPlugin = new AwsSnsMessageSenderPlugin();
@@ -91,12 +91,18 @@ class AwsMessageSenderPluginTest extends Unit
         $envelope = $awsSnsMessageSenderPlugin->send($envelope);
 
         // Assert
-        /** @var \Symfony\Component\Messenger\Stamp\SentStamp $sentStamp */
-        $sentStamp = $envelope->last(SentStamp::class);
+        /** @var \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Stamp\SenderClientStamp $senderClientStamp */
+        $senderClientStamp = $envelope->last(SenderClientStamp::class);
 
-        $this->assertNotNull($sentStamp, sprintf('Expected to have a "%s" but it is not given.', SentStamp::class));
-        $senderAlias = $sentStamp->getSenderAlias();
-        $this->assertSame('sns', $senderAlias, sprintf('Expected to have the "%s" client used but "%s" was used.', $senderAlias, $senderAlias));
+        $this->assertSame(
+            SnsSenderClient::class,
+            $senderClientStamp->getSenderClientName(),
+            sprintf(
+                'Expected not to have the message sent with the "%s" client but it was sent with "%s".',
+                SnsSenderClient::class,
+                $senderClientStamp->getSenderClientName(),
+            ),
+        );
     }
 
     /**

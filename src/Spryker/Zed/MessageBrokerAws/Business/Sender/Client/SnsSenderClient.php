@@ -11,6 +11,7 @@ use AsyncAws\Sns\SnsClient;
 use AsyncAws\Sns\SnsClient as AsyncAwsSnsClient;
 use AsyncAws\Sns\ValueObject\MessageAttributeValue;
 use Spryker\Zed\MessageBrokerAws\Business\Config\ConfigFormatterInterface;
+use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Stamp\SenderClientStamp;
 use Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\TransportException;
@@ -90,7 +91,7 @@ class SnsSenderClient implements SenderClientInterface
         if ($specialHeaders) {
             $arguments['MessageAttributes'][static::MESSAGE_ATTRIBUTE_NAME] = new MessageAttributeValue([
                 'DataType' => 'String',
-                'StringValue' => json_encode($specialHeaders),
+                'StringValue' => (string)json_encode($specialHeaders),
             ]);
         }
 
@@ -105,11 +106,11 @@ class SnsSenderClient implements SenderClientInterface
             throw new TransportException('Could not add a message to the SNS topic');
         }
 
-        return $envelope;
+        return $envelope->with(new SenderClientStamp(static::class));
     }
 
     /**
-     * @param array $configuration
+     * @param array<string, mixed> $configuration
      *
      * @return \AsyncAws\Sns\SnsClient
      */
@@ -119,9 +120,7 @@ class SnsSenderClient implements SenderClientInterface
     }
 
     /**
-     * TODO This method should be aware of configurations for channels.
-     *
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getConfiguration(): array
     {

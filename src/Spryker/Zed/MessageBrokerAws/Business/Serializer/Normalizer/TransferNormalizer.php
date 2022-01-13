@@ -13,11 +13,11 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 class TransferNormalizer implements NormalizerInterface
 {
     /**
-     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $object
+     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface|mixed $object
      * @param string|null $format
-     * @param array $context
+     * @param array<string, mixed> $context
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function normalize($object, ?string $format = null, array $context = []): array
     {

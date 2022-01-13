@@ -20,6 +20,7 @@ use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Locator\SenderClientLoca
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Locator\SenderClientLocatorInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SenderClientInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SnsSenderClient;
+use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SqsSenderClient;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Sender;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\SenderInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Serializer\Normalizer\TransferNormalizer;
@@ -67,6 +68,7 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
     {
         return [
             'sns' => $this->createSnsSenderClient(),
+            'sqs' => $this->createSqsSenderClient(),
         ];
     }
 
@@ -76,6 +78,18 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
     public function createSnsSenderClient(): SenderClientInterface
     {
         return new SnsSenderClient(
+            $this->getConfig(),
+            $this->createSerializer(),
+            $this->createConfigFormatter(),
+        );
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SenderClientInterface
+     */
+    public function createSqsSenderClient(): SenderClientInterface
+    {
+        return new SqsSenderClient(
             $this->getConfig(),
             $this->createSerializer(),
             $this->createConfigFormatter(),
@@ -147,7 +161,7 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return array
+     * @return array<(\Symfony\Component\Serializer\Normalizer\NormalizerInterface|\Symfony\Component\Serializer\Normalizer\DenormalizerInterface)>
      */
     public function getSerializerNormalizer(): array
     {
@@ -183,7 +197,7 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return array
+     * @return array<(\Symfony\Component\Serializer\Encoder\EncoderInterface|\Symfony\Component\Serializer\Encoder\DecoderInterface)>
      */
     public function getSerializerEncoders(): array
     {

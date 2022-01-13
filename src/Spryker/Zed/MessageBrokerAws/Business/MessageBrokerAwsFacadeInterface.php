@@ -20,7 +20,7 @@ interface MessageBrokerAwsFacadeInterface
      *
      * @return \Symfony\Component\Messenger\Envelope
      */
-    public function sendSns(Envelope $envelope): Envelope;
+    public function send(Envelope $envelope): Envelope;
 
     /**
      * Specification:
@@ -29,7 +29,7 @@ interface MessageBrokerAwsFacadeInterface
      *
      * @param string $channelName
      *
-     * @return iterable
+     * @return array<\Symfony\Component\Messenger\Envelope>
      */
     public function getSqs(string $channelName): iterable;
 

@@ -24,7 +24,7 @@ class MessageBrokerAwsFacade extends AbstractFacade implements MessageBrokerAwsF
      *
      * @return \Symfony\Component\Messenger\Envelope
      */
-    public function sendSns(Envelope $envelope): Envelope
+    public function send(Envelope $envelope): Envelope
     {
         return $this->getFactory()->createSender()->send($envelope);
     }
@@ -36,7 +36,7 @@ class MessageBrokerAwsFacade extends AbstractFacade implements MessageBrokerAwsF
      *
      * @param string $channelName
      *
-     * @return iterable
+     * @return array<\Symfony\Component\Messenger\Envelope>
      */
     public function getSqs(string $channelName): iterable
     {

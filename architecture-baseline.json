@@ -1,0 +1,9 @@
+[
+    {
+        "fileName": "/vendor/spryker/spryker/Bundles/MessageBrokerAws/src/Spryker/Zed/MessageBrokerAws/Business/MessageBrokerAwsFacade.php",
+        "description": "\n      Zed Business Layer - Facade: The method `Spryker\\Zed\\MessageBrokerAws\\Business\\MessageBrokerAwsFacade::send()()` is using an invalid return type `\\Symfony\\Component\\Messenger\\Envelope` which violates the rule \"Every Facade should only return native types or transfer objects.\"\n    ",
+        "rule": "FacadeReturnValueRule",
+        "ruleset": "Spryker Zed",
+        "priority": "1"
+    }
+]
