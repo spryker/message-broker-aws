@@ -16,6 +16,7 @@ use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\ReceiverClientInterfac
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\SqsReceiverClient;
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\Receiver;
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\ReceiverInterface;
+use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\HttpSenderClient;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Locator\SenderClientLocator;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Locator\SenderClientLocatorInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SenderClientInterface;
@@ -69,6 +70,7 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
         return [
             'sns' => $this->createSnsSenderClient(),
             'sqs' => $this->createSqsSenderClient(),
+            'http' => $this->createHttpSenderClient(),
         ];
     }
 
@@ -90,6 +92,18 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
     public function createSqsSenderClient(): SenderClientInterface
     {
         return new SqsSenderClient(
+            $this->getConfig(),
+            $this->createSerializer(),
+            $this->createConfigFormatter(),
+        );
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SenderClientInterface
+     */
+    public function createHttpSenderClient(): SenderClientInterface
+    {
+        return new HttpSenderClient(
             $this->getConfig(),
             $this->createSerializer(),
             $this->createConfigFormatter(),

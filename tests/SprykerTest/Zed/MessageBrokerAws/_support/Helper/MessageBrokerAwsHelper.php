@@ -175,7 +175,16 @@ class MessageBrokerAwsHelper extends Module
      */
     public function setSqsSenderClientConfiguration(string $queueName = 'message-broker'): void
     {
-        putenv(sprintf('AOP_MESSAGE_BROKER_SQS_SENDER_CONFIG={"endpoint": "http://localhost.localstack.cloud:4566", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "queue_name": "%s"}', $queueName));
+//        putenv(sprintf('AOP_MESSAGE_BROKER_SQS_SENDER_CONFIG={"endpoint": "http://localhost.localstack.cloud:4566", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "queue_name": "%s"}', $queueName));
+        putenv(sprintf('AOP_MESSAGE_BROKER_SQS_SENDER_CONFIG={"endpoint": "http://host.docker.internal:4566", "accessKeyId": "", "accessKeySecret": "", "region": "eu-central-1", "queue_name": "%s"}', $queueName));
+    }
+
+    /**
+     * @return void
+     */
+    public function setHttpSenderClientConfiguration(): void
+    {
+        putenv(sprintf('AOP_MESSAGE_BROKER_HTTP_SENDER_CONFIG={"endpoint": "0.0.0.0:8000", "timeout": 20}'));
     }
 
     /**

@@ -57,6 +57,26 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
      *
      * @return array<string, mixed>|string
      */
+    public function getHttpSenderConfig()
+    {
+        if (getenv('AOP_MESSAGE_BROKER_HTTP_SENDER_CONFIG') !== false) {
+            return getenv('AOP_MESSAGE_BROKER_HTTP_SENDER_CONFIG');
+        }
+
+        // @codeCoverageIgnoreStart
+        if ($this->getConfig()->hasKey(MessageBrokerAwsConstants::SQS_SENDER_CONFIG)) {
+            return $this->get(MessageBrokerAwsConstants::SQS_SENDER_CONFIG);
+        }
+
+        return [];
+        // @codeCoverageIgnoreEnd
+    }
+
+    /**
+     * @api
+     *
+     * @return array<string, mixed>|string
+     */
     public function getSqsReceiverConfig()
     {
         if (getenv('AOP_MESSAGE_BROKER_SQS_RECEIVER_CONFIG') !== false) {
