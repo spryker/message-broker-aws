@@ -4,11 +4,17 @@
     "description": "MessageBrokerAws module",
     "license": "proprietary",
     "require": {
+        "async-aws/sns": "^1.0.0",
+        "async-aws/sqs": "^1.0.0",
         "php": ">=7.4",
-        "spryker/kernel": "^3.30.0"
+        "spryker/guzzle": "^2.0.0",
+        "spryker/kernel": "^3.30.0",
+        "spryker/message-broker-extension": "^1.0.0",
+        "spryker/symfony": "^3.7.0"
     },
     "require-dev": {
         "spryker/code-sniffer": "*",
+        "spryker/ramsey-uuid": "*",
         "spryker/testify": "*"
     },
     "autoload": {
