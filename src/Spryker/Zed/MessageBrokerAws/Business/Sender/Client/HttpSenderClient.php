@@ -65,13 +65,18 @@ class HttpSenderClient implements SenderClientInterface
 
         $encodedMessage = $this->serializer->encode($envelope);
 
-        $headers = $encodedMessage['headers'] ?? [];
+        $payload = [
+            'payload' => $encodedMessage['bodyRaw'],
+            'attributes' => $encodedMessage['headers'] ?? [],
+        ];
+
+        $encodedBody = (string)json_encode($payload);
 
         $request = new Request(
             'POST',
             $configuration['endpoint'],
-            ['X-Spryker-JSON-Header' => (string)json_encode($headers)],
-            $encodedMessage['body'],
+            ['Content-Type' => 'application/json'],
+            $encodedBody,
         );
 
         try {

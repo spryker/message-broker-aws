@@ -48,9 +48,7 @@ class AwsSqsMessageSenderPluginTest extends Unit
     public function testSendUsesSqsSenderWhenSqsSenderIsConfiguredForChannel(): void
     {
         // Arrange
-        $messageBrokerTestMessageTransfer = new MessageBrokerTestMessageTransfer();
-        $messageBrokerTestMessageTransfer->setKey('value');
-
+        $messageBrokerTestMessageTransfer = $this->tester->createMessageWithRequiredMessageAttributes();
         $envelope = Envelope::wrap($messageBrokerTestMessageTransfer);
 
         $this->tester->setMessageSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
@@ -85,8 +83,7 @@ class AwsSqsMessageSenderPluginTest extends Unit
     public function testSendReturnsUnHandledEnvelopeWhenSentStampDoesNotExist(): void
     {
         // Arrange
-        $messageBrokerTestMessageTransfer = new MessageBrokerTestMessageTransfer();
-        $messageBrokerTestMessageTransfer->setKey('value');
+        $messageBrokerTestMessageTransfer = $this->tester->createMessageWithRequiredMessageAttributes();
 
         $envelope = Envelope::wrap($messageBrokerTestMessageTransfer);
 
@@ -110,8 +107,7 @@ class AwsSqsMessageSenderPluginTest extends Unit
     public function testSendWithSqsSenderThrowsExceptionWhenPublishThrowsAnException(): void
     {
         // Arrange
-        $messageBrokerTestMessageTransfer = new MessageBrokerTestMessageTransfer();
-        $messageBrokerTestMessageTransfer->setKey('value');
+        $messageBrokerTestMessageTransfer = $this->tester->createMessageWithRequiredMessageAttributes();
 
         $envelope = Envelope::wrap($messageBrokerTestMessageTransfer);
 
@@ -136,7 +132,7 @@ class AwsSqsMessageSenderPluginTest extends Unit
         $awsSqsMessageSenderPlugin = new AwsSqsMessageSenderPlugin();
 
         // Act
-        $clientName = $awsSqsMessageSenderPlugin->getClientName();
+        $clientName = $awsSqsMessageSenderPlugin->getTransportName();
 
         // Assert
         $this->assertSame('sqs', $clientName, sprintf('Expected to get "sqs" as client name but got "%s"', $clientName));

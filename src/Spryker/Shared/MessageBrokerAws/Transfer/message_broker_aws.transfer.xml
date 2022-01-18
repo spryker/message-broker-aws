@@ -4,14 +4,12 @@
     <transfer name="MessageBrokerTestMessage">
         <property name="key" type="string"/>
         <property name="empty" type="string"/>
+        <property name="messageAttributes" type="MessageAttributes"/>
     </transfer>
 
-    <transfer name="CorrelationId">
-        <property name="correlationId" type="string"/>
-    </transfer>
-
-    <transfer name="ChannelNameMessageStamp">
-        <property name="channelName" type="string"/>
+    <transfer name="MessageBrokerAwsTestMessageWithoutMessageAttributes">
+        <property name="key" type="string"/>
+        <property name="empty" type="string"/>
     </transfer>
 
 </transfers>

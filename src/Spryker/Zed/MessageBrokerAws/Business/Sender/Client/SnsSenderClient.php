@@ -77,9 +77,11 @@ class SnsSenderClient implements SenderClientInterface
         $specialHeaders = [];
         foreach ($headers as $name => $value) {
             if ($name[0] === '.' || $name === static::MESSAGE_ATTRIBUTE_NAME || strlen($name) > 256 || substr($name, -1) === '.' || substr($name, 0, strlen('AWS.')) === 'AWS.' || substr($name, 0, strlen('Amazon.')) === 'Amazon.' || preg_match('/([^a-zA-Z0-9_\.-]+|\.\.)/', $name)) {
+                // @codeCoverageIgnoreStart
                 $specialHeaders[$name] = $value;
 
                 continue;
+                // @codeCoverageIgnoreEnd
             }
 
             $arguments['MessageAttributes'][$name] = new MessageAttributeValue([
@@ -89,10 +91,12 @@ class SnsSenderClient implements SenderClientInterface
         }
 
         if ($specialHeaders) {
+            // @codeCoverageIgnoreStart
             $arguments['MessageAttributes'][static::MESSAGE_ATTRIBUTE_NAME] = new MessageAttributeValue([
                 'DataType' => 'String',
                 'StringValue' => (string)json_encode($specialHeaders),
             ]);
+            // @codeCoverageIgnoreEnd
         }
 
         try {

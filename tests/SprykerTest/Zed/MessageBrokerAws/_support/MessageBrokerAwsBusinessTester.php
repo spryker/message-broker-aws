@@ -25,6 +25,7 @@ use Codeception\Actor;
  * @SuppressWarnings(PHPMD)
  *
  * @method \Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsFacadeInterface getFacade()
+ * @method \Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsBusinessFactory getFactory(?string $moduleName = NULL)()
  */
 class MessageBrokerAwsBusinessTester extends Actor
 {

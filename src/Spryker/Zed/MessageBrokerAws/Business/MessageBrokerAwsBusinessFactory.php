@@ -24,8 +24,7 @@ use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SnsSenderClient;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SqsSenderClient;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Sender;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\SenderInterface;
-use Spryker\Zed\MessageBrokerAws\Business\Serializer\Normalizer\TransferNormalizer;
-use Symfony\Component\Messenger\Transport\Serialization\Serializer;
+use Spryker\Zed\MessageBrokerAws\Business\Serializer\TransferSerializer;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
@@ -160,13 +159,13 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
      */
     public function createSerializer(): SerializerInterface
     {
-        return new Serializer($this->createTransferAwareSerializer());
+        return new TransferSerializer($this->createSymfonySerializer());
     }
 
     /**
      * @return \Symfony\Component\Serializer\Serializer
      */
-    public function createTransferAwareSerializer(): SymfonySerializer
+    public function createSymfonySerializer(): SymfonySerializer
     {
         return new SymfonySerializer(
             $this->getSerializerNormalizer(),
@@ -181,7 +180,6 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
     {
         return [
             $this->createArrayDenormalizer(),
-            $this->createTransferNormalizer(),
             $this->createObjectNormalizer(),
         ];
     }
@@ -192,14 +190,6 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
     public function createArrayDenormalizer(): ArrayDenormalizer
     {
         return new ArrayDenormalizer();
-    }
-
-    /**
-     * @return \Symfony\Component\Serializer\Normalizer\NormalizerInterface
-     */
-    public function createTransferNormalizer(): NormalizerInterface
-    {
-        return new TransferNormalizer();
     }
 
     /**

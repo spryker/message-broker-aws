@@ -26,7 +26,7 @@ class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRecei
      *
      * @return string
      */
-    public function getClientName(): string
+    public function getTransportName(): string
     {
         return 'sqs';
     }
@@ -45,7 +45,10 @@ class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRecei
         foreach ($queueNames as $channelName) {
             yield from $this->getFacade()->getSqs($channelName);
         }
+    // @codeCoverageIgnoreStart
     }
+
+    // @codeCoverageIgnoreEnd
 
     /**
      * {@inheritDoc}

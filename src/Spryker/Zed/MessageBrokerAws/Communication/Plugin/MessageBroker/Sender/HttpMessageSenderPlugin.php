@@ -24,7 +24,7 @@ class HttpMessageSenderPlugin extends AbstractPlugin implements MessageSenderPlu
      *
      * @return string
      */
-    public function getClientName(): string
+    public function getTransportName(): string
     {
         return 'http';
     }

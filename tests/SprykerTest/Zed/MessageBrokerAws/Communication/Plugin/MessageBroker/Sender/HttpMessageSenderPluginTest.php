@@ -8,9 +8,9 @@
 namespace SprykerTest\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender;
 
 use Codeception\Test\Unit;
+use Generated\Shared\Transfer\MessageAttributesTransfer;
 use Generated\Shared\Transfer\MessageBrokerTestMessageTransfer;
-use Spryker\Zed\MessageBroker\Business\Stamp\CorrelationIdStamp;
-use Spryker\Zed\MessageBroker\Business\Stamp\EventNameStamp;
+use Ramsey\Uuid\Uuid;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\HttpSenderClient;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Stamp\SenderClientStamp;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender\HttpMessageSenderPlugin;
@@ -51,14 +51,22 @@ class HttpMessageSenderPluginTest extends Unit
     public function testSendUsesHttpSenderWhenHttpSenderIsConfiguredForChannel(): void
     {
         $pathToServer = __DIR__ . '../../../../_support/Server/200_OK.php';
-        $process = new Process(['php', '-S', '0.0.0.0:8000', $pathToServer]);
+        $process = new Process(['php', '-S', '0.0.0.0:8000', $pathToServer], null, null, null, 3);
         $process->start();
+        $process->waitUntil(function ($type, $buffer) {
+            return strpos($buffer, 'Development Server (http://0.0.0.0:8000) started') !== false;
+        });
 
         // Arrange
         $messageBrokerTestMessageTransfer = new MessageBrokerTestMessageTransfer();
         $messageBrokerTestMessageTransfer->setKey('value');
 
-        $envelope = Envelope::wrap($messageBrokerTestMessageTransfer, [new CorrelationIdStamp(), new EventNameStamp(MessageBrokerTestMessageTransfer::class)]);
+        $messageAttributesTransfer = new MessageAttributesTransfer();
+        $messageAttributesTransfer->setTransferName('MessageBrokerTestMessage');
+        $messageAttributesTransfer->setCorrelationId(Uuid::uuid4()->toString());
+        $messageAttributesTransfer->setTimestamp(microtime());
+
+        $messageBrokerTestMessageTransfer->setMessageAttributes($messageAttributesTransfer);
 
         $this->tester->setMessageSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
         $this->tester->setChannelNameSenderClientMap(static::CHANNEL_NAME, 'http');
@@ -67,7 +75,7 @@ class HttpMessageSenderPluginTest extends Unit
         // Act
         $httpMessageSenderPlugin = new HttpMessageSenderPlugin();
         $httpMessageSenderPlugin->setFacade($this->tester->getFacade());
-        $envelope = $httpMessageSenderPlugin->send($envelope);
+        $envelope = $httpMessageSenderPlugin->send(Envelope::wrap($messageBrokerTestMessageTransfer));
 
         // Assert
         /** @var \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Stamp\SenderClientStamp $senderClientStamp */
@@ -119,8 +127,7 @@ class HttpMessageSenderPluginTest extends Unit
     public function testSendWithHttpSenderThrowsExceptionWhenMessageCanNotBeTransported(): void
     {
         // Arrange
-        $messageBrokerTestMessageTransfer = new MessageBrokerTestMessageTransfer();
-        $messageBrokerTestMessageTransfer->setKey('value');
+        $messageBrokerTestMessageTransfer = $this->tester->createMessageWithRequiredMessageAttributes();
 
         $envelope = Envelope::wrap($messageBrokerTestMessageTransfer);
 
@@ -145,7 +152,7 @@ class HttpMessageSenderPluginTest extends Unit
         $httpMessageSenderPlugin = new HttpMessageSenderPlugin();
 
         // Act
-        $clientName = $httpMessageSenderPlugin->getClientName();
+        $clientName = $httpMessageSenderPlugin->getTransportName();
 
         // Assert
         $this->assertSame('http', $clientName, sprintf('Expected to get "http" as client name but got "%s"', $clientName));

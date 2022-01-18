@@ -65,7 +65,10 @@ class SqsReceiverClient implements ReceiverClientInterface
         foreach ($this->createReceiverClient()->get() as $envelope) {
             yield $envelope->with(new ChannelNameStamp($channelName));
         }
+    // @codeCoverageIgnoreStart
     }
+
+    // @codeCoverageIgnoreEnd
 
     /**
      * @param \Symfony\Component\Messenger\Envelope $envelope

@@ -50,8 +50,7 @@ class AwsSnsMessageSenderPluginTest extends Unit
     public function testSendReturnsUnHandledEnvelopeWhenSentStampDoesNotExist(): void
     {
         // Arrange
-        $messageBrokerTestMessageTransfer = new MessageBrokerTestMessageTransfer();
-        $messageBrokerTestMessageTransfer->setKey('value');
+        $messageBrokerTestMessageTransfer = $this->tester->createMessageWithRequiredMessageAttributes();
 
         $envelope = Envelope::wrap($messageBrokerTestMessageTransfer);
 
@@ -75,15 +74,13 @@ class AwsSnsMessageSenderPluginTest extends Unit
     public function testSendUsesSnsSenderWhenSnsSenderIsConfiguredForChannel(): void
     {
         // Arrange
-        $messageBrokerTestMessageTransfer = new MessageBrokerTestMessageTransfer();
-        $messageBrokerTestMessageTransfer->setKey('value');
+        $messageBrokerTestMessageTransfer = $this->tester->createMessageWithRequiredMessageAttributes();
 
         $envelope = Envelope::wrap($messageBrokerTestMessageTransfer);
 
         $this->tester->setMessageSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
         $this->tester->setChannelNameSenderClientMap(static::CHANNEL_NAME, 'sns');
         $this->tester->setSnsSenderClientConfiguration();
-//        $this->tester->mockSuccessfulSnsClientSendResponse();
 
         // Act
         $awsSnsMessageSenderPlugin = new AwsSnsMessageSenderPlugin();
@@ -113,8 +110,7 @@ class AwsSnsMessageSenderPluginTest extends Unit
     public function testSendWithSnsSenderThrowsExceptionWhenPublishThrowsAnException(): void
     {
         // Arrange
-        $messageBrokerTestMessageTransfer = new MessageBrokerTestMessageTransfer();
-        $messageBrokerTestMessageTransfer->setKey('value');
+        $messageBrokerTestMessageTransfer = $this->tester->createMessageWithRequiredMessageAttributes();
 
         $envelope = Envelope::wrap($messageBrokerTestMessageTransfer);
 
@@ -138,8 +134,7 @@ class AwsSnsMessageSenderPluginTest extends Unit
     public function testSendWithSnsSenderThrowsExceptionWhenPublishResponseIsInvalid(): void
     {
         // Arrange
-        $messageBrokerTestMessageTransfer = new MessageBrokerTestMessageTransfer();
-        $messageBrokerTestMessageTransfer->setKey('value');
+        $messageBrokerTestMessageTransfer = $this->tester->createMessageWithRequiredMessageAttributes();
 
         $envelope = Envelope::wrap($messageBrokerTestMessageTransfer);
 
@@ -168,7 +163,7 @@ class AwsSnsMessageSenderPluginTest extends Unit
         $awsSnsMessageSenderPlugin = new AwsSnsMessageSenderPlugin();
 
         // Act
-        $clientName = $awsSnsMessageSenderPlugin->getClientName();
+        $clientName = $awsSnsMessageSenderPlugin->getTransportName();
 
         // Assert
         $this->assertSame('sns', $clientName, sprintf('Expected to get "sns" as client name but got "%s"', $clientName));

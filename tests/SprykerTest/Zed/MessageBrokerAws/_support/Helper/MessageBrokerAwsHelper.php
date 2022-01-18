@@ -13,18 +13,24 @@ use Codeception\Module;
 use Codeception\Stub;
 use Codeception\TestInterface;
 use Exception;
+use Generated\Shared\Transfer\MessageAttributesTransfer;
 use Generated\Shared\Transfer\MessageBrokerTestMessageTransfer;
 use Ramsey\Uuid\Uuid;
 use Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsBusinessFactory;
-use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Stamp\ChannelNameStamp;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SnsSenderClient;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender\AwsSnsMessageSenderPlugin;
+use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender\AwsSqsMessageSenderPlugin;
 use SprykerTest\Zed\Testify\Helper\Business\BusinessHelperTrait;
 use Symfony\Component\Messenger\Envelope;
 
 class MessageBrokerAwsHelper extends Module
 {
     use BusinessHelperTrait;
+
+    /**
+     * @var string
+     */
+    protected string $localstackEndpoint = 'http://localhost.localstack.cloud:4566';
 
     /**
      * @param \Codeception\TestInterface $test
@@ -55,8 +61,14 @@ class MessageBrokerAwsHelper extends Module
         $messageBrokerTestMessageTransfer = new MessageBrokerTestMessageTransfer();
         $messageBrokerTestMessageTransfer->setKey('value');
 
-        $channelNameStamp = new ChannelNameStamp($channelName);
-        $envelope = Envelope::wrap($messageBrokerTestMessageTransfer, [$channelNameStamp]);
+        $messageAttributesTransfer = new MessageAttributesTransfer();
+        $messageAttributesTransfer->setMessage('MessageBrokerTestMessage');
+        $messageAttributesTransfer->setCorrelationId(Uuid::uuid4()->toString());
+        $messageAttributesTransfer->setTimestamp(microtime());
+
+        $messageBrokerTestMessageTransfer->setMessageAttributes($messageAttributesTransfer);
+
+        $envelope = Envelope::wrap($messageBrokerTestMessageTransfer);
 
         $this->setMessageSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, $channelName);
         $this->setChannelNameSenderClientMap($channelName, 'sns');
@@ -67,6 +79,46 @@ class MessageBrokerAwsHelper extends Module
         $awsMessageSenderPlugin->setFacade($this->getBusinessHelper()->getFacade());
 
         return $awsMessageSenderPlugin->send($envelope);
+    }
+
+    /**
+     * This needs proper localstack setup!
+     *
+     * @param string $channelName
+     *
+     * @return \Symfony\Component\Messenger\Envelope
+     */
+    public function haveSqsMessage(string $channelName = 'channel'): Envelope
+    {
+        $messageBrokerTestMessageTransfer = $this->createMessageWithRequiredMessageAttributes();
+
+        $envelope = Envelope::wrap($messageBrokerTestMessageTransfer);
+
+        $this->setMessageSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, $channelName);
+        $this->setChannelNameSenderClientMap($channelName, 'sqs');
+        $this->setSqsSenderClientConfiguration();
+
+        // Act
+        $awsSqsMessageSenderPlugin = new AwsSqsMessageSenderPlugin();
+        $awsSqsMessageSenderPlugin->setFacade($this->getBusinessHelper()->getFacade());
+
+        return $awsSqsMessageSenderPlugin->send($envelope);
+    }
+
+    /**
+     * @return \Generated\Shared\Transfer\MessageBrokerTestMessageTransfer
+     */
+    public function createMessageWithRequiredMessageAttributes(): MessageBrokerTestMessageTransfer
+    {
+        $messageBrokerTestMessageTransfer = new MessageBrokerTestMessageTransfer();
+        $messageBrokerTestMessageTransfer->setKey('value');
+
+        $messageAttributesTransfer = new MessageAttributesTransfer();
+        $messageAttributesTransfer->setTransferName('MessageBrokerTestMessage');
+
+        $messageBrokerTestMessageTransfer->setMessageAttributes($messageAttributesTransfer);
+
+        return $messageBrokerTestMessageTransfer;
     }
 
     /**
@@ -175,16 +227,7 @@ class MessageBrokerAwsHelper extends Module
      */
     public function setSqsSenderClientConfiguration(string $queueName = 'message-broker'): void
     {
-//        putenv(sprintf('AOP_MESSAGE_BROKER_SQS_SENDER_CONFIG={"endpoint": "http://localhost.localstack.cloud:4566", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "queue_name": "%s"}', $queueName));
-        putenv(sprintf('AOP_MESSAGE_BROKER_SQS_SENDER_CONFIG={"endpoint": "http://host.docker.internal:4566", "accessKeyId": "", "accessKeySecret": "", "region": "eu-central-1", "queue_name": "%s"}', $queueName));
-    }
-
-    /**
-     * @return void
-     */
-    public function setHttpSenderClientConfiguration(): void
-    {
-        putenv(sprintf('AOP_MESSAGE_BROKER_HTTP_SENDER_CONFIG={"endpoint": "0.0.0.0:8000", "timeout": 20}'));
+        putenv(sprintf('AOP_MESSAGE_BROKER_SQS_SENDER_CONFIG={"endpoint": "%s", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "queue_name": "%s", "poll_timeout": "5"}', $this->localstackEndpoint, $queueName));
     }
 
     /**
@@ -194,7 +237,15 @@ class MessageBrokerAwsHelper extends Module
      */
     public function setSqsReceiverClientConfiguration(string $queueName = 'message-broker'): void
     {
-        putenv(sprintf('AOP_MESSAGE_BROKER_SQS_RECEIVER_CONFIG={"endpoint": "http://localhost.localstack.cloud:4566", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "queue_name": "%s"}', $queueName));
+        putenv(sprintf('AOP_MESSAGE_BROKER_SQS_RECEIVER_CONFIG={"endpoint": "%s", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "queue_name": "%s", "poll_timeout": "5"}', $this->localstackEndpoint, $queueName));
+    }
+
+    /**
+     * @return void
+     */
+    public function setHttpSenderClientConfiguration(): void
+    {
+        putenv(sprintf('AOP_MESSAGE_BROKER_HTTP_SENDER_CONFIG={"endpoint": "0.0.0.0:8000", "timeout": 20}'));
     }
 
     /**

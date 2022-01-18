@@ -24,7 +24,7 @@ class AwsSnsMessageSenderPlugin extends AbstractPlugin implements MessageSenderP
      *
      * @return string
      */
-    public function getClientName(): string
+    public function getTransportName(): string
     {
         return 'sns';
     }

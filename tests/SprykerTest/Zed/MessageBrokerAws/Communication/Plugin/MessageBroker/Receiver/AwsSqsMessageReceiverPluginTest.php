@@ -22,10 +22,10 @@ use SprykerTest\Zed\MessageBrokerAws\MessageBrokerAwsCommunicationTester;
  * @group Plugin
  * @group MessageBroker
  * @group Receiver
- * @group AwsMessageReceiverPluginTest
+ * @group AwsSqsMessageReceiverPluginTest
  * Add your own group annotations below this line
  */
-class AwsMessageReceiverPluginTest extends Unit
+class AwsSqsMessageReceiverPluginTest extends Unit
 {
     /**
      * @var string
@@ -42,7 +42,7 @@ class AwsMessageReceiverPluginTest extends Unit
      */
     public function testGetReturnsMessageWhenMessageExist(): void
     {
-        $this->tester->haveMessage();
+        $this->tester->haveSqsMessage();
 
         $this->tester->setChannelNameReceiverClientMap(static::CHANNEL_NAME, 'sqs');
         $this->tester->setSqsReceiverClientConfiguration();
@@ -54,6 +54,7 @@ class AwsMessageReceiverPluginTest extends Unit
         $result = $awsMessageReceiverPlugin->getFromQueues([static::CHANNEL_NAME]);
 
         $currentMessage = $result->current();
+        $this->assertNotNull($currentMessage, 'Expected to get a message but did not receive any.');
         $this->assertInstanceOf(MessageBrokerTestMessageTransfer::class, $currentMessage->getMessage());
 
         $awsMessageReceiverPlugin->ack($currentMessage);
@@ -64,7 +65,7 @@ class AwsMessageReceiverPluginTest extends Unit
      */
     public function testRejectReceivedMessage(): void
     {
-        $this->tester->haveMessage();
+        $this->tester->haveSqsMessage();
 
         $this->tester->setChannelNameReceiverClientMap(static::CHANNEL_NAME, 'sqs');
         $this->tester->setSqsReceiverClientConfiguration();
@@ -90,7 +91,7 @@ class AwsMessageReceiverPluginTest extends Unit
         $awsMessageReceiverPlugin = new AwsSqsMessageReceiverPlugin();
 
         // Act
-        $clientName = $awsMessageReceiverPlugin->getClientName();
+        $clientName = $awsMessageReceiverPlugin->getTransportName();
 
         // Assert
         $this->assertSame('sqs', $clientName, sprintf('Expected to get "sqs" as client name but got "%s"', $clientName));
