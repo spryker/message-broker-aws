@@ -10,7 +10,8 @@
         "spryker/guzzle": "^2.0.0",
         "spryker/kernel": "^3.30.0",
         "spryker/message-broker-extension": "*",
-        "spryker/symfony": "^3.7.0"
+        "spryker/symfony": "^3.7.0",
+        "symfony/amazon-sqs-messenger": "^5.0.0 || ^6.0.0"
     },
     "require-dev": {
         "spryker/code-sniffer": "*",
