@@ -8,7 +8,7 @@
 namespace Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender;
 
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
-use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageSenderPluginInterface;
+use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageSenderPluginInterface;
 use Symfony\Component\Messenger\Envelope;
 
 /**

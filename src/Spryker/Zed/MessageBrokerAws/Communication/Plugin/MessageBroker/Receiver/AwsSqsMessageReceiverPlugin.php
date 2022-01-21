@@ -9,7 +9,7 @@ namespace Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Receiv
 
 use Exception;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
-use Spryker\Zed\MessageBrokerExtension\Dependecy\Plugin\MessageReceiverPluginInterface;
+use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageReceiverPluginInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Receiver\QueueReceiverInterface;
 
