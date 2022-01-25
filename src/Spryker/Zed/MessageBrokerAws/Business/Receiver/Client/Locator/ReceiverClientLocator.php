@@ -47,7 +47,7 @@ class ReceiverClientLocator implements ReceiverClientLocatorInterface
      */
     public function getReceiverClientByChannelName(string $channelName): ReceiverClientInterface
     {
-        $channelToReceiverClientMap = $this->config->getChannelToReceiverClientMap();
+        $channelToReceiverClientMap = $this->config->getChannelToReceiverTransportMap();
 
         if (is_string($channelToReceiverClientMap)) {
             $channelToReceiverClientMap = $this->configFormatter->format($channelToReceiverClientMap);
