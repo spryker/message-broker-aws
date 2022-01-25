@@ -62,7 +62,7 @@ class MessageBrokerAwsHelper extends Module
         $messageBrokerTestMessageTransfer->setKey('value');
 
         $messageAttributesTransfer = new MessageAttributesTransfer();
-        $messageAttributesTransfer->setMessage('MessageBrokerTestMessage');
+        $messageAttributesTransfer->setEvent('MessageBrokerTestMessage');
         $messageAttributesTransfer->setCorrelationId(Uuid::uuid4()->toString());
         $messageAttributesTransfer->setTimestamp(microtime());
 
@@ -70,9 +70,9 @@ class MessageBrokerAwsHelper extends Module
 
         $envelope = Envelope::wrap($messageBrokerTestMessageTransfer);
 
-        $this->setMessageSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, $channelName);
-        $this->setChannelNameSenderClientMap($channelName, 'sns');
-        $this->setSnsSenderClientConfiguration();
+        $this->setMessageToChannelMap(MessageBrokerTestMessageTransfer::class, $channelName);
+        $this->setChannelToSenderTransportMap($channelName, 'sns');
+        $this->setSnsSenderConfiguration();
 
         // Act
         $awsMessageSenderPlugin = new AwsSnsMessageSenderPlugin();
@@ -94,9 +94,9 @@ class MessageBrokerAwsHelper extends Module
 
         $envelope = Envelope::wrap($messageBrokerTestMessageTransfer);
 
-        $this->setMessageSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, $channelName);
-        $this->setChannelNameSenderClientMap($channelName, 'sqs');
-        $this->setSqsSenderClientConfiguration();
+        $this->setMessageToChannelMap(MessageBrokerTestMessageTransfer::class, $channelName);
+        $this->setChannelToSenderTransportMap($channelName, 'sqs');
+        $this->setSqsSenderConfiguration();
 
         // Act
         $awsSqsMessageSenderPlugin = new AwsSqsMessageSenderPlugin();
@@ -127,7 +127,7 @@ class MessageBrokerAwsHelper extends Module
      *
      * @return void
      */
-    public function setMessageToReceiverSenderChannelNameMap(string $messageClassName, string $channelName): void
+    public function setMessageToChannelMap(string $messageClassName, string $channelName): void
     {
         putenv(sprintf('AOP_MESSAGE_TO_CHANNEL_MAP={"%s": "%s"}', str_replace('\\', '\\\\', $messageClassName), $channelName));
     }
@@ -215,7 +215,7 @@ class MessageBrokerAwsHelper extends Module
      *
      * @return void
      */
-    public function setSnsSenderClientConfiguration(string $topic = 'arn:aws:sns:eu-central-1:000000000000:message-broker'): void
+    public function setSnsSenderConfiguration(string $topic = 'arn:aws:sns:eu-central-1:000000000000:message-broker'): void
     {
         putenv(sprintf('AOP_MESSAGE_BROKER_SNS_SENDER_CONFIG={"endpoint": "http://localhost.localstack.cloud:4566", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "topic": "%s"}', $topic));
     }
@@ -225,7 +225,7 @@ class MessageBrokerAwsHelper extends Module
      *
      * @return void
      */
-    public function setSqsSenderClientConfiguration(string $queueName = 'message-broker'): void
+    public function setSqsSenderConfiguration(string $queueName = 'message-broker'): void
     {
         putenv(sprintf('AOP_MESSAGE_BROKER_SQS_SENDER_CONFIG={"endpoint": "%s", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "queue_name": "%s", "poll_timeout": "5"}', $this->localstackEndpoint, $queueName));
     }
@@ -235,7 +235,7 @@ class MessageBrokerAwsHelper extends Module
      *
      * @return void
      */
-    public function setSqsReceiverClientConfiguration(string $queueName = 'message-broker'): void
+    public function setSqsReceiverConfiguration(string $queueName = 'message-broker'): void
     {
         putenv(sprintf('AOP_MESSAGE_BROKER_SQS_RECEIVER_CONFIG={"endpoint": "%s", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "queue_name": "%s", "poll_timeout": "5"}', $this->localstackEndpoint, $queueName));
     }
@@ -243,20 +243,9 @@ class MessageBrokerAwsHelper extends Module
     /**
      * @return void
      */
-    public function setHttpSenderClientConfiguration(): void
+    public function setHttpSenderConfiguration(): void
     {
         putenv(sprintf('AOP_MESSAGE_BROKER_HTTP_SENDER_CONFIG={"endpoint": "0.0.0.0:8000", "timeout": 20}'));
-    }
-
-    /**
-     * @param string $messageClassName
-     * @param string $channelName
-     *
-     * @return void
-     */
-    public function setMessageSenderChannelNameMap(string $messageClassName, string $channelName): void
-    {
-        putenv(sprintf('AOP_MESSAGE_TO_CHANNEL_MAP={"%s": "%s"}', str_replace('\\', '\\\\', $messageClassName), $channelName));
     }
 
     /**
@@ -265,7 +254,7 @@ class MessageBrokerAwsHelper extends Module
      *
      * @return void
      */
-    public function setChannelNameSenderClientMap(string $channelName, string $client): void
+    public function setChannelToSenderTransportMap(string $channelName, string $client): void
     {
         putenv(sprintf('AOP_CHANNEL_TO_SENDER_TRANSPORT_MAP={"%s": "%s"}', $channelName, $client));
     }
@@ -276,7 +265,7 @@ class MessageBrokerAwsHelper extends Module
      *
      * @return void
      */
-    public function setChannelNameReceiverClientMap(string $channelName, string $client): void
+    public function setChannelToReceiverTransportMap(string $channelName, string $client): void
     {
         putenv(sprintf('AOP_CHANNEL_TO_RECEIVER_TRANSPORT_MAP={"%s": "%s"}', $channelName, $client));
     }

@@ -78,9 +78,9 @@ class AwsSnsMessageSenderPluginTest extends Unit
 
         $envelope = Envelope::wrap($messageBrokerTestMessageTransfer);
 
-        $this->tester->setMessageSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
-        $this->tester->setChannelNameSenderClientMap(static::CHANNEL_NAME, 'sns');
-        $this->tester->setSnsSenderClientConfiguration();
+        $this->tester->setMessageToChannelMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
+        $this->tester->setChannelToSenderTransportMap(static::CHANNEL_NAME, 'sns');
+        $this->tester->setSnsSenderConfiguration();
 
         // Act
         $awsSnsMessageSenderPlugin = new AwsSnsMessageSenderPlugin();
@@ -114,8 +114,8 @@ class AwsSnsMessageSenderPluginTest extends Unit
 
         $envelope = Envelope::wrap($messageBrokerTestMessageTransfer);
 
-        $this->tester->setMessageSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
-        $this->tester->setChannelNameSenderClientMap(static::CHANNEL_NAME, 'sns');
+        $this->tester->setMessageToChannelMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
+        $this->tester->setChannelToSenderTransportMap(static::CHANNEL_NAME, 'sns');
 
         // Expect
         $this->expectException(TransportException::class);
@@ -138,9 +138,9 @@ class AwsSnsMessageSenderPluginTest extends Unit
 
         $envelope = Envelope::wrap($messageBrokerTestMessageTransfer);
 
-        $this->tester->setMessageSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
-        $this->tester->setChannelNameSenderClientMap(static::CHANNEL_NAME, 'sns');
-        $this->tester->setSnsSenderClientConfiguration();
+        $this->tester->setMessageToChannelMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
+        $this->tester->setChannelToSenderTransportMap(static::CHANNEL_NAME, 'sns');
+        $this->tester->setSnsSenderConfiguration();
 
         // This will mock a response that will not have a messageId.
         $this->tester->mockFailingSnsClientSendResponse();

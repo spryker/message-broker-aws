@@ -51,9 +51,9 @@ class AwsSqsMessageSenderPluginTest extends Unit
         $messageBrokerTestMessageTransfer = $this->tester->createMessageWithRequiredMessageAttributes();
         $envelope = Envelope::wrap($messageBrokerTestMessageTransfer);
 
-        $this->tester->setMessageSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
-        $this->tester->setChannelNameSenderClientMap(static::CHANNEL_NAME, 'sqs');
-        $this->tester->setSqsSenderClientConfiguration();
+        $this->tester->setMessageToChannelMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
+        $this->tester->setChannelToSenderTransportMap(static::CHANNEL_NAME, 'sqs');
+        $this->tester->setSqsSenderConfiguration();
 
         // Act
         $awsSqsMessageSenderPlugin = new AwsSqsMessageSenderPlugin();
@@ -111,8 +111,8 @@ class AwsSqsMessageSenderPluginTest extends Unit
 
         $envelope = Envelope::wrap($messageBrokerTestMessageTransfer);
 
-        $this->tester->setMessageSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
-        $this->tester->setChannelNameSenderClientMap(static::CHANNEL_NAME, 'sqs');
+        $this->tester->setMessageToChannelMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
+        $this->tester->setChannelToSenderTransportMap(static::CHANNEL_NAME, 'sqs');
 
         // Expect
         $this->expectException(TransportException::class);

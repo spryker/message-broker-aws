@@ -68,9 +68,9 @@ class HttpMessageSenderPluginTest extends Unit
 
         $messageBrokerTestMessageTransfer->setMessageAttributes($messageAttributesTransfer);
 
-        $this->tester->setMessageSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
-        $this->tester->setChannelNameSenderClientMap(static::CHANNEL_NAME, 'http');
-        $this->tester->setHttpSenderClientConfiguration();
+        $this->tester->setMessageToChannelMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
+        $this->tester->setChannelToSenderTransportMap(static::CHANNEL_NAME, 'http');
+        $this->tester->setHttpSenderConfiguration();
 
         // Act
         $httpMessageSenderPlugin = new HttpMessageSenderPlugin();
@@ -131,8 +131,8 @@ class HttpMessageSenderPluginTest extends Unit
 
         $envelope = Envelope::wrap($messageBrokerTestMessageTransfer);
 
-        $this->tester->setMessageSenderChannelNameMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
-        $this->tester->setChannelNameSenderClientMap(static::CHANNEL_NAME, 'http');
+        $this->tester->setMessageToChannelMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
+        $this->tester->setChannelToSenderTransportMap(static::CHANNEL_NAME, 'http');
 
         // Expect
         $this->expectException(TransportException::class);

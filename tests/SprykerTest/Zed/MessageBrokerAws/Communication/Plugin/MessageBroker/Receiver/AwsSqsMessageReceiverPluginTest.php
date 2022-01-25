@@ -44,8 +44,8 @@ class AwsSqsMessageReceiverPluginTest extends Unit
     {
         $this->tester->haveSqsMessage();
 
-        $this->tester->setChannelNameReceiverClientMap(static::CHANNEL_NAME, 'sqs');
-        $this->tester->setSqsReceiverClientConfiguration();
+        $this->tester->setChannelToReceiverTransportMap(static::CHANNEL_NAME, 'sqs');
+        $this->tester->setSqsReceiverConfiguration();
 
         $awsMessageReceiverPlugin = new AwsSqsMessageReceiverPlugin();
         $awsMessageReceiverPlugin->setFacade($this->tester->getFacade());
@@ -67,8 +67,8 @@ class AwsSqsMessageReceiverPluginTest extends Unit
     {
         $this->tester->haveSqsMessage();
 
-        $this->tester->setChannelNameReceiverClientMap(static::CHANNEL_NAME, 'sqs');
-        $this->tester->setSqsReceiverClientConfiguration();
+        $this->tester->setChannelToReceiverTransportMap(static::CHANNEL_NAME, 'sqs');
+        $this->tester->setSqsReceiverConfiguration();
 
         $awsMessageReceiverPlugin = new AwsSqsMessageReceiverPlugin();
         $awsMessageReceiverPlugin->setFacade($this->tester->getFacade());
