@@ -12,6 +12,7 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageReceiverPluginInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Receiver\QueueReceiverInterface;
+use Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig;
 
 /**
  * @method \Spryker\Zed\MessageBroker\MessageBrokerConfig getConfig()
@@ -28,7 +29,7 @@ class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRecei
      */
     public function getTransportName(): string
     {
-        return 'sqs';
+        return MessageBrokerAwsConfig::SQS_TRANSPORT;
     }
 
     /**

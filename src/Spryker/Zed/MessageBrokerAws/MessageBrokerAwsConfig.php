@@ -13,6 +13,31 @@ use Spryker\Zed\Kernel\AbstractBundleConfig;
 class MessageBrokerAwsConfig extends AbstractBundleConfig
 {
     /**
+     * @var string
+     */
+    public const QUEUE_NAME = 'messages';
+
+    /**
+     * @var string
+     */
+    public const CHANNEL_NAME_PAYMENT = 'payment';
+
+    /**
+     * @var string
+     */
+    public const CHANNEL_NAME_ASSETS = 'assets';
+
+    /**
+     * @var string
+     */
+    public const SQS_TRANSPORT = 'sqs';
+
+    /**
+     * @var string
+     */
+    protected const SQS_AWS_API_VERSION = '2012-11-05';
+
+    /**
      * @api
      *
      * @return array<string, mixed>|string
@@ -170,5 +195,65 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
 
         return [];
         // @codeCoverageIgnoreStart
+    }
+
+    /**
+     * @api
+     *
+     * @return array<int, string>
+     */
+    public function getSqsQueuesNames(): array
+    {
+        return $this->get(MessageBrokerAwsConstants::SQS_AWS_CREATOR_QUEUES_NAMES, []);
+    }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getSqsAwsAccessKey(): string
+    {
+        return $this->get(MessageBrokerAwsConstants::SQS_AWS_SECRET_ACCESS, '');
+    }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getSqsAwsAccessSecret(): string
+    {
+        return $this->get(MessageBrokerAwsConstants::SQS_AWS_ACCESS_KEY, '');
+    }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getSqsAwsEndpoint(): string
+    {
+        return $this->get(MessageBrokerAwsConstants::SQS_AWS_ENDPOINT, '');
+    }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getSqsAwsRegion(): string
+    {
+        return $this->get(MessageBrokerAwsConstants::SQS_AWS_REGION, '');
+    }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getSqsAwsVersion(): string
+    {
+        return static::SQS_AWS_API_VERSION;
     }
 }

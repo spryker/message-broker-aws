@@ -70,4 +70,16 @@ class MessageBrokerAwsFacade extends AbstractFacade implements MessageBrokerAwsF
     {
         $this->getFactory()->createReceiver()->reject($envelope);
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @return void
+     */
+    public function createQueues(): void
+    {
+        $this->getFactory()->createAwsSqsQueuesCreator()->createQueues();
+    }
 }

@@ -7,9 +7,12 @@
 
 namespace Spryker\Zed\MessageBrokerAws\Business;
 
+use Aws\Sqs\SqsClient;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 use Spryker\Zed\MessageBrokerAws\Business\Config\ConfigFormatterInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Config\JsonToArrayConfigFormatter;
+use Spryker\Zed\MessageBrokerAws\Business\Queue\AwsSqsQueuesCreator;
+use Spryker\Zed\MessageBrokerAws\Business\Queue\AwsSqsQueuesCreatorInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Locator\ReceiverClientLocator;
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Locator\ReceiverClientLocatorInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\ReceiverClientInterface;
@@ -25,6 +28,7 @@ use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SqsSenderClient;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Sender;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\SenderInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Serializer\TransferSerializer;
+use Spryker\Zed\MessageBrokerAws\MessageBrokerAwsDependencyProvider;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
@@ -224,5 +228,24 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
     public function createConfigFormatter(): ConfigFormatterInterface
     {
         return new JsonToArrayConfigFormatter();
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBrokerAws\Business\Queue\AwsSqsQueuesCreatorInterface
+     */
+    public function createAwsSqsQueuesCreator(): AwsSqsQueuesCreatorInterface
+    {
+        return new AwsSqsQueuesCreator(
+            $this->getAwsSqsClient(),
+            $this->getConfig(),
+        );
+    }
+
+    /**
+     * @return \Aws\Sqs\SqsClient
+     */
+    public function getAwsSqsClient(): SqsClient
+    {
+        return $this->getProvidedDependency(MessageBrokerAwsDependencyProvider::CLIENT_AWS_SQS);
     }
 }

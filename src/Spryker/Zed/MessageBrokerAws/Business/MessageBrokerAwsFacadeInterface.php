@@ -54,4 +54,14 @@ interface MessageBrokerAwsFacadeInterface
      * @return void
      */
     public function reject(Envelope $envelope): void;
+
+    /**
+     * Specification:
+     * - Creates queues in the configured AWS SQS service.
+     *
+     * @api
+     *
+     * @return void
+     */
+    public function createQueues(): void;
 }

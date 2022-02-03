@@ -53,4 +53,54 @@ interface MessageBrokerAwsConstants
      * @var string
      */
     public const DEBUG_ENABLED = 'MESSAGE_BROKER:DEBUG_ENABLED';
+
+    /**
+     * Specification:
+     * - Defines the list of AWS SQS queue names.
+     *
+     * @api
+     *
+     * @var string
+     */
+    public const SQS_AWS_CREATOR_QUEUES_NAMES= 'MESSAGE_BROKER_AWS:SQS_AWS_CREATOR_QUEUES_NAMES';
+
+    /**
+     * Specification:
+     * - Defines AWS SQS API secret key.
+     *
+     * @api
+     *
+     * @var string
+     */
+    public const SQS_AWS_SECRET_ACCESS = 'MESSAGE_BROKER_AWS:SQS_AWS_SECRET_ACCESS';
+
+    /**
+     * Specification:
+     * - Defines AWS SQS API access secret.
+     *
+     * @api
+     *
+     * @var string
+     */
+    public const SQS_AWS_ACCESS_KEY = 'MESSAGE_BROKER_AWS:SQS_AWS_ACCESS_KEY';
+
+    /**
+     * Specification:
+     * - Defines AWS SQS API endpoint.
+     *
+     * @api
+     *
+     * @var string
+     */
+    public const SQS_AWS_ENDPOINT = 'MESSAGE_BROKER_AWS:SQS_AWS_ENDPOINT';
+
+    /**
+     * Specification:
+     * - Defines AWS SQS API region.
+     *
+     * @api
+     *
+     * @var string
+     */
+    public const SQS_AWS_REGION = 'MESSAGE_BROKER_AWS:SQS_AWS_REGION';
 }
