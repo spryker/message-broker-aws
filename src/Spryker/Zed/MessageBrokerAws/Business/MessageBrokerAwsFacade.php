@@ -82,4 +82,29 @@ class MessageBrokerAwsFacade extends AbstractFacade implements MessageBrokerAwsF
     {
         $this->getFactory()->createAwsSqsQueuesCreator()->createQueues();
     }
+
+    /**
+     * Specification:
+     * - Creates topics in the configured AWS SNS service.
+     *
+     * @api
+     *
+     * @return void
+     */
+    public function createTopics(): void
+    {
+        $this->getFactory()->createAwsSnsTopicCreator()->createTopics();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @return void
+     */
+    public function subscribeQueues(): void
+    {
+        $this->getFactory()->createAwsSqsQueuesSubscriber()->subscribeQueues();
+    }
 }

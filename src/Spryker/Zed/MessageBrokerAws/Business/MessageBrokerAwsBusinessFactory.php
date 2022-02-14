@@ -7,12 +7,15 @@
 
 namespace Spryker\Zed\MessageBrokerAws\Business;
 
+use Aws\Sns\SnsClient;
 use Aws\Sqs\SqsClient;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 use Spryker\Zed\MessageBrokerAws\Business\Config\ConfigFormatterInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Config\JsonToArrayConfigFormatter;
 use Spryker\Zed\MessageBrokerAws\Business\Queue\AwsSqsQueuesCreator;
 use Spryker\Zed\MessageBrokerAws\Business\Queue\AwsSqsQueuesCreatorInterface;
+use Spryker\Zed\MessageBrokerAws\Business\Queue\AwsSqsQueuesSubscriber;
+use Spryker\Zed\MessageBrokerAws\Business\Queue\AwsSqsQueuesSubscriberInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Locator\ReceiverClientLocator;
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Locator\ReceiverClientLocatorInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\ReceiverClientInterface;
@@ -28,6 +31,8 @@ use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SqsSenderClient;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Sender;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\SenderInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Serializer\TransferSerializer;
+use Spryker\Zed\MessageBrokerAws\Business\Sns\AwsSnsTopicCreator;
+use Spryker\Zed\MessageBrokerAws\Business\Sns\AwsSnsTopicCreatorInterface;
 use Spryker\Zed\MessageBrokerAws\MessageBrokerAwsDependencyProvider;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -242,10 +247,40 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
+     * @return \Spryker\Zed\MessageBrokerAws\Business\Sns\AwsSnsTopicCreatorInterface
+     */
+    public function createAwsSnsTopicCreator(): AwsSnsTopicCreatorInterface
+    {
+        return new AwsSnsTopicCreator(
+            $this->getAwsSnsClient(),
+            $this->getConfig(),
+        );
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBrokerAws\Business\Queue\AwsSqsQueuesSubscriberInterface
+     */
+    public function createAwsSqsQueuesSubscriber(): AwsSqsQueuesSubscriberInterface
+    {
+        return new AwsSqsQueuesSubscriber(
+            $this->getAwsSnsClient(),
+            $this->getConfig(),
+        );
+    }
+
+    /**
      * @return \Aws\Sqs\SqsClient
      */
     public function getAwsSqsClient(): SqsClient
     {
         return $this->getProvidedDependency(MessageBrokerAwsDependencyProvider::CLIENT_AWS_SQS);
+    }
+
+    /**
+     * @return \Aws\Sqs\SnsClient
+     */
+    public function getAwsSnsClient(): SnsClient
+    {
+        return $this->getProvidedDependency(MessageBrokerAwsDependencyProvider::CLIENT_AWS_SNS);
     }
 }

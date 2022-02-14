@@ -5,17 +5,17 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Zed\MessageBrokerAws\Business\Queue;
+namespace Spryker\Zed\MessageBrokerAws\Business\Sns;
 
-use Aws\Sqs\SqsClient;
+use Aws\Sns\SnsClient;
 use Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig;
 
-class AwsSqsQueuesCreator implements AwsSqsQueuesCreatorInterface
+class AwsSnsTopicCreator implements AwsSnsTopicCreatorInterface
 {
     /**
-     * @var \Aws\Sqs\SqsClient
+     * @var \Aws\Sns\SnsClient
      */
-    protected $sqsClient;
+    protected $snsClient;
 
     /**
      * @var \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig
@@ -23,27 +23,27 @@ class AwsSqsQueuesCreator implements AwsSqsQueuesCreatorInterface
     protected $messageBrokerAwsConfig;
 
     /**
-     * @param \Aws\Sqs\SqsClient $sqsClient
+     * @param \Aws\Sns\SnsClient $snsClient
      * @param \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig $messageBrokerAwsConfig
      */
     public function __construct(
-        SqsClient $sqsClient,
+        SnsClient $snsClient,
         MessageBrokerAwsConfig $messageBrokerAwsConfig
     ) {
-        $this->sqsClient = $sqsClient;
+        $this->snsClient = $snsClient;
         $this->messageBrokerAwsConfig = $messageBrokerAwsConfig;
     }
 
     /**
      * @return void
      */
-    public function createQueues(): void
+    public function createTopics(): void
     {
-        foreach ($this->messageBrokerAwsConfig->getSqsQueuesNames() as $sqsQueueName) {
-            $this->sqsClient->createQueue([
-                'QueueName' => $sqsQueueName,
+        foreach ($this->messageBrokerAwsConfig->getSnsTopicNames() as $snsTopicName) {
+            $this->snsClient->createTopic([
+                'Name' => $snsTopicName,
                 'Attributes' => [
-                    'FifoQueue' => 'true',
+                    'FifoTopic' => 'true',
                 ],
             ]);
         }

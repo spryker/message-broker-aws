@@ -62,7 +62,43 @@ interface MessageBrokerAwsConstants
      *
      * @var string
      */
-    public const SQS_AWS_CREATOR_QUEUES_NAMES= 'MESSAGE_BROKER_AWS:SQS_AWS_CREATOR_QUEUES_NAMES';
+    public const SQS_AWS_CREATOR_QUEUES_NAMES = 'MESSAGE_BROKER_AWS:SQS_AWS_CREATOR_QUEUES_NAMES';
+
+    /**
+     * Specification:
+     * - Defines the list of AWS SQS TO AWS SNS subscriptions.
+     * - has the following structure:
+     *  [
+     *     [
+     *          'topic' => 'topic1',
+     *          'endpoint' => 'queueEndpoint1',
+     *          'filterPolicy' => '{}',
+     *          ...
+     *     ],
+     *     [
+     *          'topic' => 'topic2',
+     *          'endpoint' => 'queueEndpoint2',
+     *          'filterPolicy' => '{}',
+     *          ...
+     *     ],
+     *     ...
+     *  ]
+     *
+     * @api
+     *
+     * @var array<int, array<string, string>>
+     */
+    public const SQS_AWS_TO_SNS_SUBSCRIPTIONS = 'MESSAGE_BROKER_AWS:SQS_AWS_TO_SNS_SUBSCRIPTIONS';
+
+    /**
+     * Specification:
+     * - Defines the list of AWS SNS topic names.
+     *
+     * @api
+     *
+     * @var string
+     */
+    public const SNS_AWS_CREATOR_TOPIC_NAMES = 'MESSAGE_BROKER_AWS:SNS_AWS_CREATOR_TOPIC_NAMES';
 
     /**
      * Specification:

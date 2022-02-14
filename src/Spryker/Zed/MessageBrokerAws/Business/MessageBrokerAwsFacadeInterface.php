@@ -64,4 +64,24 @@ interface MessageBrokerAwsFacadeInterface
      * @return void
      */
     public function createQueues(): void;
+
+    /**
+     * Specification:
+     * - Creates topics in the configured AWS SNS service.
+     *
+     * @api
+     *
+     * @return void
+     */
+    public function createTopics(): void;
+
+    /**
+     * Specification:
+     * - Subscribes queues in the configured AWS SQS service to AWS SNS topic.
+     *
+     * @api
+     *
+     * @return void
+     */
+    public function subscribeQueues(): void;
 }

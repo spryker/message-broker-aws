@@ -210,6 +210,24 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
     /**
      * @api
      *
+     * @return array<int, array<string,string>>
+     */
+    public function getSqsToSnsSubscriptions(): array
+    {
+        return $this->get(MessageBrokerAwsConstants::SQS_AWS_TO_SNS_SUBSCRIPTIONS, []);
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getSnsTopicNames(): array
+    {
+        return $this->get(MessageBrokerAwsConstants::SNS_AWS_CREATOR_TOPIC_NAMES, []);
+    }
+
+    /**
+     * @api
+     *
      * @return string
      */
     public function getSqsAwsAccessKey(): string

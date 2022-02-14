@@ -7,6 +7,7 @@
 
 namespace Spryker\Zed\MessageBrokerAws;
 
+use Aws\Sns\SnsClient;
 use Aws\Sqs\SqsClient;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
@@ -22,6 +23,11 @@ class MessageBrokerAwsDependencyProvider extends AbstractBundleDependencyProvide
     public const CLIENT_AWS_SQS = 'CLIENT_AWS_SQS';
 
     /**
+     * @var string
+     */
+    public const CLIENT_AWS_SNS = 'CLIENT_AWS_SNS';
+
+    /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
@@ -30,6 +36,7 @@ class MessageBrokerAwsDependencyProvider extends AbstractBundleDependencyProvide
     {
         $container = parent::provideBusinessLayerDependencies($container);
         $container = $this->addSqsAwsClient($container);
+        $container = $this->addSnsAwsClient($container);
 
         return $container;
     }
@@ -50,6 +57,28 @@ class MessageBrokerAwsDependencyProvider extends AbstractBundleDependencyProvide
                 'endpoint' => $this->getConfig()->getSqsAwsEndpoint(),
                 'region' => $this->getConfig()->getSqsAwsRegion(),
                 'version' => $this->getConfig()->getSqsAwsVersion(),
+            ]);
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addSnsAwsClient(Container $container): Container
+    {
+        $container->set(static::CLIENT_AWS_SNS, function () {
+            return new SnsClient([
+                'credentials' => [
+                    'key' => $this->getConfig()->getSqsAwsAccessKey(),
+                    'secret' => $this->getConfig()->getSqsAwsAccessSecret(),
+                ],
+                'endpoint' => $this->getConfig()->getSqsAwsEndpoint(),
+                'region' => $this->getConfig()->getSqsAwsRegion(),
+                'version' => '2010-03-31',
             ]);
         });
 
