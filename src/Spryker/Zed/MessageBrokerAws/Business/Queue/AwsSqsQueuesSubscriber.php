@@ -45,9 +45,8 @@ class AwsSqsQueuesSubscriber implements AwsSqsQueuesSubscriberInterface
         foreach ($this->messageBrokerAwsConfig->getSqsToSnsSubscriptions() as $sqsSubscription) {
             $sqsSubscription['Protocol'] = static::SQS_PROTOCOL;
             $sqsSubscription['ReturnSubscriptionArn'] = false;
+            $sqsSubscription['Attributes']['RawMessageDelivery'] = 'true';
 
-            // Check FilterPolicy attribute
-            // Check that messages are filtered based on this policy
             if (isset($sqsSubscription['FilterPolicy'])) {
                 $sqsSubscription['Attributes']['FilterPolicy'] = $sqsSubscription['FilterPolicy'];
                 unset($sqsSubscription['FilterPolicy']);
