@@ -43,7 +43,7 @@ class AwsSqsQueuesSubscriber implements AwsSqsQueuesSubscriberInterface
     public function subscribeQueues(): void
     {
         foreach ($this->messageBrokerAwsConfig->getSqsToSnsSubscriptions() as $sqsSubscription) {
-            $sqsSubscription['Protocol'] = static::SQS_PROTOCOL;
+            $sqsSubscription['Protocol'] = $sqsSubscription['Protocol'] ?? static::SQS_PROTOCOL;
             $sqsSubscription['ReturnSubscriptionArn'] = false;
             $sqsSubscription['Attributes']['RawMessageDelivery'] = 'true';
 
