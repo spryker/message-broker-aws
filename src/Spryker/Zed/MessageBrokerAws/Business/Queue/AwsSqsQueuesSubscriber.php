@@ -8,11 +8,13 @@
 namespace Spryker\Zed\MessageBrokerAws\Business\Queue;
 
 use Aws\Sns\SnsClient;
-use Aws\Sqs\SqsClient;
 use Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig;
 
 class AwsSqsQueuesSubscriber implements AwsSqsQueuesSubscriberInterface
 {
+    /**
+     * @var string
+     */
     protected const SQS_PROTOCOL = 'sqs';
 
     /**
@@ -26,7 +28,7 @@ class AwsSqsQueuesSubscriber implements AwsSqsQueuesSubscriberInterface
     protected $messageBrokerAwsConfig;
 
     /**
-     * @param \Aws\Sqs\SqsClient $snsClient
+     * @param \Aws\Sns\SnsClient $snsClient
      * @param \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig $messageBrokerAwsConfig
      */
     public function __construct(

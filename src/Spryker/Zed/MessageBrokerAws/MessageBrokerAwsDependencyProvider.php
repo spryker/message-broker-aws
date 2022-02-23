@@ -11,6 +11,7 @@ use Aws\Sns\SnsClient;
 use Aws\Sqs\SqsClient;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
+use Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreBridge;
 
 /**
  * @method \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig getConfig()
@@ -28,15 +29,21 @@ class MessageBrokerAwsDependencyProvider extends AbstractBundleDependencyProvide
     public const CLIENT_AWS_SNS = 'CLIENT_AWS_SNS';
 
     /**
+     * @var string
+     */
+    public const FACADE_STORE = 'FACADE_STORE';
+
+    /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    public function provideBusinessLayerDependencies(Container $container)
+    public function provideBusinessLayerDependencies(Container $container): Container
     {
         $container = parent::provideBusinessLayerDependencies($container);
         $container = $this->addSqsAwsClient($container);
         $container = $this->addSnsAwsClient($container);
+        $container = $this->addStoreFacade($container);
 
         return $container;
     }
@@ -80,6 +87,20 @@ class MessageBrokerAwsDependencyProvider extends AbstractBundleDependencyProvide
                 'region' => $this->getConfig()->getSqsAwsRegion(),
                 'version' => '2010-03-31',
             ]);
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addStoreFacade(Container $container): Container
+    {
+        $container->set(static::FACADE_STORE, function (Container $container) {
+            return new MessageBrokerAwsToStoreBridge($container->getLocator()->store()->facade());
         });
 
         return $container;

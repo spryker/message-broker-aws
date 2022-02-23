@@ -22,6 +22,8 @@ use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\ReceiverClientInterfac
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\SqsReceiverClient;
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\Receiver;
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\ReceiverInterface;
+use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Formatter\HeadersFormatter;
+use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Formatter\HeadersFormatterInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\HttpSenderClient;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Locator\SenderClientLocator;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Locator\SenderClientLocatorInterface;
@@ -33,6 +35,7 @@ use Spryker\Zed\MessageBrokerAws\Business\Sender\SenderInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Serializer\TransferSerializer;
 use Spryker\Zed\MessageBrokerAws\Business\Sns\AwsSnsTopicCreator;
 use Spryker\Zed\MessageBrokerAws\Business\Sns\AwsSnsTopicCreatorInterface;
+use Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreFacadeInterface;
 use Spryker\Zed\MessageBrokerAws\MessageBrokerAwsDependencyProvider;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -115,6 +118,7 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
             $this->getConfig(),
             $this->createSerializer(),
             $this->createConfigFormatter(),
+            $this->createHeadersFormatter(),
         );
     }
 
@@ -232,7 +236,7 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
      */
     public function createConfigFormatter(): ConfigFormatterInterface
     {
-        return new JsonToArrayConfigFormatter();
+        return new JsonToArrayConfigFormatter($this->getStoreFacade());
     }
 
     /**
@@ -277,10 +281,26 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \Aws\Sqs\SnsClient
+     * @return \Aws\Sns\SnsClient
      */
     public function getAwsSnsClient(): SnsClient
     {
         return $this->getProvidedDependency(MessageBrokerAwsDependencyProvider::CLIENT_AWS_SNS);
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Formatter\HeadersFormatterInterface
+     */
+    public function createHeadersFormatter(): HeadersFormatterInterface
+    {
+        return new HeadersFormatter();
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreFacadeInterface
+     */
+    protected function getStoreFacade(): MessageBrokerAwsToStoreFacadeInterface
+    {
+        return $this->getProvidedDependency(MessageBrokerAwsDependencyProvider::FACADE_STORE);
     }
 }

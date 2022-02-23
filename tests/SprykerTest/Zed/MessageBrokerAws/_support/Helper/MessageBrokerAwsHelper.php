@@ -15,17 +15,21 @@ use Codeception\TestInterface;
 use Exception;
 use Generated\Shared\Transfer\MessageAttributesTransfer;
 use Generated\Shared\Transfer\MessageBrokerTestMessageTransfer;
+use Generated\Shared\Transfer\StoreTransfer;
 use Ramsey\Uuid\Uuid;
 use Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsBusinessFactory;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SnsSenderClient;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender\AwsSnsMessageSenderPlugin;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender\AwsSqsMessageSenderPlugin;
+use Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreBridge;
+use SprykerTest\Shared\Testify\Helper\DependencyHelperTrait;
 use SprykerTest\Zed\Testify\Helper\Business\BusinessHelperTrait;
 use Symfony\Component\Messenger\Envelope;
 
 class MessageBrokerAwsHelper extends Module
 {
     use BusinessHelperTrait;
+    use DependencyHelperTrait;
 
     /**
      * @var string
@@ -197,6 +201,23 @@ class MessageBrokerAwsHelper extends Module
         );
 
         $this->getBusinessHelper()->mockFactoryMethod('createSnsSenderClient', $snsSenderClientMock);
+
+        $this->mockFacadeStore();
+    }
+
+    /**
+     * @return void
+     */
+    protected function mockFacadeStore(): void
+    {
+        $storeFacadeMock = Stub::make(
+            MessageBrokerAwsToStoreBridge::class,
+            [
+                'getCurrentStore' => (new StoreTransfer())->setName('foo'),
+            ],
+        );
+
+        $this->getBusinessHelper()->mockFactoryMethod('getStoreFacade', $storeFacadeMock);
     }
 
     /**
@@ -215,7 +236,7 @@ class MessageBrokerAwsHelper extends Module
      *
      * @return void
      */
-    public function setSnsSenderConfiguration(string $topic = 'arn:aws:sns:eu-central-1:000000000000:message-broker'): void
+    public function setSnsSenderConfiguration(string $topic = 'arn:aws:sns:eu-central-1:000000000000:message-broker.fifo'): void
     {
         putenv(sprintf('AOP_MESSAGE_BROKER_SNS_SENDER_CONFIG={"endpoint": "http://localhost.localstack.cloud:4566", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "topic": "%s"}', $topic));
     }

@@ -10,6 +10,7 @@ namespace Spryker\Zed\MessageBrokerAws\Business\Sender\Client;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use Spryker\Zed\MessageBrokerAws\Business\Config\ConfigFormatterInterface;
+use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Formatter\HeadersFormatterInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Stamp\SenderClientStamp;
 use Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig;
 use Symfony\Component\Messenger\Envelope;
@@ -35,6 +36,11 @@ class HttpSenderClient implements SenderClientInterface
     protected ConfigFormatterInterface $configFormatter;
 
     /**
+     * @var \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Formatter\HeadersFormatterInterface
+     */
+    protected HeadersFormatterInterface $headersFormatter;
+
+    /**
      * @var array<string, mixed>|null
      */
     protected ?array $clientConfiguration = null;
@@ -43,12 +49,18 @@ class HttpSenderClient implements SenderClientInterface
      * @param \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig $config
      * @param \Symfony\Component\Messenger\Transport\Serialization\SerializerInterface $serializer
      * @param \Spryker\Zed\MessageBrokerAws\Business\Config\ConfigFormatterInterface $configFormatter
+     * @param \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Formatter\HeadersFormatterInterface $headersFormatter
      */
-    public function __construct(MessageBrokerAwsConfig $config, SerializerInterface $serializer, ConfigFormatterInterface $configFormatter)
-    {
+    public function __construct(
+        MessageBrokerAwsConfig $config,
+        SerializerInterface $serializer,
+        ConfigFormatterInterface $configFormatter,
+        HeadersFormatterInterface $headersFormatter
+    ) {
         $this->config = $config;
         $this->serializer = $serializer;
         $this->configFormatter = $configFormatter;
+        $this->headersFormatter = $headersFormatter;
     }
 
     /**
@@ -67,15 +79,16 @@ class HttpSenderClient implements SenderClientInterface
 
         $payload = [
             'payload' => $encodedMessage['bodyRaw'],
-            'attributes' => $encodedMessage['headers'] ?? [],
         ];
+
+        $headers = $this->headersFormatter->formatHeadersForHttpRequest($encodedMessage['headers'] ?? []);
 
         $encodedBody = (string)json_encode($payload);
 
         $request = new Request(
             'POST',
             $configuration['endpoint'],
-            ['Content-Type' => 'application/json'],
+            ['Content-Type' => 'application/json'] + $headers,
             $encodedBody,
         );
 

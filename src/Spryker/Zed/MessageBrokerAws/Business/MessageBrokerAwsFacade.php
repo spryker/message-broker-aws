@@ -84,8 +84,7 @@ class MessageBrokerAwsFacade extends AbstractFacade implements MessageBrokerAwsF
     }
 
     /**
-     * Specification:
-     * - Creates topics in the configured AWS SNS service.
+     * {@inheritDoc}
      *
      * @api
      *

@@ -35,7 +35,7 @@ interface MessageBrokerAwsConstants
     /**
      * @var string
      */
-    public const CHANNEL_TO_SENDER_TRANSPORT_MAP = 'MESSAGE_BROKER:CHANNEL_TO_SENDER_TRANSPORT_MAP';
+    public const CHANNEL_TO_SENDER_TRANSPORT_MAP = 'MESSAGE_BROKER:SENDER_CHANNEL_TO_CLIENT_MAP';
 
     /**
      * @var string
@@ -86,7 +86,7 @@ interface MessageBrokerAwsConstants
      *
      * @api
      *
-     * @var array<int, array<string, string>>
+     * @var string
      */
     public const SQS_AWS_TO_SNS_SUBSCRIPTIONS = 'MESSAGE_BROKER_AWS:SQS_AWS_TO_SNS_SUBSCRIPTIONS';
 

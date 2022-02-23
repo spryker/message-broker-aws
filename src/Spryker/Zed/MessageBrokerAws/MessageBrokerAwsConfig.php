@@ -35,6 +35,11 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
     /**
      * @var string
      */
+    public const SNS_TRANSPORT = 'sns';
+
+    /**
+     * @var string
+     */
     protected const SQS_AWS_API_VERSION = '2012-11-05';
 
     /**
@@ -44,8 +49,8 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
      */
     public function getSnsSenderConfig()
     {
-        if (getenv('AOP_MESSAGE_BROKER_SNS_SENDER_CONFIG') !== false) {
-            return getenv('AOP_MESSAGE_BROKER_SNS_SENDER_CONFIG');
+        if (getenv('SPRYKER_MESSAGE_BROKER_SNS_SENDER_CONFIG') !== false) {
+            return getenv('SPRYKER_MESSAGE_BROKER_SNS_SENDER_CONFIG');
         }
 
         // @codeCoverageIgnoreStart
@@ -64,8 +69,8 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
      */
     public function getSqsSenderConfig()
     {
-        if (getenv('AOP_MESSAGE_BROKER_SQS_SENDER_CONFIG') !== false) {
-            return getenv('AOP_MESSAGE_BROKER_SQS_SENDER_CONFIG');
+        if (getenv('SPRYKER_MESSAGE_BROKER_SQS_SENDER_CONFIG') !== false) {
+            return getenv('SPRYKER_MESSAGE_BROKER_SQS_SENDER_CONFIG');
         }
 
         // @codeCoverageIgnoreStart
@@ -84,13 +89,13 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
      */
     public function getHttpSenderConfig()
     {
-        if (getenv('AOP_MESSAGE_BROKER_HTTP_SENDER_CONFIG') !== false) {
-            return getenv('AOP_MESSAGE_BROKER_HTTP_SENDER_CONFIG');
+        if (getenv('SPRYKER_MESSAGE_BROKER_HTTP_SENDER_CONFIG') !== false) {
+            return getenv('SPRYKER_MESSAGE_BROKER_HTTP_SENDER_CONFIG');
         }
 
         // @codeCoverageIgnoreStart
-        if ($this->getConfig()->hasKey(MessageBrokerAwsConstants::SQS_SENDER_CONFIG)) {
-            return $this->get(MessageBrokerAwsConstants::SQS_SENDER_CONFIG);
+        if ($this->getConfig()->hasKey(MessageBrokerAwsConstants::HTTP_SENDER_CONFIG)) {
+            return $this->get(MessageBrokerAwsConstants::HTTP_SENDER_CONFIG);
         }
 
         return [];
@@ -104,8 +109,8 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
      */
     public function getSqsReceiverConfig()
     {
-        if (getenv('AOP_MESSAGE_BROKER_SQS_RECEIVER_CONFIG') !== false) {
-            return getenv('AOP_MESSAGE_BROKER_SQS_RECEIVER_CONFIG');
+        if (getenv('SPRYKER_MESSAGE_BROKER_SQS_RECEIVER_CONFIG') !== false) {
+            return getenv('SPRYKER_MESSAGE_BROKER_SQS_RECEIVER_CONFIG');
         }
 
         // @codeCoverageIgnoreStart
@@ -210,7 +215,7 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
     /**
      * @api
      *
-     * @return array<int, array<string,string>>
+     * @return array<int, array<string, string>>
      */
     public function getSqsToSnsSubscriptions(): array
     {
@@ -218,6 +223,8 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
     }
 
     /**
+     * @api
+     *
      * @return array<string>
      */
     public function getSnsTopicNames(): array
