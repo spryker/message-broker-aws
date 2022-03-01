@@ -35,7 +35,7 @@ interface MessageBrokerAwsConstants
     /**
      * @var string
      */
-    public const CHANNEL_TO_SENDER_TRANSPORT_MAP = 'MESSAGE_BROKER:SENDER_CHANNEL_TO_CLIENT_MAP';
+    public const CHANNEL_TO_SENDER_TRANSPORT_MAP = 'MESSAGE_BROKER:CHANNEL_TO_SENDER_TRANSPORT_MAP';
 
     /**
      * @var string
@@ -62,7 +62,7 @@ interface MessageBrokerAwsConstants
      *
      * @var string
      */
-    public const SQS_AWS_CREATOR_QUEUES_NAMES = 'MESSAGE_BROKER_AWS:SQS_AWS_CREATOR_QUEUES_NAMES';
+    public const SQS_AWS_CREATOR_QUEUE_NAMES = 'MESSAGE_BROKER_AWS:SQS_AWS_CREATOR_QUEUE_NAMES';
 
     /**
      * Specification:

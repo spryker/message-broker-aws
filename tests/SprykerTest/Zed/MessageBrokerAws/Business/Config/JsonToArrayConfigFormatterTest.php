@@ -8,7 +8,7 @@
 namespace SprykerTest\Zed\MessageBrokerAws\Business\Config;
 
 use Codeception\Test\Unit;
-use Exception;
+use InvalidArgumentException;
 use Generated\Shared\Transfer\StoreTransfer;
 use Spryker\Zed\MessageBrokerAws\Business\Config\JsonToArrayConfigFormatter;
 use Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreFacadeInterface;
@@ -34,7 +34,7 @@ class JsonToArrayConfigFormatterTest extends Unit
     /**
      * @return void
      */
-    public function testFormatFormatsJsonStringToArrayWhenNoDefaultKeyAndNoStoreKey(): void
+    public function testFormatReturnsUnchangedConfigurationWhenSimpleConfiguration(): void
     {
         // Arrange
         $storeFacade = $this->getMockStoreFacadeDefaultStore();
@@ -50,37 +50,37 @@ class JsonToArrayConfigFormatterTest extends Unit
     /**
      * @return void
      */
-    public function testFormatFormatsJsonStringToArrayWhenDefaultKeyExistsAndStoreKeyExists(): void
+    public function testFormatMergesDefaultAndStoreConfigurationsWhenDefaultKeyExistsAndStoreKeyExists(): void
     {
         // Arrange
         $jsonToArrayConfigFormatter = new JsonToArrayConfigFormatter($this->getMockStoreFacadeDefaultStore());
 
         // Act
-        $formatted = $jsonToArrayConfigFormatter->format('{"default": {"foo": "bar"}, "' . static::STORE_NAME . '": {"foo": "bar_' . static::STORE_NAME . '"}}');
+        $formatted = $jsonToArrayConfigFormatter->format('{"default": {"foo": "bar", "some": "value"}, "' . static::STORE_NAME . '": {"foo": "bar_' . static::STORE_NAME . '"}}');
 
         // Assert
-        $this->assertSame(['foo' => 'bar_DE'], $formatted);
+        $this->assertSame(['foo' => sprintf('bar_%s', static::STORE_NAME), 'some' => 'value'], $formatted);
     }
 
     /**
      * @return void
      */
-    public function testFormatFormatsJsonStringToArrayWhenDefaultKeyExistsAndNoStoreKey(): void
+    public function testFormatThrowsExceptionWhenDefaultKeyExistsAndStoreKeyDoesNotExist(): void
     {
         // Arrange
         $jsonToArrayConfigFormatter = new JsonToArrayConfigFormatter($this->getMockStoreFacadeDefaultStore());
+
+        // Expect
+        $this->expectException(InvalidArgumentException::class);
 
         // Act
         $formatted = $jsonToArrayConfigFormatter->format('{"default": {"foo": "bar"}}');
-
-        // Assert
-        $this->assertSame(['foo' => 'bar'], $formatted);
     }
 
     /**
      * @return void
      */
-    public function testFormatFormatsJsonStringToArrayWhenNoDefaultKeyAndStoreKeyExists(): void
+    public function testFormatReturnsStoreConfigruationWhenDefaultKeyDoesNotExistAndStoreKeyExists(): void
     {
         // Arrange
         $jsonToArrayConfigFormatter = new JsonToArrayConfigFormatter($this->getMockStoreFacadeDefaultStore());
@@ -89,7 +89,7 @@ class JsonToArrayConfigFormatterTest extends Unit
         $formatted = $jsonToArrayConfigFormatter->format('{"' . static::STORE_NAME . '": {"foo": "bar_' . static::STORE_NAME . '"}}');
 
         // Assert
-        $this->assertSame(['foo' => 'bar_DE'], $formatted);
+        $this->assertSame(['foo' => sprintf('bar_%s', static::STORE_NAME)], $formatted);
     }
 
     /**
@@ -101,7 +101,7 @@ class JsonToArrayConfigFormatterTest extends Unit
         $jsonToArrayConfigFormatter = new JsonToArrayConfigFormatter($this->getMockStoreFacadeDefaultStore());
 
         // Expect
-        $this->expectException(Exception::class);
+        $this->expectException(InvalidArgumentException::class);
 
         // Act
         $jsonToArrayConfigFormatter->format('"foo": "bar"');
@@ -112,12 +112,13 @@ class JsonToArrayConfigFormatterTest extends Unit
      */
     protected function getMockStoreFacadeDefaultStore(): MessageBrokerAwsToStoreFacadeInterface
     {
-        $storeFacadeMock = $this->getMockBuilder(MessageBrokerAwsToStoreFacadeInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $storeFacadeMock->method('getCurrentStore')->willReturn(
-            (new StoreTransfer())->setName(static::STORE_NAME),
-        );
+        $storeFacadeMock = $this->createMock(MessageBrokerAwsToStoreFacadeInterface::class);
+        $storeFacadeMock
+            ->expects($this->any())
+            ->method('getCurrentStore')
+            ->willReturn(
+                (new StoreTransfer())->setName(static::STORE_NAME),
+            );
 
         return $storeFacadeMock;
     }

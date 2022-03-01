@@ -22,8 +22,8 @@ use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\ReceiverClientInterfac
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\SqsReceiverClient;
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\Receiver;
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\ReceiverInterface;
-use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Formatter\HeadersFormatter;
-use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Formatter\HeadersFormatterInterface;
+use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Formatter\HttpHeaderFormatter;
+use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Formatter\HttpHeaderFormatterInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\HttpSenderClient;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Locator\SenderClientLocator;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Locator\SenderClientLocatorInterface;
@@ -118,7 +118,7 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
             $this->getConfig(),
             $this->createSerializer(),
             $this->createConfigFormatter(),
-            $this->createHeadersFormatter(),
+            $this->createHttpHeaderFormatter(),
         );
     }
 
@@ -264,7 +264,7 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \Spryker\Zed\MessageBrokerAws\Business\Queue\AwsSqsQueuesSubscriberInterface
      */
-    public function createAwsSqsQueuesSubscriber(): AwsSqsQueuesSubscriberInterface
+    public function createAwsSqsQueueSubscriber(): AwsSqsQueuesSubscriberInterface
     {
         return new AwsSqsQueuesSubscriber(
             $this->getAwsSnsClient(),
@@ -289,11 +289,11 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Formatter\HeadersFormatterInterface
+     * @return \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Formatter\HttpHeaderFormatterInterface
      */
-    public function createHeadersFormatter(): HeadersFormatterInterface
+    public function createHttpHeaderFormatter(): HttpHeaderFormatterInterface
     {
-        return new HeadersFormatter();
+        return new HttpHeaderFormatter();
     }
 
     /**

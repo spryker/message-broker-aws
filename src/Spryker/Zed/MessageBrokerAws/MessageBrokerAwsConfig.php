@@ -209,7 +209,7 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
      */
     public function getSqsQueuesNames(): array
     {
-        return $this->get(MessageBrokerAwsConstants::SQS_AWS_CREATOR_QUEUES_NAMES, []);
+        return $this->get(MessageBrokerAwsConstants::SQS_AWS_CREATOR_QUEUE_NAMES, []);
     }
 
     /**

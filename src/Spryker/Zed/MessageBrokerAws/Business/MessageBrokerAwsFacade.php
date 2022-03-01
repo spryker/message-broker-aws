@@ -102,8 +102,8 @@ class MessageBrokerAwsFacade extends AbstractFacade implements MessageBrokerAwsF
      *
      * @return void
      */
-    public function subscribeQueues(): void
+    public function subscribeQueuesToTopics(): void
     {
-        $this->getFactory()->createAwsSqsQueuesSubscriber()->subscribeQueues();
+        $this->getFactory()->createAwsSqsQueueSubscriber()->subscribeSqsToSns();
     }
 }

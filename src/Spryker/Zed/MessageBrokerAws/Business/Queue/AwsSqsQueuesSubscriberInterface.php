@@ -12,5 +12,5 @@ interface AwsSqsQueuesSubscriberInterface
     /**
      * @return void
      */
-    public function subscribeQueues(): void;
+    public function subscribeSqsToSns(): void;
 }

@@ -202,13 +202,13 @@ class MessageBrokerAwsHelper extends Module
 
         $this->getBusinessHelper()->mockFactoryMethod('createSnsSenderClient', $snsSenderClientMock);
 
-        $this->mockFacadeStore();
+        $this->mockStoreFacade();
     }
 
     /**
      * @return void
      */
-    protected function mockFacadeStore(): void
+    protected function mockStoreFacade(): void
     {
         $storeFacadeMock = Stub::make(
             MessageBrokerAwsToStoreBridge::class,
@@ -238,7 +238,15 @@ class MessageBrokerAwsHelper extends Module
      */
     public function setSnsSenderConfiguration(string $topic = 'arn:aws:sns:eu-central-1:000000000000:message-broker.fifo'): void
     {
-        putenv(sprintf('AOP_MESSAGE_BROKER_SNS_SENDER_CONFIG={"endpoint": "http://localhost.localstack.cloud:4566", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "topic": "%s"}', $topic));
+        putenv(sprintf('SPRYKER_MESSAGE_BROKER_SNS_SENDER_CONFIG={"endpoint": "http://localhost.localstack.cloud:4566", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "topic": "%s"}', $topic));
+    }
+
+    /**
+     * @return void
+     */
+    public function resetSnsSenderConfiguration(): void
+    {
+        putenv('SPRYKER_MESSAGE_BROKER_SNS_SENDER_CONFIG=[]');
     }
 
     /**
@@ -248,7 +256,15 @@ class MessageBrokerAwsHelper extends Module
      */
     public function setSqsSenderConfiguration(string $queueName = 'message-broker'): void
     {
-        putenv(sprintf('AOP_MESSAGE_BROKER_SQS_SENDER_CONFIG={"endpoint": "%s", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "queue_name": "%s", "poll_timeout": "5"}', $this->localstackEndpoint, $queueName));
+        putenv(sprintf('SPRYKER_MESSAGE_BROKER_SQS_SENDER_CONFIG={"endpoint": "%s", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "queue_name": "%s", "poll_timeout": "5"}', $this->localstackEndpoint, $queueName));
+    }
+
+    /**
+     * @return void
+     */
+    public function resetSqsSenderConfiguration(): void
+    {
+        putenv('SPRYKER_MESSAGE_BROKER_SQS_SENDER_CONFIG=[]');
     }
 
     /**
@@ -258,7 +274,7 @@ class MessageBrokerAwsHelper extends Module
      */
     public function setSqsReceiverConfiguration(string $queueName = 'message-broker'): void
     {
-        putenv(sprintf('AOP_MESSAGE_BROKER_SQS_RECEIVER_CONFIG={"endpoint": "%s", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "queue_name": "%s", "poll_timeout": "5"}', $this->localstackEndpoint, $queueName));
+        putenv(sprintf('SPRYKER_MESSAGE_BROKER_SQS_RECEIVER_CONFIG={"endpoint": "%s", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "queue_name": "%s", "poll_timeout": "5"}', $this->localstackEndpoint, $queueName));
     }
 
     /**
@@ -266,7 +282,7 @@ class MessageBrokerAwsHelper extends Module
      */
     public function setHttpSenderConfiguration(): void
     {
-        putenv(sprintf('AOP_MESSAGE_BROKER_HTTP_SENDER_CONFIG={"endpoint": "0.0.0.0:8000", "timeout": 20}'));
+        putenv(sprintf('SPRYKER_MESSAGE_BROKER_HTTP_SENDER_CONFIG={"endpoint": "0.0.0.0:8000", "timeout": 20}'));
     }
 
     /**

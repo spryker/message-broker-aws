@@ -10,7 +10,7 @@ namespace Spryker\Zed\MessageBrokerAws\Business\Sender\Client;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use Spryker\Zed\MessageBrokerAws\Business\Config\ConfigFormatterInterface;
-use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Formatter\HeadersFormatterInterface;
+use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Formatter\HttpHeaderFormatterInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Stamp\SenderClientStamp;
 use Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig;
 use Symfony\Component\Messenger\Envelope;
@@ -36,9 +36,9 @@ class HttpSenderClient implements SenderClientInterface
     protected ConfigFormatterInterface $configFormatter;
 
     /**
-     * @var \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Formatter\HeadersFormatterInterface
+     * @var \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Formatter\HttpHeaderFormatterInterface
      */
-    protected HeadersFormatterInterface $headersFormatter;
+    protected HttpHeaderFormatterInterface $httpHeaderFormatter;
 
     /**
      * @var array<string, mixed>|null
@@ -49,18 +49,18 @@ class HttpSenderClient implements SenderClientInterface
      * @param \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig $config
      * @param \Symfony\Component\Messenger\Transport\Serialization\SerializerInterface $serializer
      * @param \Spryker\Zed\MessageBrokerAws\Business\Config\ConfigFormatterInterface $configFormatter
-     * @param \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Formatter\HeadersFormatterInterface $headersFormatter
+     * @param \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Formatter\HttpHeaderFormatterInterface $httpHeaderFormatter
      */
     public function __construct(
         MessageBrokerAwsConfig $config,
         SerializerInterface $serializer,
         ConfigFormatterInterface $configFormatter,
-        HeadersFormatterInterface $headersFormatter
+        HttpHeaderFormatterInterface $httpHeaderFormatter
     ) {
         $this->config = $config;
         $this->serializer = $serializer;
         $this->configFormatter = $configFormatter;
-        $this->headersFormatter = $headersFormatter;
+        $this->httpHeaderFormatter = $httpHeaderFormatter;
     }
 
     /**
@@ -81,7 +81,7 @@ class HttpSenderClient implements SenderClientInterface
             'payload' => $encodedMessage['bodyRaw'],
         ];
 
-        $headers = $this->headersFormatter->formatHeadersForHttpRequest($encodedMessage['headers'] ?? []);
+        $headers = $this->httpHeaderFormatter->formatHeaders($encodedMessage['headers'] ?? []);
 
         $encodedBody = (string)json_encode($payload);
 

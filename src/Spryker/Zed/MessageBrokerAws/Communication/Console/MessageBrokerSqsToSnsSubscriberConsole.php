@@ -38,7 +38,7 @@ class MessageBrokerSqsToSnsSubscriberConsole extends Console
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->getFacade()->subscribeQueues();
+        $this->getFacade()->subscribeSqsToSns();
 
         return static::CODE_SUCCESS;
     }

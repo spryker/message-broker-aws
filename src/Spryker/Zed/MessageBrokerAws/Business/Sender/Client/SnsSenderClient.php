@@ -72,6 +72,7 @@ class SnsSenderClient implements SenderClientInterface
         $arguments = [
             'Message' => $encodedMessage['body'],
             'TopicArn' => $topic,
+            'MessageGroupId' => 'default',
         ];
 
         $specialHeaders = [];

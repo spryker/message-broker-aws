@@ -23,7 +23,6 @@ suites:
                 - \SprykerTest\Shared\Testify\Helper\DependencyHelper
                 - \SprykerTest\Zed\MessageBrokerAws\Helper\MessageBrokerAwsHelper
                 - \SprykerTest\Zed\Testify\Helper\Business\BusinessHelper
-                - \SprykerTest\Shared\Propel\Helper\ConnectionHelper
     Communication:
         path: Communication
         class_name: MessageBrokerAwsCommunicationTester
