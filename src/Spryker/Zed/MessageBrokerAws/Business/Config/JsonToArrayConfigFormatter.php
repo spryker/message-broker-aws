@@ -46,10 +46,16 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
             return $formattedConfig;
         }
 
-        return array_merge(
-            $this->getDefaultConfiguration($formattedConfig),
-            $this->getStoreConfiguration($formattedConfig)
-        );
+        $defaultConfiguration = $this->getDefaultConfiguration($formattedConfig);
+        $storeConfiguration = $this->getStoreConfiguration($formattedConfig);
+
+        if ($defaultConfiguration === [] && $storeConfiguration === []) {
+            throw new InvalidArgumentException(
+                sprintf('No default configuration or "%s" store configuration found', $this->getCurrentStore())
+            );
+        }
+
+        return array_merge($defaultConfiguration, $storeConfiguration);
     }
 
     /**
@@ -89,18 +95,14 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
     /**
      * @param array $formattedConfig
      *
-     * @throws \InvalidArgumentException
-     *
      * @return array
      */
     protected function getStoreConfiguration(array $formattedConfig): array
     {
-        $currentStoreName = $this->messageBrokerAwsToStoreFacade->getCurrentStore()->getName();
+        $currentStoreName = $this->getCurrentStore();
 
         if (!array_key_exists($currentStoreName, $formattedConfig)) {
-            throw new InvalidArgumentException(
-                sprintf('No configuration for "%s" store found', $currentStoreName)
-            );
+            return [];
         }
 
         return $formattedConfig[$currentStoreName];
@@ -118,5 +120,13 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
         }
 
         return $formattedConfig[static::DEFAULT_CONFIG_KEY];
+    }
+
+    /**
+     * @return string
+     */
+    protected function getCurrentStore(): string
+    {
+        return $this->messageBrokerAwsToStoreFacade->getCurrentStore()->getName();
     }
 }

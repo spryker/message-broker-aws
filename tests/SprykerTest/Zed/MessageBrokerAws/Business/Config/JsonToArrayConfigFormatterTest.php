@@ -65,16 +65,16 @@ class JsonToArrayConfigFormatterTest extends Unit
     /**
      * @return void
      */
-    public function testFormatThrowsExceptionWhenDefaultKeyExistsAndStoreKeyDoesNotExist(): void
+    public function testFormatReturnsDefaultConfigurationWhenDefaultKeyExistsAndStoreKeyDoesNotExist(): void
     {
         // Arrange
         $jsonToArrayConfigFormatter = new JsonToArrayConfigFormatter($this->getMockStoreFacadeDefaultStore());
 
-        // Expect
-        $this->expectException(InvalidArgumentException::class);
-
         // Act
         $formatted = $jsonToArrayConfigFormatter->format('{"default": {"foo": "bar"}}');
+
+        // Assert
+        $this->assertSame(['foo' => 'bar'], $formatted);
     }
 
     /**
