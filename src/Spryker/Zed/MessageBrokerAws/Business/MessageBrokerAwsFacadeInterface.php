@@ -83,5 +83,5 @@ interface MessageBrokerAwsFacadeInterface
      *
      * @return void
      */
-    public function subscribeQueuesToTopics(): void;
+    public function subscribeSqsToSns(): void;
 }
