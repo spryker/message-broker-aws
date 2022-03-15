@@ -8,6 +8,7 @@
 namespace Spryker\Zed\MessageBrokerAws\Business\Serializer;
 
 use Generated\Shared\Transfer\MessageAttributesTransfer;
+use Generated\Shared\Transfer\PublisherTransfer;
 use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\MessageDecodingFailedException;
@@ -62,7 +63,17 @@ class TransferSerializer implements SerializerInterface
             throw new MessageDecodingFailedException('Encoded envelope does not have a "transferName" header. The "transferName" is referring to a Transfer class that is used to unserialize the message data.');
         }
 
+        if (empty($encodedEnvelope['headers']['publisher'])) {
+            throw new MessageDecodingFailedException('Encoded envelope does not have a "publisher" header. The "publisher" is referring to a Transfer class that is used to unserialize the message data.');
+        }
+
         $messageAttributesTransfer = new MessageAttributesTransfer();
+        $messageAttributesTransfer->setPublisher(
+            (new PublisherTransfer())
+                ->fromArray(json_decode($encodedEnvelope['headers']['publisher'], true), true)
+        );
+        unset($encodedEnvelope['headers']['publisher']);
+
         $messageAttributesTransfer->fromArray($encodedEnvelope['headers'], true);
 
         // TODO check with security manager if this could be an issue.
