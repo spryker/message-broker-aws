@@ -10,6 +10,8 @@ namespace Spryker\Zed\MessageBrokerAws\Business\Serializer;
 use Generated\Shared\Transfer\MessageAttributesTransfer;
 use Generated\Shared\Transfer\PublisherTransfer;
 use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
+use Spryker\Zed\MessageBrokerAws\Business\Exception\EnvelopDecodingFailedException;
+use Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\MessageDecodingFailedException;
 use Symfony\Component\Messenger\Stamp\NonSendableStampInterface;
@@ -25,6 +27,11 @@ class TransferSerializer implements SerializerInterface
     protected SymfonySerializerInterface $serializer;
 
     /**
+     * @var \Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceInterface
+     */
+    protected MessageBrokerAwsToUtilEncodingServiceInterface $utilEncodingService;
+
+    /**
      * @var string
      */
     protected string $format = 'json';
@@ -36,15 +43,20 @@ class TransferSerializer implements SerializerInterface
 
     /**
      * @param \Symfony\Component\Serializer\SerializerInterface $serializer
+     * @param \Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceInterface $utilEncodingService
      */
-    public function __construct(SymfonySerializerInterface $serializer)
-    {
+    public function __construct(
+        SymfonySerializerInterface $serializer,
+        MessageBrokerAwsToUtilEncodingServiceInterface $utilEncodingService
+    ) {
         $this->serializer = $serializer;
+        $this->utilEncodingService = $utilEncodingService;
     }
 
     /**
      * @param array<string, mixed> $encodedEnvelope
      *
+     * @throws \Spryker\Zed\MessageBrokerAws\Business\Exception\EnvelopDecodingFailedException
      * @throws \Symfony\Component\Messenger\Exception\MessageDecodingFailedException
      *
      * @return \Symfony\Component\Messenger\Envelope
@@ -52,27 +64,26 @@ class TransferSerializer implements SerializerInterface
     public function decode(array $encodedEnvelope): Envelope
     {
         if (empty($encodedEnvelope['body'])) {
-            throw new MessageDecodingFailedException('Encoded envelope should have a "body".');
+            throw new EnvelopDecodingFailedException('Encoded envelope should have a "body".');
         }
 
         if (empty($encodedEnvelope['headers'])) {
-            throw new MessageDecodingFailedException('Encoded envelope should have some "headers".');
+            throw new EnvelopDecodingFailedException('Encoded envelope should have some "headers".');
         }
 
         if (empty($encodedEnvelope['headers']['transferName'])) {
-            throw new MessageDecodingFailedException('Encoded envelope does not have a "transferName" header. The "transferName" is referring to a Transfer class that is used to unserialize the message data.');
-        }
-
-        if (empty($encodedEnvelope['headers']['publisher'])) {
-            throw new MessageDecodingFailedException('Encoded envelope does not have a "publisher" header. The "publisher" is referring to a Transfer class that is used to unserialize the message data.');
+            throw new EnvelopDecodingFailedException('Encoded envelope does not have a "transferName" header. The "transferName" is referring to a Transfer class that is used to unserialize the message data.');
         }
 
         $messageAttributesTransfer = new MessageAttributesTransfer();
-        $messageAttributesTransfer->setPublisher(
-            (new PublisherTransfer())
-                ->fromArray(json_decode($encodedEnvelope['headers']['publisher'], true), true),
-        );
-        unset($encodedEnvelope['headers']['publisher']);
+
+        if (!empty($encodedEnvelope['headers']['publisher'])) {
+            $messageAttributesTransfer->setPublisher(
+                (new PublisherTransfer())
+                    ->fromArray($this->utilEncodingService->decodeJson($encodedEnvelope['headers']['publisher'], true), true),
+            );
+            unset($encodedEnvelope['headers']['publisher']);
+        }
 
         $messageAttributesTransfer->fromArray($encodedEnvelope['headers'], true);
 
@@ -87,7 +98,7 @@ class TransferSerializer implements SerializerInterface
             $messageTransfer = $this->serializer->deserialize($encodedEnvelope['body'], $messageTransferClassName, $this->format, $this->context);
             $messageTransfer->setMessageAttributes($messageAttributesTransfer);
         } catch (ExceptionInterface $e) {
-            throw new MessageDecodingFailedException('Could not decode message: ' . $e->getMessage(), $e->getCode(), $e);
+            throw new EnvelopDecodingFailedException('Could not decode message: ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return new Envelope($messageTransfer);
@@ -96,7 +107,7 @@ class TransferSerializer implements SerializerInterface
     /**
      * @param \Symfony\Component\Messenger\Envelope $envelope
      *
-     * @throws \Symfony\Component\Messenger\Exception\MessageDecodingFailedException
+     * @throws \Spryker\Zed\MessageBrokerAws\Business\Exception\EnvelopDecodingFailedException
      *
      * @return array<string, mixed>
      */
@@ -107,18 +118,18 @@ class TransferSerializer implements SerializerInterface
         $messageTransfer = $envelope->getMessage();
 
         if (!($messageTransfer instanceof AbstractTransfer)) {
-            throw new MessageDecodingFailedException(sprintf('Could not decode message, expected type of "%s" but got "%s".', AbstractTransfer::class, gettype($messageTransfer)));
+            throw new EnvelopDecodingFailedException(sprintf('Could not decode message, expected type of "%s" but got "%s".', AbstractTransfer::class, gettype($messageTransfer)));
         }
 
         if (!method_exists($messageTransfer, 'getMessageAttributes')) {
-            throw new MessageDecodingFailedException(sprintf('Could not decode message, expected to have a method "getMessageAttributes()" but it was not found in "%s".', get_class($messageTransfer)));
+            throw new EnvelopDecodingFailedException(sprintf('Could not decode message, expected to have a method "getMessageAttributes()" but it was not found in "%s".', get_class($messageTransfer)));
         }
 
         /** @var \Generated\Shared\Transfer\MessageAttributesTransfer $messageAttributesTransfer */
         $messageAttributesTransfer = $messageTransfer->getMessageAttributes();
 
         if (!($messageAttributesTransfer instanceof MessageAttributesTransfer)) {
-            throw new MessageDecodingFailedException(sprintf('Could not decode message, expected to have a Transfer object "%s" inside your "%s" message transfer but it is empty.', MessageAttributesTransfer::class, get_class($messageTransfer)));
+            throw new EnvelopDecodingFailedException(sprintf('Could not decode message, expected to have a Transfer object "%s" inside your "%s" message transfer but it is empty.', MessageAttributesTransfer::class, get_class($messageTransfer)));
         }
         $messageAttributesTransfer->getTransferNameOrFail();
 
@@ -128,6 +139,12 @@ class TransferSerializer implements SerializerInterface
 
         $headers = $messageAttributesTransfer->modifiedToArray(true, true);
         $headers += ['Content-Type' => 'application/json'];
+
+        if ($messageAttributesTransfer->getPublisher()) {
+            $headers['publisher'] = $this->utilEncodingService->encodeJson(
+                $messageAttributesTransfer->getPublisher()->modifiedToArray(true, true),
+            );
+        }
 
         return [
             'body' => $this->serializer->serialize($messageData, $this->format, $this->context),

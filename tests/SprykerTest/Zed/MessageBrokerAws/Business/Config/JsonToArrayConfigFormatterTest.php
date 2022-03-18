@@ -9,9 +9,10 @@ namespace SprykerTest\Zed\MessageBrokerAws\Business\Config;
 
 use Codeception\Test\Unit;
 use Generated\Shared\Transfer\StoreTransfer;
-use InvalidArgumentException;
 use Spryker\Zed\MessageBrokerAws\Business\Config\JsonToArrayConfigFormatter;
+use Spryker\Zed\MessageBrokerAws\Business\Exception\ConfigDecodingFailedException;
 use Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreFacadeInterface;
+use Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceInterface;
 
 /**
  * Auto-generated group annotations
@@ -37,8 +38,10 @@ class JsonToArrayConfigFormatterTest extends Unit
     public function testFormatReturnsUnchangedConfigurationWhenSimpleConfiguration(): void
     {
         // Arrange
-        $storeFacade = $this->getMockStoreFacadeDefaultStore();
-        $jsonToArrayConfigFormatter = new JsonToArrayConfigFormatter($storeFacade);
+        $jsonToArrayConfigFormatter = new JsonToArrayConfigFormatter(
+            $this->getMockStoreFacadeDefaultStore(),
+            $this->getUtilEncodingMock(),
+        );
 
         // Act
         $formatted = $jsonToArrayConfigFormatter->format('{"foo": "bar"}');
@@ -53,7 +56,10 @@ class JsonToArrayConfigFormatterTest extends Unit
     public function testFormatMergesDefaultAndStoreConfigurationsWhenDefaultKeyExistsAndStoreKeyExists(): void
     {
         // Arrange
-        $jsonToArrayConfigFormatter = new JsonToArrayConfigFormatter($this->getMockStoreFacadeDefaultStore());
+        $jsonToArrayConfigFormatter = new JsonToArrayConfigFormatter(
+            $this->getMockStoreFacadeDefaultStore(),
+            $this->getUtilEncodingMock(),
+        );
 
         // Act
         $formatted = $jsonToArrayConfigFormatter->format('{"default": {"foo": "bar", "some": "value"}, "' . static::STORE_NAME . '": {"foo": "bar_' . static::STORE_NAME . '"}}');
@@ -68,7 +74,10 @@ class JsonToArrayConfigFormatterTest extends Unit
     public function testFormatReturnsDefaultConfigurationWhenDefaultKeyExistsAndStoreKeyDoesNotExist(): void
     {
         // Arrange
-        $jsonToArrayConfigFormatter = new JsonToArrayConfigFormatter($this->getMockStoreFacadeDefaultStore());
+        $jsonToArrayConfigFormatter = new JsonToArrayConfigFormatter(
+            $this->getMockStoreFacadeDefaultStore(),
+            $this->getUtilEncodingMock(),
+        );
 
         // Act
         $formatted = $jsonToArrayConfigFormatter->format('{"default": {"foo": "bar"}}');
@@ -83,7 +92,10 @@ class JsonToArrayConfigFormatterTest extends Unit
     public function testFormatReturnsStoreConfigruationWhenDefaultKeyDoesNotExistAndStoreKeyExists(): void
     {
         // Arrange
-        $jsonToArrayConfigFormatter = new JsonToArrayConfigFormatter($this->getMockStoreFacadeDefaultStore());
+        $jsonToArrayConfigFormatter = new JsonToArrayConfigFormatter(
+            $this->getMockStoreFacadeDefaultStore(),
+            $this->getUtilEncodingMock(),
+        );
 
         // Act
         $formatted = $jsonToArrayConfigFormatter->format('{"' . static::STORE_NAME . '": {"foo": "bar_' . static::STORE_NAME . '"}}');
@@ -98,10 +110,13 @@ class JsonToArrayConfigFormatterTest extends Unit
     public function testFormatThrowsExceptionWhenStringCanNotBeConvertedToArray(): void
     {
         // Arrange
-        $jsonToArrayConfigFormatter = new JsonToArrayConfigFormatter($this->getMockStoreFacadeDefaultStore());
+        $jsonToArrayConfigFormatter = new JsonToArrayConfigFormatter(
+            $this->getMockStoreFacadeDefaultStore(),
+            $this->getUtilEncodingMock(),
+        );
 
         // Expect
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(ConfigDecodingFailedException::class);
 
         // Act
         $jsonToArrayConfigFormatter->format('"foo": "bar"');
@@ -121,5 +136,19 @@ class JsonToArrayConfigFormatterTest extends Unit
             );
 
         return $storeFacadeMock;
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceInterface
+     */
+    protected function getUtilEncodingMock(): MessageBrokerAwsToUtilEncodingServiceInterface
+    {
+        $utilEncodingService = $this->createMock(MessageBrokerAwsToUtilEncodingServiceInterface::class);
+
+        $utilEncodingService->method('decodeJson')->willReturnCallback(function ($jsonValue, $assoc, $depth = null, $options = null) {
+            return json_decode($jsonValue, $assoc);
+        });
+
+        return $utilEncodingService;
     }
 }

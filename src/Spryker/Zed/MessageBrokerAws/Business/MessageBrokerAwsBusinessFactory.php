@@ -36,6 +36,7 @@ use Spryker\Zed\MessageBrokerAws\Business\Serializer\TransferSerializer;
 use Spryker\Zed\MessageBrokerAws\Business\Sns\AwsSnsTopicCreator;
 use Spryker\Zed\MessageBrokerAws\Business\Sns\AwsSnsTopicCreatorInterface;
 use Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreFacadeInterface;
+use Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceInterface;
 use Spryker\Zed\MessageBrokerAws\MessageBrokerAwsDependencyProvider;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -172,7 +173,10 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
      */
     public function createSerializer(): SerializerInterface
     {
-        return new TransferSerializer($this->createSymfonySerializer());
+        return new TransferSerializer(
+            $this->createSymfonySerializer(),
+            $this->getUtilEncodingService(),
+        );
     }
 
     /**
@@ -236,7 +240,10 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
      */
     public function createConfigFormatter(): ConfigFormatterInterface
     {
-        return new JsonToArrayConfigFormatter($this->getStoreFacade());
+        return new JsonToArrayConfigFormatter(
+            $this->getStoreFacade(),
+            $this->getUtilEncodingService(),
+        );
     }
 
     /**
@@ -302,5 +309,13 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
     protected function getStoreFacade(): MessageBrokerAwsToStoreFacadeInterface
     {
         return $this->getProvidedDependency(MessageBrokerAwsDependencyProvider::FACADE_STORE);
+    }
+
+    /**
+     * @return \Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceInterface
+     */
+    protected function getUtilEncodingService(): MessageBrokerAwsToUtilEncodingServiceInterface
+    {
+        return $this->getProvidedDependency(MessageBrokerAwsDependencyProvider::SERVICE_UTIL_ENCODING);
     }
 }

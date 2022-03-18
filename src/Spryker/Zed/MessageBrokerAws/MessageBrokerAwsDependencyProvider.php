@@ -12,6 +12,7 @@ use Aws\Sqs\SqsClient;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
 use Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreBridge;
+use Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceBridge;
 
 /**
  * @method \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig getConfig()
@@ -34,6 +35,11 @@ class MessageBrokerAwsDependencyProvider extends AbstractBundleDependencyProvide
     public const FACADE_STORE = 'FACADE_STORE';
 
     /**
+     * @var string
+     */
+    public const SERVICE_UTIL_ENCODING = 'SERVICE_UTIL_ENCODING';
+
+    /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
@@ -44,6 +50,7 @@ class MessageBrokerAwsDependencyProvider extends AbstractBundleDependencyProvide
         $container = $this->addSqsAwsClient($container);
         $container = $this->addSnsAwsClient($container);
         $container = $this->addStoreFacade($container);
+        $container = $this->addUtilEncodingService($container);
 
         return $container;
     }
@@ -101,6 +108,22 @@ class MessageBrokerAwsDependencyProvider extends AbstractBundleDependencyProvide
     {
         $container->set(static::FACADE_STORE, function (Container $container) {
             return new MessageBrokerAwsToStoreBridge($container->getLocator()->store()->facade());
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addUtilEncodingService(Container $container): Container
+    {
+        $container->set(static::SERVICE_UTIL_ENCODING, function (Container $container) {
+            return new MessageBrokerAwsToUtilEncodingServiceBridge(
+                $container->getLocator()->utilEncoding()->service(),
+            );
         });
 
         return $container;

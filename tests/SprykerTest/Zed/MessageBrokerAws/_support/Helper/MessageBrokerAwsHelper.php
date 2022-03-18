@@ -15,6 +15,7 @@ use Codeception\TestInterface;
 use Exception;
 use Generated\Shared\Transfer\MessageAttributesTransfer;
 use Generated\Shared\Transfer\MessageBrokerTestMessageTransfer;
+use Generated\Shared\Transfer\PublisherTransfer;
 use Generated\Shared\Transfer\StoreTransfer;
 use Ramsey\Uuid\Uuid;
 use Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsBusinessFactory;
@@ -22,6 +23,7 @@ use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SnsSenderClient;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender\AwsSnsMessageSenderPlugin;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender\AwsSqsMessageSenderPlugin;
 use Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreBridge;
+use Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceBridge;
 use SprykerTest\Shared\Testify\Helper\DependencyHelperTrait;
 use SprykerTest\Zed\Testify\Helper\Business\BusinessHelperTrait;
 use Symfony\Component\Messenger\Envelope;
@@ -119,6 +121,11 @@ class MessageBrokerAwsHelper extends Module
 
         $messageAttributesTransfer = new MessageAttributesTransfer();
         $messageAttributesTransfer->setTransferName('MessageBrokerTestMessage');
+        $messageAttributesTransfer->setPublisher(
+            (new PublisherTransfer())
+                ->setStoreReference('StoreReference')
+                ->setAppIdentifier('AppIdentifier'),
+        );
 
         $messageBrokerTestMessageTransfer->setMessageAttributes($messageAttributesTransfer);
 
@@ -203,6 +210,7 @@ class MessageBrokerAwsHelper extends Module
         $this->getBusinessHelper()->mockFactoryMethod('createSnsSenderClient', $snsSenderClientMock);
 
         $this->mockStoreFacade();
+        $this->mockUtilEncodingService();
     }
 
     /**
@@ -218,6 +226,23 @@ class MessageBrokerAwsHelper extends Module
         );
 
         $this->getBusinessHelper()->mockFactoryMethod('getStoreFacade', $storeFacadeMock);
+    }
+
+    /**
+     * @return void
+     */
+    protected function mockUtilEncodingService(): void
+    {
+        $encodingService = Stub::make(
+            MessageBrokerAwsToUtilEncodingServiceBridge::class,
+            [
+                'decodeJson' => function ($jsonValue, $assoc, $depth = null, $options = null) {
+                    return json_decode($jsonValue, $assoc);
+                },
+            ],
+        );
+
+        $this->getBusinessHelper()->mockFactoryMethod('getUtilEncodingService', $encodingService);
     }
 
     /**
@@ -250,6 +275,14 @@ class MessageBrokerAwsHelper extends Module
     }
 
     /**
+     * @return void
+     */
+    public function setInvalidSnsSenderConfiguration(): void
+    {
+        putenv('SPRYKER_MESSAGE_BROKER_SNS_SENDER_CONFIG={"endpoint": "invalidValue"}');
+    }
+
+    /**
      * @param string $queueName
      *
      * @return void
@@ -265,6 +298,14 @@ class MessageBrokerAwsHelper extends Module
     public function resetSqsSenderConfiguration(): void
     {
         putenv('SPRYKER_MESSAGE_BROKER_SQS_SENDER_CONFIG=[]');
+    }
+
+    /**
+     * @return void
+     */
+    public function setInvalidSqsSenderConfiguration(): void
+    {
+        putenv('SPRYKER_MESSAGE_BROKER_SQS_SENDER_CONFIG={"invalidKey": "invalidValue"}');
     }
 
     /**

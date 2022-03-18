@@ -113,7 +113,7 @@ class AwsSqsMessageSenderPluginTest extends Unit
 
         $this->tester->setMessageToChannelMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
         $this->tester->setChannelToSenderTransportMap(static::CHANNEL_NAME, 'sqs');
-        $this->tester->resetSqsSenderConfiguration();
+        $this->tester->setInvalidSqsSenderConfiguration();
 
         // Expect
         $this->expectException(TransportException::class);

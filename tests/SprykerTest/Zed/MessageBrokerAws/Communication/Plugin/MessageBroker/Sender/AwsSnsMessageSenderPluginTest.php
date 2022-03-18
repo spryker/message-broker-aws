@@ -116,7 +116,7 @@ class AwsSnsMessageSenderPluginTest extends Unit
 
         $this->tester->setMessageToChannelMap(MessageBrokerTestMessageTransfer::class, static::CHANNEL_NAME);
         $this->tester->setChannelToSenderTransportMap(static::CHANNEL_NAME, 'sns');
-        $this->tester->resetSnsSenderConfiguration();
+        $this->tester->setInvalidSnsSenderConfiguration();
 
         // Expect
         $this->expectException(TransportException::class);

@@ -7,8 +7,10 @@
 
 namespace Spryker\Zed\MessageBrokerAws\Business\Config;
 
-use InvalidArgumentException;
+use Spryker\Zed\MessageBrokerAws\Business\Exception\ConfigDecodingFailedException;
+use Spryker\Zed\MessageBrokerAws\Business\Exception\ConfigInvalidException;
 use Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreFacadeInterface;
+use Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceInterface;
 
 class JsonToArrayConfigFormatter implements ConfigFormatterInterface
 {
@@ -23,17 +25,26 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
     protected $messageBrokerAwsToStoreFacade;
 
     /**
-     * @param \Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreFacadeInterface $messageBrokerAwsToStoreFacade
+     * @var \Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceInterface
      */
-    public function __construct(MessageBrokerAwsToStoreFacadeInterface $messageBrokerAwsToStoreFacade)
-    {
+    protected $utilEncodingService;
+
+    /**
+     * @param \Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreFacadeInterface $messageBrokerAwsToStoreFacade
+     * @param \Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceInterface $utilEncodingService
+     */
+    public function __construct(
+        MessageBrokerAwsToStoreFacadeInterface $messageBrokerAwsToStoreFacade,
+        MessageBrokerAwsToUtilEncodingServiceInterface $utilEncodingService
+    ) {
         $this->messageBrokerAwsToStoreFacade = $messageBrokerAwsToStoreFacade;
+        $this->utilEncodingService = $utilEncodingService;
     }
 
     /**
      * @param string $config
      *
-     * @throws \InvalidArgumentException
+     * @throws \Spryker\Zed\MessageBrokerAws\Business\Exception\ConfigInvalidException
      *
      * @return array<string, mixed>
      */
@@ -49,7 +60,7 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
         $storeConfiguration = $this->getStoreConfiguration($formattedConfig);
 
         if ($defaultConfiguration === [] && $storeConfiguration === []) {
-            throw new InvalidArgumentException(
+            throw new ConfigInvalidException(
                 sprintf('No default configuration or "%s" store configuration found', $this->getCurrentStore()),
             );
         }
@@ -60,16 +71,19 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
     /**
      * @param string $config
      *
-     * @throws \InvalidArgumentException
+     * @throws \Spryker\Zed\MessageBrokerAws\Business\Exception\ConfigDecodingFailedException
      *
      * @return array
      */
     protected function getFormattedConfiguration(string $config): array
     {
-        $formattedConfig = json_decode(html_entity_decode($config, ENT_QUOTES), true);
+        $formattedConfig = $this->utilEncodingService->decodeJson(
+            html_entity_decode($config, ENT_QUOTES),
+            true,
+        );
 
-        if (json_last_error()) {
-            throw new InvalidArgumentException(json_last_error_msg());
+        if (!$formattedConfig) {
+            throw new ConfigDecodingFailedException();
         }
 
         return $formattedConfig;

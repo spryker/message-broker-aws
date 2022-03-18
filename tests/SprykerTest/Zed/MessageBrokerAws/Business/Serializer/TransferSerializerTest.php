@@ -122,7 +122,15 @@ class TransferSerializerTest extends Unit
         $transferSerializer = $this->tester->getFactory()->createSerializer();
 
         // Act
-        $envelope = $transferSerializer->decode(['body' => '{"key": "value"}', 'headers' => ['transferName' => 'MessageBrokerTestMessage']]);
+        $envelope = $transferSerializer->decode(
+            [
+                'body' => '{"key": "value"}',
+                'headers' => [
+                    'transferName' => 'MessageBrokerTestMessage',
+                    'publisher' => '{"storeReference": "storeReference", "appIdentifier": "appIdentifier"}',
+                ],
+            ],
+        );
 
         // Assert
         $this->assertInstanceOf(Envelope::class, $envelope);
