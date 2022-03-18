@@ -70,7 +70,7 @@ class TransferSerializer implements SerializerInterface
         $messageAttributesTransfer = new MessageAttributesTransfer();
         $messageAttributesTransfer->setPublisher(
             (new PublisherTransfer())
-                ->fromArray(json_decode($encodedEnvelope['headers']['publisher'], true), true)
+                ->fromArray(json_decode($encodedEnvelope['headers']['publisher'], true), true),
         );
         unset($encodedEnvelope['headers']['publisher']);
 

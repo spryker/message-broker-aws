@@ -7,7 +7,6 @@
 
 namespace Spryker\Zed\MessageBrokerAws\Business\Config;
 
-use Exception;
 use InvalidArgumentException;
 use Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreFacadeInterface;
 
@@ -34,7 +33,7 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
     /**
      * @param string $config
      *
-     * @throws \Exception
+     * @throws \InvalidArgumentException
      *
      * @return array<string, mixed>
      */
@@ -51,7 +50,7 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
 
         if ($defaultConfiguration === [] && $storeConfiguration === []) {
             throw new InvalidArgumentException(
-                sprintf('No default configuration or "%s" store configuration found', $this->getCurrentStore())
+                sprintf('No default configuration or "%s" store configuration found', $this->getCurrentStore()),
             );
         }
 
@@ -61,13 +60,13 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
     /**
      * @param string $config
      *
-     * @throws \Exception
+     * @throws \InvalidArgumentException
      *
      * @return array
      */
     protected function getFormattedConfiguration(string $config): array
     {
-        $formattedConfig = json_decode($config, true);
+        $formattedConfig = json_decode(html_entity_decode($config, ENT_QUOTES), true);
 
         if (json_last_error()) {
             throw new InvalidArgumentException(json_last_error_msg());
@@ -83,7 +82,7 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
      */
     protected function isSimpleConfiguration(array $formattedConfig): bool
     {
-        if (empty($formattedConfig)) {
+        if (!$formattedConfig) {
             return true;
         }
 

@@ -45,12 +45,12 @@ class MessageBrokerAwsHelper extends Module
     {
         parent::_before($test);
 
-        putenv('AOP_MESSAGE_TO_CHANNEL_MAP');
-        putenv('AOP_CHANNEL_TO_SENDER_TRANSPORT_MAP');
-        putenv('AOP_CHANNEL_TO_RECEIVER_TRANSPORT_MAP');
-        putenv('AOP_MESSAGE_BROKER_SNS_SENDER_CONFIG');
-        putenv('AOP_MESSAGE_BROKER_SQS_SENDER_CONFIG');
-        putenv('AOP_MESSAGE_BROKER_SQS_RECEIVER_CONFIG');
+        putenv('SPRYKER_MESSAGE_TO_CHANNEL_MAP');
+        putenv('SPRYKER_CHANNEL_TO_SENDER_TRANSPORT_MAP');
+        putenv('SPRYKER_CHANNEL_TO_RECEIVER_TRANSPORT_MAP');
+        putenv('SPRYKER_MESSAGE_BROKER_SNS_SENDER_CONFIG');
+        putenv('SPRYKER_MESSAGE_BROKER_SQS_SENDER_CONFIG');
+        putenv('SPRYKER_MESSAGE_BROKER_SQS_RECEIVER_CONFIG');
     }
 
     /**
@@ -133,7 +133,7 @@ class MessageBrokerAwsHelper extends Module
      */
     public function setMessageToChannelMap(string $messageClassName, string $channelName): void
     {
-        putenv(sprintf('AOP_MESSAGE_TO_CHANNEL_MAP={"%s": "%s"}', str_replace('\\', '\\\\', $messageClassName), $channelName));
+        putenv(sprintf('SPRYKER_MESSAGE_TO_CHANNEL_MAP={"%s": "%s"}', str_replace('\\', '\\\\', $messageClassName), $channelName));
     }
 
     /**
@@ -293,7 +293,7 @@ class MessageBrokerAwsHelper extends Module
      */
     public function setChannelToSenderTransportMap(string $channelName, string $client): void
     {
-        putenv(sprintf('AOP_CHANNEL_TO_SENDER_TRANSPORT_MAP={"%s": "%s"}', $channelName, $client));
+        putenv(sprintf('SPRYKER_CHANNEL_TO_SENDER_TRANSPORT_MAP={"%s": "%s"}', $channelName, $client));
     }
 
     /**
@@ -304,7 +304,7 @@ class MessageBrokerAwsHelper extends Module
      */
     public function setChannelToReceiverTransportMap(string $channelName, string $client): void
     {
-        putenv(sprintf('AOP_CHANNEL_TO_RECEIVER_TRANSPORT_MAP={"%s": "%s"}', $channelName, $client));
+        putenv(sprintf('SPRYKER_CHANNEL_TO_RECEIVER_TRANSPORT_MAP={"%s": "%s"}', $channelName, $client));
     }
 
     /**

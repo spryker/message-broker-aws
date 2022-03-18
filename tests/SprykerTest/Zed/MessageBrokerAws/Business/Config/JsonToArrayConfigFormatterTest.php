@@ -8,8 +8,8 @@
 namespace SprykerTest\Zed\MessageBrokerAws\Business\Config;
 
 use Codeception\Test\Unit;
-use InvalidArgumentException;
 use Generated\Shared\Transfer\StoreTransfer;
+use InvalidArgumentException;
 use Spryker\Zed\MessageBrokerAws\Business\Config\JsonToArrayConfigFormatter;
 use Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreFacadeInterface;
 

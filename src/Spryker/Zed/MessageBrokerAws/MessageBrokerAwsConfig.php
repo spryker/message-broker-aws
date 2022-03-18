@@ -149,8 +149,8 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
      */
     public function getChannelToSenderTransportMap()
     {
-        if (getenv('AOP_CHANNEL_TO_SENDER_TRANSPORT_MAP') !== false) {
-            return getenv('AOP_CHANNEL_TO_SENDER_TRANSPORT_MAP');
+        if (getenv('SPRYKER_CHANNEL_TO_SENDER_TRANSPORT_MAP') !== false) {
+            return getenv('SPRYKER_CHANNEL_TO_SENDER_TRANSPORT_MAP');
         }
 
         // @codeCoverageIgnoreStart
@@ -169,8 +169,8 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
      */
     public function getChannelToReceiverTransportMap()
     {
-        if (getenv('AOP_CHANNEL_TO_RECEIVER_TRANSPORT_MAP') !== false) {
-            return getenv('AOP_CHANNEL_TO_RECEIVER_TRANSPORT_MAP');
+        if (getenv('SPRYKER_CHANNEL_TO_RECEIVER_TRANSPORT_MAP') !== false) {
+            return getenv('SPRYKER_CHANNEL_TO_RECEIVER_TRANSPORT_MAP');
         }
 
         // @codeCoverageIgnoreStart
@@ -189,8 +189,8 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
      */
     public function getMessageToChannelMap()
     {
-        if (getenv('AOP_MESSAGE_TO_CHANNEL_MAP') !== false) {
-            return getenv('AOP_MESSAGE_TO_CHANNEL_MAP');
+        if (getenv('SPRYKER_MESSAGE_TO_CHANNEL_MAP') !== false) {
+            return getenv('SPRYKER_MESSAGE_TO_CHANNEL_MAP');
         }
 
         // @codeCoverageIgnoreStart
