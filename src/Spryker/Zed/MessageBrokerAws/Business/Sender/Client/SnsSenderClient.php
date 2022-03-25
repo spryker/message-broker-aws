@@ -26,6 +26,11 @@ class SnsSenderClient implements SenderClientInterface
     protected const MESSAGE_ATTRIBUTE_NAME = 'X-Symfony-Messenger';
 
     /**
+     * @var string
+     */
+    protected const TOPIC_FIFO_CRITERIA = '.fifo';
+
+    /**
      * @var \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig
      */
     protected MessageBrokerAwsConfig $config;
@@ -74,6 +79,8 @@ class SnsSenderClient implements SenderClientInterface
             'TopicArn' => $topic,
             'MessageGroupId' => 'default',
         ];
+
+        $arguments = $this->extendArgumentsWithMessageDeduplicationId($arguments, $topic);
 
         $specialHeaders = [];
         foreach ($headers as $name => $value) {
@@ -147,5 +154,20 @@ class SnsSenderClient implements SenderClientInterface
         $snsSenderConfig['debug'] = $this->config->getIsDebugEnabled();
 
         return $snsSenderConfig;
+    }
+
+    /**
+     * @param array $arguments
+     * @param string $topic
+     *
+     * @return array
+     */
+    protected function extendArgumentsWithMessageDeduplicationId(array $arguments, string $topic): array
+    {
+        if (str_contains($topic, static::TOPIC_FIFO_CRITERIA)) {
+            $arguments['MessageDeduplicationId'] = str_replace([" ", "."], "", microtime());
+        };
+
+        return $arguments;
     }
 }
