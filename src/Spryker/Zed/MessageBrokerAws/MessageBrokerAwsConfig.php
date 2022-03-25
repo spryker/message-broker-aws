@@ -15,21 +15,6 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
     /**
      * @var string
      */
-    public const QUEUE_NAME = 'messages';
-
-    /**
-     * @var string
-     */
-    public const CHANNEL_NAME_PAYMENT = 'payment';
-
-    /**
-     * @var string
-     */
-    public const CHANNEL_NAME_ASSETS = 'assets';
-
-    /**
-     * @var string
-     */
     public const SQS_TRANSPORT = 'sqs';
 
     /**

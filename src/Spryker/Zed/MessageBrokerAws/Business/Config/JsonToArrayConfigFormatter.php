@@ -22,7 +22,7 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
     /**
      * @var \Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreFacadeInterface
      */
-    protected $messageBrokerAwsToStoreFacade;
+    protected $storeFacade;
 
     /**
      * @var \Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceInterface
@@ -30,14 +30,14 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
     protected $utilEncodingService;
 
     /**
-     * @param \Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreFacadeInterface $messageBrokerAwsToStoreFacade
+     * @param \Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreFacadeInterface $storeFacade
      * @param \Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceInterface $utilEncodingService
      */
     public function __construct(
-        MessageBrokerAwsToStoreFacadeInterface $messageBrokerAwsToStoreFacade,
+        MessageBrokerAwsToStoreFacadeInterface $storeFacade,
         MessageBrokerAwsToUtilEncodingServiceInterface $utilEncodingService
     ) {
-        $this->messageBrokerAwsToStoreFacade = $messageBrokerAwsToStoreFacade;
+        $this->storeFacade = $storeFacade;
         $this->utilEncodingService = $utilEncodingService;
     }
 
@@ -140,6 +140,6 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
      */
     protected function getCurrentStore(): string
     {
-        return $this->messageBrokerAwsToStoreFacade->getCurrentStore()->getName();
+        return $this->storeFacade->getCurrentStore()->getName();
     }
 }
