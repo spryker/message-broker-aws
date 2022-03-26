@@ -94,7 +94,7 @@ class SnsSenderClient implements SenderClientInterface
 
             if (is_array($value)) {
                 $arguments['MessageAttributes'][$name] = new MessageAttributeValue([
-                    'DataType' => 'String',
+                    'DataType' => 'String.Array',
                     'StringValue' => (string)json_encode($value),
                 ]);
 
