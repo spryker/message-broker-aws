@@ -92,10 +92,10 @@ class SnsSenderClient implements SenderClientInterface
                 // @codeCoverageIgnoreEnd
             }
 
-            if (is_array($value)) {
+            if ($this->isValueJson($value)) {
                 $arguments['MessageAttributes'][$name] = new MessageAttributeValue([
                     'DataType' => 'String.Array',
-                    'StringValue' => (string)json_encode($value),
+                    'StringValue' => $value,
                 ]);
 
                 continue;
@@ -169,5 +169,15 @@ class SnsSenderClient implements SenderClientInterface
         };
 
         return $arguments;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return bool
+     */
+    protected function isValueJson(string $value): bool
+    {
+        return is_string($value) && is_array(json_decode($value, true)) ? true : false;
     }
 }
