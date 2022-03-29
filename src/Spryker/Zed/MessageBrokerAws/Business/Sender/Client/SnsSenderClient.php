@@ -151,22 +151,22 @@ class SnsSenderClient implements SenderClientInterface
             $snsSenderConfig = $this->configFormatter->format($snsSenderConfig);
         }
 
-        $snsSenderConfig['debug'] = $this->config->getIsDebugEnabled();
+        $snsSenderConfig['debug'] = $this->config->isDebugEnabled();
 
         return $snsSenderConfig;
     }
 
     /**
-     * @param array $arguments
+     * @param array<mixed> $arguments
      * @param string $topic
      *
-     * @return array
+     * @return array<mixed>
      */
     protected function extendArgumentsWithMessageDeduplicationId(array $arguments, string $topic): array
     {
-        if (str_contains($topic, static::TOPIC_FIFO_CRITERIA)) {
-            $arguments['MessageDeduplicationId'] = str_replace([" ", "."], "", microtime());
-        };
+        if (mb_strpos($topic, static::TOPIC_FIFO_CRITERIA) !== false) {
+            $arguments['MessageDeduplicationId'] = str_replace([' ', '.'], '', microtime());
+        }
 
         return $arguments;
     }

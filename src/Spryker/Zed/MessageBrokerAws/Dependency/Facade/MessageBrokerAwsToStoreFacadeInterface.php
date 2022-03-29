@@ -5,7 +5,7 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Zed\MessageBrokerAws\Dependency;
+namespace Spryker\Zed\MessageBrokerAws\Dependency\Facade;
 
 use Generated\Shared\Transfer\StoreTransfer;
 

@@ -11,7 +11,7 @@ use Aws\Sns\SnsClient;
 use Aws\Sqs\SqsClient;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
-use Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreBridge;
+use Spryker\Zed\MessageBrokerAws\Dependency\Facade\MessageBrokerAwsToStoreBridge;
 use Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceBridge;
 
 /**

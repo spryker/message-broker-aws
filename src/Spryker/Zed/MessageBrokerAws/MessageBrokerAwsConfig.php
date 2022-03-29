@@ -112,7 +112,7 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
      *
      * @return bool
      */
-    public function getIsDebugEnabled(): bool
+    public function isDebugEnabled(): bool
     {
         if (getenv('SPRYKER_DEBUG_ENABLED') !== false) {
             return (bool)getenv('SPRYKER_DEBUG_ENABLED');
@@ -200,7 +200,7 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
     /**
      * @api
      *
-     * @return array<int, array<string, string>>
+     * @return array<int, array<string, mixed>>
      */
     public function getSqsToSnsSubscriptions(): array
     {

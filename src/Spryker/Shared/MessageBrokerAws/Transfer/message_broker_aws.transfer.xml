@@ -12,4 +12,16 @@
         <property name="empty" type="string"/>
     </transfer>
 
+    <transfer name="Store">
+        <property name="name" type="string"/>
+    </transfer>
+
+    <transfer name="MessageAttributes">
+        <property name="publisher" type="Publisher"/>
+        <property name="transferName" type="string"/>
+    </transfer>
+
+    <transfer name="Publisher">
+    </transfer>
+
 </transfers>

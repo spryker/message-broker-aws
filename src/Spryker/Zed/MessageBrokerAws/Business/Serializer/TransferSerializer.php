@@ -78,9 +78,11 @@ class TransferSerializer implements SerializerInterface
         $messageAttributesTransfer = new MessageAttributesTransfer();
 
         if (!empty($encodedEnvelope['headers']['publisher'])) {
+            $publisherData = (array)$this->utilEncodingService->decodeJson($encodedEnvelope['headers']['publisher'], true);
+
             $messageAttributesTransfer->setPublisher(
                 (new PublisherTransfer())
-                    ->fromArray($this->utilEncodingService->decodeJson($encodedEnvelope['headers']['publisher'], true), true),
+                    ->fromArray($publisherData, true),
             );
             unset($encodedEnvelope['headers']['publisher']);
         }

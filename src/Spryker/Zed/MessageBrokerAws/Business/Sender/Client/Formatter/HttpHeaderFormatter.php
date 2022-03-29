@@ -17,9 +17,9 @@ class HttpHeaderFormatter implements HttpHeaderFormatterInterface
     protected const HEADER_NAME_SUFFIX = 'X-';
 
     /**
-     * @param array<string, string> $headers
+     * @param array<string, mixed> $headers
      *
-     * @return array<string, string>
+     * @return array<string, mixed>
      */
     public function formatHeaders(array $headers): array
     {
@@ -29,7 +29,13 @@ class HttpHeaderFormatter implements HttpHeaderFormatterInterface
                 continue;
             }
 
-            $headerName = static::HEADER_NAME_SUFFIX . ucfirst(preg_replace('/(?<=[a-z])(?=[A-Z])/', '-', $header));
+            $header = preg_replace('/(?<=[a-z])(?=[A-Z])/', '-', $header);
+
+            if (!$header) {
+                continue;
+            }
+
+            $headerName = sprintf('%s%s', static::HEADER_NAME_SUFFIX, ucfirst($header));
 
             if (is_array($value)) {
                 $value = json_encode($value);

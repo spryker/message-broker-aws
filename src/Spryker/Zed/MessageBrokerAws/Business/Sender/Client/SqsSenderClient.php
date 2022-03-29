@@ -99,7 +99,7 @@ class SqsSenderClient implements SenderClientInterface
                 $sqsReceiverConfig = $this->configFormatter->format($sqsReceiverConfig);
             }
 
-            $sqsReceiverConfig['debug'] = $this->config->getIsDebugEnabled();
+            $sqsReceiverConfig['debug'] = $this->config->isDebugEnabled();
 
             $this->sqsConfiguration = $sqsReceiverConfig;
         }

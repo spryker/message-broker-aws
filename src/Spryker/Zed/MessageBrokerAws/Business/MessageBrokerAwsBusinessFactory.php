@@ -35,7 +35,7 @@ use Spryker\Zed\MessageBrokerAws\Business\Sender\SenderInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Serializer\TransferSerializer;
 use Spryker\Zed\MessageBrokerAws\Business\Sns\AwsSnsTopicCreator;
 use Spryker\Zed\MessageBrokerAws\Business\Sns\AwsSnsTopicCreatorInterface;
-use Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreFacadeInterface;
+use Spryker\Zed\MessageBrokerAws\Dependency\Facade\MessageBrokerAwsToStoreFacadeInterface;
 use Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceInterface;
 use Spryker\Zed\MessageBrokerAws\MessageBrokerAwsDependencyProvider;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
@@ -304,7 +304,7 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreFacadeInterface
+     * @return \Spryker\Zed\MessageBrokerAws\Dependency\Facade\MessageBrokerAwsToStoreFacadeInterface
      */
     protected function getStoreFacade(): MessageBrokerAwsToStoreFacadeInterface
     {

@@ -9,7 +9,7 @@ namespace Spryker\Zed\MessageBrokerAws\Business\Config;
 
 use Spryker\Zed\MessageBrokerAws\Business\Exception\ConfigDecodingFailedException;
 use Spryker\Zed\MessageBrokerAws\Business\Exception\ConfigInvalidException;
-use Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreFacadeInterface;
+use Spryker\Zed\MessageBrokerAws\Dependency\Facade\MessageBrokerAwsToStoreFacadeInterface;
 use Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceInterface;
 
 class JsonToArrayConfigFormatter implements ConfigFormatterInterface
@@ -20,7 +20,7 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
     protected const DEFAULT_CONFIG_KEY = 'default';
 
     /**
-     * @var \Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreFacadeInterface
+     * @var \Spryker\Zed\MessageBrokerAws\Dependency\Facade\MessageBrokerAwsToStoreFacadeInterface
      */
     protected $storeFacade;
 
@@ -30,7 +30,7 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
     protected $utilEncodingService;
 
     /**
-     * @param \Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreFacadeInterface $storeFacade
+     * @param \Spryker\Zed\MessageBrokerAws\Dependency\Facade\MessageBrokerAwsToStoreFacadeInterface $storeFacade
      * @param \Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceInterface $utilEncodingService
      */
     public function __construct(
@@ -73,11 +73,11 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
      *
      * @throws \Spryker\Zed\MessageBrokerAws\Business\Exception\ConfigDecodingFailedException
      *
-     * @return array
+     * @return array<mixed>
      */
     protected function getFormattedConfiguration(string $config): array
     {
-        $formattedConfig = $this->utilEncodingService->decodeJson(
+        $formattedConfig = (array)$this->utilEncodingService->decodeJson(
             html_entity_decode($config, ENT_QUOTES),
             true,
         );
@@ -90,7 +90,7 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
     }
 
     /**
-     * @param array $formattedConfig
+     * @param array<mixed> $formattedConfig
      *
      * @return bool
      */
@@ -106,9 +106,9 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
     }
 
     /**
-     * @param array $formattedConfig
+     * @param array<mixed> $formattedConfig
      *
-     * @return array
+     * @return array<mixed>
      */
     protected function getStoreConfiguration(array $formattedConfig): array
     {
@@ -122,9 +122,9 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
     }
 
     /**
-     * @param array $formattedConfig
+     * @param array<mixed> $formattedConfig
      *
-     * @return array
+     * @return array<mixed>
      */
     protected function getDefaultConfiguration(array $formattedConfig): array
     {
@@ -140,6 +140,6 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
      */
     protected function getCurrentStore(): string
     {
-        return $this->storeFacade->getCurrentStore()->getName();
+        return $this->storeFacade->getCurrentStore()->getNameOrFail();
     }
 }
