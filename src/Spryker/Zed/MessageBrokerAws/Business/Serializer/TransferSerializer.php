@@ -97,11 +97,20 @@ class TransferSerializer implements SerializerInterface
         }
 
         try {
+            /** @var \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer */
             $messageTransfer = $this->serializer->deserialize($encodedEnvelope['body'], $messageTransferClassName, $this->format, $this->context);
-            $messageTransfer->setMessageAttributes($messageAttributesTransfer);
         } catch (ExceptionInterface $e) {
             throw new EnvelopDecodingFailedException('Could not decode message: ' . $e->getMessage(), $e->getCode(), $e);
         }
+
+        if (!method_exists($messageTransfer, 'setMessageAttributes')) {
+            throw new EnvelopDecodingFailedException(sprintf(
+                'Could not decode message: "%s" contains no "setMessageAttributes" method.',
+                get_class($messageTransfer),
+            ));
+        }
+
+        $messageTransfer->setMessageAttributes($messageAttributesTransfer);
 
         return new Envelope($messageTransfer);
     }

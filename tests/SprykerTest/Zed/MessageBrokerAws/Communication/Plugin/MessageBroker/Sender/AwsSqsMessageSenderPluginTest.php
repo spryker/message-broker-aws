@@ -55,6 +55,8 @@ class AwsSqsMessageSenderPluginTest extends Unit
         $this->tester->setChannelToSenderTransportMap(static::CHANNEL_NAME, 'sqs');
         $this->tester->setSqsSenderConfiguration();
 
+        $sqsSenderClient = $this->tester->mockSuccessfulSqsClientSendResponse();
+
         // Act
         $awsSqsMessageSenderPlugin = new AwsSqsMessageSenderPlugin();
         $awsSqsMessageSenderPlugin->setFacade($this->tester->getFacade());
@@ -65,7 +67,7 @@ class AwsSqsMessageSenderPluginTest extends Unit
         $senderClientStamp = $envelope->last(SenderClientStamp::class);
 
         $this->assertSame(
-            SqsSenderClient::class,
+            get_class($sqsSenderClient),
             $senderClientStamp->getSenderClientName(),
             sprintf(
                 'Expected not to have the message sent with the "%s" client but it was sent with "%s".',

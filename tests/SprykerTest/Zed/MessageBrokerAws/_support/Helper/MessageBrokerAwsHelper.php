@@ -7,6 +7,7 @@
 
 namespace SprykerTest\Zed\MessageBrokerAws\Helper;
 
+use AsyncAws\Core\Exception\Http\NetworkException;
 use AsyncAws\Sns\Result\PublishResponse;
 use AsyncAws\Sns\SnsClient;
 use Codeception\Module;
@@ -20,12 +21,14 @@ use Generated\Shared\Transfer\StoreTransfer;
 use Ramsey\Uuid\Uuid;
 use Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsBusinessFactory;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SnsSenderClient;
+use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SqsSenderClient;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender\AwsSnsMessageSenderPlugin;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender\AwsSqsMessageSenderPlugin;
 use Spryker\Zed\MessageBrokerAws\Dependency\Facade\MessageBrokerAwsToStoreBridge;
 use Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceBridge;
 use SprykerTest\Shared\Testify\Helper\DependencyHelperTrait;
 use SprykerTest\Zed\Testify\Helper\Business\BusinessHelperTrait;
+use Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsSender;
 use Symfony\Component\Messenger\Envelope;
 
 class MessageBrokerAwsHelper extends Module
@@ -108,7 +111,13 @@ class MessageBrokerAwsHelper extends Module
         $awsSqsMessageSenderPlugin = new AwsSqsMessageSenderPlugin();
         $awsSqsMessageSenderPlugin->setFacade($this->getBusinessHelper()->getFacade());
 
-        return $awsSqsMessageSenderPlugin->send($envelope);
+        try {
+            $envelope = $awsSqsMessageSenderPlugin->send($envelope);
+        } catch (NetworkException $e) {
+            $this->markTestSkipped('Localstack is not implemented.');
+        }
+
+        return $envelope;
     }
 
     /**
@@ -216,6 +225,47 @@ class MessageBrokerAwsHelper extends Module
     }
 
     /**
+     * @return \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SqsSenderClient
+     */
+    public function mockSuccessfulSqsClientSendResponse(): SqsSenderClient
+    {
+        $awsSqsSenderClientMock = Stub::make(AmazonSqsSender::class, [
+            'send' => function ($envelope) {
+                return $envelope;
+            },
+        ]);
+
+        return $this->mockSqsSenderClient($awsSqsSenderClientMock);
+    }
+
+    /**
+     * @param \Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsSender $awsSqsSenderClientMock
+     *
+     * @return \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SqsSenderClient
+     */
+    protected function mockSqsSenderClient(AmazonSqsSender $awsSqsSenderClientMock): SqsSenderClient
+    {
+        $sqsSenderClientMock = Stub::construct(
+            SqsSenderClient::class,
+            [
+                $this->getFactory()->getConfig(),
+                $this->getFactory()->createSerializer(),
+                $this->getFactory()->createConfigFormatter(),
+            ],
+            [
+                'createSenderClient' => $awsSqsSenderClientMock,
+            ],
+        );
+
+        $this->getBusinessHelper()->mockFactoryMethod('createSqsSenderClient', $sqsSenderClientMock);
+
+        $this->mockStoreFacade();
+        $this->mockUtilEncodingService();
+
+        return $sqsSenderClientMock;
+    }
+
+    /**
      * @return void
      */
     protected function mockStoreFacade(): void
@@ -240,6 +290,11 @@ class MessageBrokerAwsHelper extends Module
             [
                 'decodeJson' => function ($jsonValue, $assoc, $depth = null, $options = null) {
                     return json_decode($jsonValue, $assoc);
+                },
+                'encodeJson' => function ($value, $options = null, $depth = null) {
+                    dump($value);
+
+                    return json_encode($value);
                 },
             ],
         );
