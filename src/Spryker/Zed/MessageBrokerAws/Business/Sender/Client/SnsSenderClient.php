@@ -7,6 +7,7 @@
 
 namespace Spryker\Zed\MessageBrokerAws\Business\Sender\Client;
 
+use AsyncAws\Core\Configuration;
 use AsyncAws\Sns\SnsClient;
 use AsyncAws\Sns\SnsClient as AsyncAwsSnsClient;
 use AsyncAws\Sns\ValueObject\MessageAttributeValue;
@@ -151,7 +152,7 @@ class SnsSenderClient implements SenderClientInterface
             $snsSenderConfig = $this->configFormatter->format($snsSenderConfig);
         }
 
-        $snsSenderConfig['debug'] = $this->config->isDebugEnabled();
+        $snsSenderConfig[Configuration::OPTION_DEBUG] = $this->config->isDebugEnabled();
 
         return $snsSenderConfig;
     }

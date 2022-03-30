@@ -114,7 +114,7 @@ class MessageBrokerAwsHelper extends Module
         try {
             $envelope = $awsSqsMessageSenderPlugin->send($envelope);
         } catch (NetworkException $e) {
-            $this->markTestSkipped('Localstack is not implemented.');
+            $this->markTestSkipped('Localstack is not running.');
         }
 
         return $envelope;
@@ -292,8 +292,6 @@ class MessageBrokerAwsHelper extends Module
                     return json_decode($jsonValue, $assoc);
                 },
                 'encodeJson' => function ($value, $options = null, $depth = null) {
-                    dump($value);
-
                     return json_encode($value);
                 },
             ],
