@@ -82,6 +82,8 @@ class AwsSnsMessageSenderPluginTest extends Unit
         $this->tester->setChannelToSenderTransportMap(static::CHANNEL_NAME, 'sns');
         $this->tester->setSnsSenderConfiguration();
 
+        $snsSenderClient = $this->tester->mockSuccessfulSnsClientSendResponse();
+
         // Act
         $awsSnsMessageSenderPlugin = new AwsSnsMessageSenderPlugin();
         $awsSnsMessageSenderPlugin->setFacade($this->tester->getFacade());
@@ -92,7 +94,7 @@ class AwsSnsMessageSenderPluginTest extends Unit
         $senderClientStamp = $envelope->last(SenderClientStamp::class);
 
         $this->assertSame(
-            SnsSenderClient::class,
+            get_class($snsSenderClient),
             $senderClientStamp->getSenderClientName(),
             sprintf(
                 'Expected not to have the message sent with the "%s" client but it was sent with "%s".',

@@ -22,7 +22,7 @@ use Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsBusinessFactory;
 use Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SnsSenderClient;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender\AwsSnsMessageSenderPlugin;
 use Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender\AwsSqsMessageSenderPlugin;
-use Spryker\Zed\MessageBrokerAws\Dependency\MessageBrokerAwsToStoreBridge;
+use Spryker\Zed\MessageBrokerAws\Dependency\Facade\MessageBrokerAwsToStoreBridge;
 use Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceBridge;
 use SprykerTest\Shared\Testify\Helper\DependencyHelperTrait;
 use SprykerTest\Zed\Testify\Helper\Business\BusinessHelperTrait;
@@ -144,9 +144,9 @@ class MessageBrokerAwsHelper extends Module
     }
 
     /**
-     * @return void
+     * @return \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SnsSenderClient
      */
-    public function mockSuccessfulSnsClientSendResponse(): void
+    public function mockSuccessfulSnsClientSendResponse(): SnsSenderClient
     {
         $publishResponseMock = Stub::make(PublishResponse::class, [
             'getMessageId' => Uuid::uuid4()->toString(),
@@ -156,13 +156,13 @@ class MessageBrokerAwsHelper extends Module
             'publish' => $publishResponseMock,
         ]);
 
-        $this->mockSnsSenderClient($awsSnsSenderClientMock);
+        return $this->mockSnsSenderClient($awsSnsSenderClientMock);
     }
 
     /**
-     * @return void
+     * @return \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SnsSenderClient
      */
-    public function mockFailingSnsClient(): void
+    public function mockFailingSnsClient(): SnsSenderClient
     {
         $awsSnsSenderClientMock = Stub::make(SnsClient::class, [
             'publish' => function (): void {
@@ -170,13 +170,13 @@ class MessageBrokerAwsHelper extends Module
             },
         ]);
 
-        $this->mockSnsSenderClient($awsSnsSenderClientMock);
+        return $this->mockSnsSenderClient($awsSnsSenderClientMock);
     }
 
     /**
-     * @return void
+     * @return \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SnsSenderClient
      */
-    public function mockFailingSnsClientSendResponse(): void
+    public function mockFailingSnsClientSendResponse(): SnsSenderClient
     {
         $publishResponseMock = Stub::make(PublishResponse::class, [
             'getMessageId' => null,
@@ -185,15 +185,15 @@ class MessageBrokerAwsHelper extends Module
             'publish' => $publishResponseMock,
         ]);
 
-        $this->mockSnsSenderClient($awsSnsSenderClientMock);
+        return $this->mockSnsSenderClient($awsSnsSenderClientMock);
     }
 
     /**
      * @param \AsyncAws\Sns\SnsClient $awsSnsSenderClientMock
      *
-     * @return void
+     * @return \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SnsSenderClient
      */
-    protected function mockSnsSenderClient(SnsClient $awsSnsSenderClientMock): void
+    protected function mockSnsSenderClient(SnsClient $awsSnsSenderClientMock): SnsSenderClient
     {
         $snsSenderClientMock = Stub::construct(
             SnsSenderClient::class,
@@ -211,6 +211,8 @@ class MessageBrokerAwsHelper extends Module
 
         $this->mockStoreFacade();
         $this->mockUtilEncodingService();
+
+        return $snsSenderClientMock;
     }
 
     /**
