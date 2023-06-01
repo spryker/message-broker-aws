@@ -27,6 +27,11 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
     /**
      * @var string
      */
+    public const HTTP_CHANNEL_TRANSPORT = 'http-channel';
+
+    /**
+     * @var string
+     */
     protected const SQS_AWS_API_VERSION = '2012-11-05';
 
     /**

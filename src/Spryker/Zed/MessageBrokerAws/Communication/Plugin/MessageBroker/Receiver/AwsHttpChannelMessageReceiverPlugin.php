@@ -18,7 +18,7 @@ use Symfony\Component\Messenger\Transport\Receiver\QueueReceiverInterface;
  * @method \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig getConfig()
  * @method \Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsFacadeInterface getFacade()
  */
-class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageReceiverPluginInterface, QueueReceiverInterface
+class AwsHttpChannelMessageReceiverPlugin extends AbstractPlugin implements MessageReceiverPluginInterface, QueueReceiverInterface
 {
     /**
      * {@inheritDoc}
@@ -29,7 +29,7 @@ class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRecei
      */
     public function getTransportName(): string
     {
-        return MessageBrokerAwsConfig::SQS_TRANSPORT;
+        return MessageBrokerAwsConfig::HTTP_CHANNEL_TRANSPORT;
     }
 
     /**
@@ -43,13 +43,8 @@ class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRecei
      */
     public function getFromQueues(array $queueNames): iterable
     {
-        foreach ($queueNames as $channelName) {
-            yield from $this->getFacade()->getSqs($channelName);
-        }
-    // @codeCoverageIgnoreStart
+        return [];
     }
-
-    // @codeCoverageIgnoreEnd
 
     /**
      * {@inheritDoc}
@@ -62,7 +57,7 @@ class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRecei
      */
     public function get(): iterable
     {
-        return [];
+        return $this->getFacade()->get();
     }
 
     /**
