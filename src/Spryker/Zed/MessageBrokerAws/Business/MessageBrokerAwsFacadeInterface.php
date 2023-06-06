@@ -88,4 +88,11 @@ interface MessageBrokerAwsFacadeInterface
      * @return void
      */
     public function subscribeSqsToSns(): void;
+
+    /**
+     * @param array<string, mixed> $encodedEnvelope
+     *
+     * @return \Symfony\Component\Messenger\Envelope
+     */
+    public function createEnvelope(array $encodedEnvelope): Envelope;
 }

@@ -106,4 +106,14 @@ class MessageBrokerAwsFacade extends AbstractFacade implements MessageBrokerAwsF
     {
         $this->getFactory()->createAwsSqsQueueSubscriber()->subscribeSqsToSns();
     }
+
+    /**
+     * @param array<string, mixed> $encodedEnvelope
+     *
+     * @return \Symfony\Component\Messenger\Envelope
+     */
+    public function createEnvelope(array $encodedEnvelope): Envelope
+    {
+        return $this->getFactory()->createSerializer()->decode($encodedEnvelope);
+    }
 }
