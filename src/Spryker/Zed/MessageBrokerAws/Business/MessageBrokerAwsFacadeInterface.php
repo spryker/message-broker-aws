@@ -95,4 +95,11 @@ interface MessageBrokerAwsFacadeInterface
      * @return \Symfony\Component\Messenger\Envelope
      */
     public function createEnvelope(array $encodedEnvelope): Envelope;
+
+    /**
+     * @param \Symfony\Component\Messenger\Envelope $envelope
+     *
+     * @return array
+     */
+    public function serializeEnvelope(Envelope $envelope): array;
 }

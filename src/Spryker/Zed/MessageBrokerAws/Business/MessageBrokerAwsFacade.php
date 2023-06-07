@@ -116,4 +116,14 @@ class MessageBrokerAwsFacade extends AbstractFacade implements MessageBrokerAwsF
     {
         return $this->getFactory()->createSerializer()->decode($encodedEnvelope);
     }
+
+    /**
+     * @param \Symfony\Component\Messenger\Envelope $envelope
+     *
+     * @return array
+     */
+    public function serializeEnvelope(Envelope $envelope): array
+    {
+        return $this->getFactory()->createSerializer()->encode($envelope);
+    }
 }
