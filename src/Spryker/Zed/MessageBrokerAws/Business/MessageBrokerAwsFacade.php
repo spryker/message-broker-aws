@@ -30,6 +30,20 @@ class MessageBrokerAwsFacade extends AbstractFacade implements MessageBrokerAwsF
     }
 
     /**
+     * Specification:
+     *
+     * @api
+     *
+     * @param \Symfony\Component\Messenger\Envelope $envelope
+     *
+     * @return \Symfony\Component\Messenger\Envelope
+     */
+    public function sendWithHttp(Envelope $envelope): Envelope
+    {
+        return $this->getFactory()->createHttpSenderClient()->send($envelope);
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @api

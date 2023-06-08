@@ -42,6 +42,6 @@ class HttpMessageSenderPlugin extends AbstractPlugin implements MessageSenderPlu
      */
     public function send(Envelope $envelope): Envelope
     {
-        return $this->getFacade()->send($envelope);
+        return $this->getFacade()->sendWithHttp($envelope);
     }
 }
