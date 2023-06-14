@@ -7,6 +7,7 @@
 
 namespace Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Locator;
 
+use Exception;
 use Spryker\Zed\MessageBrokerAws\Business\Config\ConfigFormatterInterface;
 use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\ReceiverClientInterface;
 use Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig;
@@ -53,6 +54,14 @@ class ReceiverClientLocator implements ReceiverClientLocatorInterface
             $channelToReceiverClientMap = $this->configFormatter->format($channelToReceiverClientMap);
         }
 
-        return $this->receiverClients[$channelToReceiverClientMap[$channelName]];
+        foreach ((array)$channelToReceiverClientMap[$channelName] as $transportName) {
+            if (!isset($this->receiverClients[$transportName])) {
+                continue;
+            }
+
+            return $this->receiverClients[$transportName];
+        }
+
+        throw new Exception(sprintf('Cannot find a receiver for "%s"', $channelName));
     }
 }

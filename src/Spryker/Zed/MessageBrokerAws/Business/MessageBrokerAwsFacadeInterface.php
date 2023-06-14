@@ -24,17 +24,6 @@ interface MessageBrokerAwsFacadeInterface
 
     /**
      * Specification:
-     *
-     * @api
-     *
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     *
-     * @return \Symfony\Component\Messenger\Envelope
-     */
-    public function sendWithHttp(Envelope $envelope): Envelope;
-
-    /**
-     * Specification:
      * - Receives messages from SQS.
      * - Adds ChannelNameStamp in Envelop.
      * - Returns a generator to get an unlimited number of Envelopes.
@@ -99,18 +88,4 @@ interface MessageBrokerAwsFacadeInterface
      * @return void
      */
     public function subscribeSqsToSns(): void;
-
-    /**
-     * @param array<string, mixed> $encodedEnvelope
-     *
-     * @return \Symfony\Component\Messenger\Envelope
-     */
-    public function createEnvelope(array $encodedEnvelope): Envelope;
-
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     *
-     * @return array
-     */
-    public function serializeEnvelope(Envelope $envelope): array;
 }

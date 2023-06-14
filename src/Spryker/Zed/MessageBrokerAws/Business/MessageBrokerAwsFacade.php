@@ -30,20 +30,6 @@ class MessageBrokerAwsFacade extends AbstractFacade implements MessageBrokerAwsF
     }
 
     /**
-     * Specification:
-     *
-     * @api
-     *
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     *
-     * @return \Symfony\Component\Messenger\Envelope
-     */
-    public function sendWithHttp(Envelope $envelope): Envelope
-    {
-        return $this->getFactory()->createHttpSenderClient()->send($envelope);
-    }
-
-    /**
      * {@inheritDoc}
      *
      * @api
@@ -119,25 +105,5 @@ class MessageBrokerAwsFacade extends AbstractFacade implements MessageBrokerAwsF
     public function subscribeSqsToSns(): void
     {
         $this->getFactory()->createAwsSqsQueueSubscriber()->subscribeSqsToSns();
-    }
-
-    /**
-     * @param array<string, mixed> $encodedEnvelope
-     *
-     * @return \Symfony\Component\Messenger\Envelope
-     */
-    public function createEnvelope(array $encodedEnvelope): Envelope
-    {
-        return $this->getFactory()->createSerializer()->decode($encodedEnvelope);
-    }
-
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     *
-     * @return array
-     */
-    public function serializeEnvelope(Envelope $envelope): array
-    {
-        return $this->getFactory()->createSerializer()->encode($envelope);
     }
 }

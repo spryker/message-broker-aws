@@ -9,7 +9,6 @@ namespace Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Receiv
 
 use Exception;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
-use Spryker\Zed\MessageBroker\Communication\Plugin\MessageBroker\Receiver\HttpChannelMessageReceiverPlugin;
 use Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig;
 use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageReceiverPluginInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -22,12 +21,6 @@ use Symfony\Component\Messenger\Transport\Receiver\QueueReceiverInterface;
 class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageReceiverPluginInterface, QueueReceiverInterface
 {
     /**
-     * @var array<string>
-     *
-     */
-    protected $channels = [];
-
-    /**
      * {@inheritDoc}
      *
      * @api
@@ -37,16 +30,6 @@ class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRecei
     public function getTransportName(): string
     {
         return MessageBrokerAwsConfig::SQS_TRANSPORT;
-    }
-
-    /**
-     * @return self
-     */
-    public function setChannels(array $channels): self
-    {
-        $this->channels = $channels;
-
-        return $this;
     }
 
     /**
