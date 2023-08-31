@@ -15,12 +15,10 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Receiver\QueueReceiverInterface;
 
 /**
- * @deprecated Will be removed without replacement.
- *
  * @method \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig getConfig()
  * @method \Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsFacadeInterface getFacade()
  */
-class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageReceiverPluginInterface, QueueReceiverInterface
+class HttpChannelMessageReceiverPlugin extends AbstractPlugin implements MessageReceiverPluginInterface, QueueReceiverInterface
 {
     /**
      * {@inheritDoc}
@@ -31,7 +29,7 @@ class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRecei
      */
     public function getTransportName(): string
     {
-        return MessageBrokerAwsConfig::SQS_TRANSPORT;
+        return MessageBrokerAwsConfig::HTTP_CHANNEL_TRANSPORT;
     }
 
     /**
@@ -41,17 +39,14 @@ class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRecei
      *
      * @param array<string> $queueNames
      *
-     * @return array<\Symfony\Component\Messenger\Envelope>
+     * @return list<\Symfony\Component\Messenger\Envelope>
      */
     public function getFromQueues(array $queueNames): iterable
     {
         foreach ($queueNames as $channelName) {
-            yield from $this->getFacade()->getSqs($channelName);
+            yield from $this->getFacade()->getMessagesFromHttpChannel($channelName);
         }
-    // @codeCoverageIgnoreStart
     }
-
-    // @codeCoverageIgnoreEnd
 
     /**
      * {@inheritDoc}
@@ -60,7 +55,7 @@ class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRecei
      *
      * @api
      *
-     * @return array<\Symfony\Component\Messenger\Envelope>
+     * @return list<\Symfony\Component\Messenger\Envelope>
      */
     public function get(): iterable
     {
@@ -78,7 +73,7 @@ class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRecei
      */
     public function ack(Envelope $envelope): void
     {
-        $this->getFacade()->ack($envelope);
+        $this->getFacade()->ackMessageFromHttpChannel($envelope);
     }
 
     /**
@@ -92,6 +87,6 @@ class AwsSqsMessageReceiverPlugin extends AbstractPlugin implements MessageRecei
      */
     public function reject(Envelope $envelope): void
     {
-        $this->getFacade()->reject($envelope);
+        $this->getFacade()->rejectMessageFromHttpChannel($envelope);
     }
 }

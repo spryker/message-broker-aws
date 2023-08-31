@@ -8,16 +8,15 @@
 namespace Spryker\Zed\MessageBrokerAws\Communication\Plugin\MessageBroker\Sender;
 
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
+use Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig;
 use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageSenderPluginInterface;
 use Symfony\Component\Messenger\Envelope;
 
 /**
- * @deprecated Will be removed without replacement.
- *
  * @method \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig getConfig()
  * @method \Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsFacadeInterface getFacade()
  */
-class HttpMessageSenderPlugin extends AbstractPlugin implements MessageSenderPluginInterface
+class HttpChannelMessageSenderPlugin extends AbstractPlugin implements MessageSenderPluginInterface
 {
     /**
      * {@inheritDoc}
@@ -28,7 +27,7 @@ class HttpMessageSenderPlugin extends AbstractPlugin implements MessageSenderPlu
      */
     public function getTransportName(): string
     {
-        return 'http';
+        return MessageBrokerAwsConfig::HTTP_CHANNEL_TRANSPORT;
     }
 
     /**
@@ -38,12 +37,12 @@ class HttpMessageSenderPlugin extends AbstractPlugin implements MessageSenderPlu
      *
      * @param \Symfony\Component\Messenger\Envelope $envelope
      *
-     * @throws \Symfony\Component\Messenger\Exception\TransportException
+     * @throws \Spryker\Zed\MessageBrokerAws\Business\Exception\MessageValidationFailedException
      *
      * @return \Symfony\Component\Messenger\Envelope
      */
     public function send(Envelope $envelope): Envelope
     {
-        return $this->getFacade()->send($envelope);
+        return $this->getFacade()->sendMessageToHttpChannel($envelope);
     }
 }
