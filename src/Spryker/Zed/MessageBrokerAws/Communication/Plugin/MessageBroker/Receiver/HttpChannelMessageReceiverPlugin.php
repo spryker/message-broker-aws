@@ -44,6 +44,7 @@ class HttpChannelMessageReceiverPlugin extends AbstractPlugin implements Message
     public function getFromQueues(array $queueNames): iterable
     {
         foreach ($queueNames as $channelName) {
+            /** @phpstan-ignore generator.returnType */
             yield from $this->getFacade()->getMessagesFromHttpChannel($channelName);
         }
     }

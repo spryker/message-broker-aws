@@ -36,7 +36,7 @@ class HttpChannelReceiverClient implements ReceiverClientInterface
     protected SerializerInterface $serializer;
 
     /**
-     * @var list<\Spryker\Zed\MessageBrokerAwsExtension\Dependency\Plugin\HttpChannelMessageReceiverRequestExpanderPluginInterface>
+     * @var array<\Spryker\Zed\MessageBrokerAwsExtension\Dependency\Plugin\HttpChannelMessageReceiverRequestExpanderPluginInterface>
      */
     protected array $httpChannelMessageReceiverRequestExpanderPlugins;
 
@@ -53,7 +53,7 @@ class HttpChannelReceiverClient implements ReceiverClientInterface
     /**
      * @param \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig $config
      * @param \Symfony\Component\Messenger\Transport\Serialization\SerializerInterface $serializer
-     * @param list<\Spryker\Zed\MessageBrokerAwsExtension\Dependency\Plugin\HttpChannelMessageReceiverRequestExpanderPluginInterface> $httpChannelMessageReceiverRequestExpanderPlugins
+     * @param array<\Spryker\Zed\MessageBrokerAwsExtension\Dependency\Plugin\HttpChannelMessageReceiverRequestExpanderPluginInterface> $httpChannelMessageReceiverRequestExpanderPlugins
      * @param \GuzzleHttp\ClientInterface $httpClient
      * @param \Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceInterface $utilEncodingService
      */
@@ -74,7 +74,7 @@ class HttpChannelReceiverClient implements ReceiverClientInterface
     /**
      * @param string $channelName
      *
-     * @return list<\Symfony\Component\Messenger\Envelope>
+     * @return array<\Symfony\Component\Messenger\Envelope>
      */
     public function get(string $channelName): iterable
     {
@@ -209,9 +209,9 @@ class HttpChannelReceiverClient implements ReceiverClientInterface
     }
 
     /**
-     * @param list<mixed> $messages
+     * @param array<mixed> $messages
      *
-     * @return list<\Symfony\Component\Messenger\Envelope>
+     * @return array<\Symfony\Component\Messenger\Envelope>
      */
     protected function transformMessagesToEnvelopes(array $messages): array
     {

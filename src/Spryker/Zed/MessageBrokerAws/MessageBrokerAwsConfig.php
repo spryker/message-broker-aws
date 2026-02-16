@@ -63,8 +63,9 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
      */
     public function getSnsSenderConfig()
     {
-        if (getenv('SPRYKER_MESSAGE_BROKER_SNS_SENDER_CONFIG') !== false) {
-            return getenv('SPRYKER_MESSAGE_BROKER_SNS_SENDER_CONFIG');
+        $config = getenv('SPRYKER_MESSAGE_BROKER_SNS_SENDER_CONFIG');
+        if ($config !== false) {
+            return $config;
         }
 
         // @codeCoverageIgnoreStart
@@ -85,8 +86,9 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
      */
     public function getSqsSenderConfig()
     {
-        if (getenv('SPRYKER_MESSAGE_BROKER_SQS_SENDER_CONFIG') !== false) {
-            return getenv('SPRYKER_MESSAGE_BROKER_SQS_SENDER_CONFIG');
+        $config = getenv('SPRYKER_MESSAGE_BROKER_SQS_SENDER_CONFIG');
+        if ($config !== false) {
+            return $config;
         }
 
         // @codeCoverageIgnoreStart
@@ -107,8 +109,9 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
      */
     public function getHttpSenderConfig()
     {
-        if (getenv('SPRYKER_MESSAGE_BROKER_HTTP_SENDER_CONFIG') !== false) {
-            return getenv('SPRYKER_MESSAGE_BROKER_HTTP_SENDER_CONFIG');
+        $config = getenv('SPRYKER_MESSAGE_BROKER_HTTP_SENDER_CONFIG');
+        if ($config !== false) {
+            return $config;
         }
 
         // @codeCoverageIgnoreStart
@@ -129,8 +132,9 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
      */
     public function getSqsReceiverConfig()
     {
-        if (getenv('SPRYKER_MESSAGE_BROKER_SQS_RECEIVER_CONFIG') !== false) {
-            return getenv('SPRYKER_MESSAGE_BROKER_SQS_RECEIVER_CONFIG');
+        $config = getenv('SPRYKER_MESSAGE_BROKER_SQS_RECEIVER_CONFIG');
+        if ($config !== false) {
+            return $config;
         }
 
         // @codeCoverageIgnoreStart
@@ -171,8 +175,9 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
      */
     public function getChannelToSenderTransportMap()
     {
-        if (getenv('SPRYKER_CHANNEL_TO_SENDER_TRANSPORT_MAP') !== false) {
-            return getenv('SPRYKER_CHANNEL_TO_SENDER_TRANSPORT_MAP');
+        $map = getenv('SPRYKER_CHANNEL_TO_SENDER_TRANSPORT_MAP');
+        if ($map !== false) {
+            return $map;
         }
 
         // @codeCoverageIgnoreStart
@@ -191,8 +196,9 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
      */
     public function getChannelToReceiverTransportMap()
     {
-        if (getenv('SPRYKER_CHANNEL_TO_RECEIVER_TRANSPORT_MAP') !== false) {
-            return getenv('SPRYKER_CHANNEL_TO_RECEIVER_TRANSPORT_MAP');
+        $map = getenv('SPRYKER_CHANNEL_TO_RECEIVER_TRANSPORT_MAP');
+        if ($map !== false) {
+            return $map;
         }
 
         // @codeCoverageIgnoreStart
@@ -211,8 +217,9 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
      */
     public function getMessageToChannelMap()
     {
-        if (getenv('SPRYKER_MESSAGE_TO_CHANNEL_MAP') !== false) {
-            return getenv('SPRYKER_MESSAGE_TO_CHANNEL_MAP');
+        $map = getenv('SPRYKER_MESSAGE_TO_CHANNEL_MAP');
+        if ($map !== false) {
+            return $map;
         }
 
         // @codeCoverageIgnoreStart

@@ -138,6 +138,7 @@ class TransferSerializer implements SerializerInterface
         /** @var \Generated\Shared\Transfer\MessageAttributesTransfer $messageAttributesTransfer */
         $messageAttributesTransfer = $messageTransfer->getMessageAttributes();
 
+        /** @phpstan-ignore instanceof.alwaysTrue */
         if (!($messageAttributesTransfer instanceof MessageAttributesTransfer)) {
             throw new EnvelopDecodingFailedException(sprintf('Could not decode message, expected to have a Transfer object "%s" inside your "%s" message transfer but it is empty.', MessageAttributesTransfer::class, get_class($messageTransfer)));
         }
