@@ -32,11 +32,6 @@ class Sender implements SenderInterface
      */
     protected ConfigFormatterInterface $configFormatter;
 
-    /**
-     * @param \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig $config
-     * @param \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Locator\SenderClientLocatorInterface $senderClientResolver
-     * @param \Spryker\Zed\MessageBrokerAws\Business\Config\ConfigFormatterInterface $configFormatter
-     */
     public function __construct(MessageBrokerAwsConfig $config, SenderClientLocatorInterface $senderClientResolver, ConfigFormatterInterface $configFormatter)
     {
         $this->config = $config;
@@ -44,11 +39,6 @@ class Sender implements SenderInterface
         $this->configFormatter = $configFormatter;
     }
 
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     *
-     * @return \Symfony\Component\Messenger\Envelope
-     */
     public function send(Envelope $envelope): Envelope
     {
         $channelName = $this->getSenderChannelNameForMessage($envelope);
@@ -62,11 +52,6 @@ class Sender implements SenderInterface
             ->send($envelope);
     }
 
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     *
-     * @return string|null
-     */
     public function getSenderChannelNameForMessage(Envelope $envelope): ?string
     {
         $messageToChannelMap = $this->config->getMessageToChannelMap();

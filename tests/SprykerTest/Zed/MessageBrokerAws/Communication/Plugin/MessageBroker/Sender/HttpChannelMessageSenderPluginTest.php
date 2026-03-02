@@ -60,9 +60,6 @@ class HttpChannelMessageSenderPluginTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -71,9 +68,6 @@ class HttpChannelMessageSenderPluginTest extends Unit
         $this->tester->setConfig(MessageBrokerConstants::TENANT_IDENTIFIER, static::TENANT_IDENTIFIER);
     }
 
-    /**
-     * @return void
-     */
     public function testSendEnvelopeSuccessfullyExecutesWhenRequestIsCorrect(): void
     {
         // Arrange
@@ -145,9 +139,6 @@ class HttpChannelMessageSenderPluginTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
     public function testSendEnvelopeThrowsExceptionWhenEnvelopeIsInvalid(): void
     {
         // Arrange

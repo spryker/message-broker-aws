@@ -47,22 +47,12 @@ class MessageBrokerAwsBusinessTester extends Actor
      */
     protected const MESSAGE_ATTRIBUTES_KEY = 'message_attributes';
 
-    /**
-     * @param array $seed
-     *
-     * @return \Generated\Shared\Transfer\MessageBrokerTestMessageWithArrayTransfer
-     */
     public function createMessageBrokerTestMessageWithArrayTransfer(
         array $seed = []
     ): MessageBrokerTestMessageWithArrayTransfer {
         return (new MessageBrokerTestMessageWithArrayBuilder($seed))->build();
     }
 
-    /**
-     * @param array $seed
-     *
-     * @return \Generated\Shared\Transfer\MessageBrokerTestMessageWithNestedArrayTransfer
-     */
     public function createMessageBrokerTestMessageWithNestedArrayTransfer(
         array $seed = []
     ): MessageBrokerTestMessageWithNestedArrayTransfer {
@@ -101,11 +91,6 @@ class MessageBrokerAwsBusinessTester extends Actor
         ];
     }
 
-    /**
-     * @param \Spryker\Shared\Kernel\Transfer\AbstractTransfer $transfer
-     *
-     * @return string
-     */
     protected function getTransferName(AbstractTransfer $transfer): string
     {
         $fqcnParts = explode('\\', get_class($transfer));

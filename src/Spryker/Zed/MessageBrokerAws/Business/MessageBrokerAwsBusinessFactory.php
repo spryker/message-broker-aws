@@ -144,9 +144,6 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SenderClientInterface
-     */
     public function createHttpChannelSenderClient(): SenderClientInterface
     {
         return new HttpChannelSenderClient(
@@ -197,9 +194,6 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
         ];
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\ReceiverClientInterface
-     */
     public function createHttpChannelReceiverClient(): ReceiverClientInterface
     {
         return new HttpChannelReceiverClient(
@@ -225,9 +219,6 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Symfony\Component\Messenger\Transport\Serialization\SerializerInterface
-     */
     public function createSerializer(): SerializerInterface
     {
         return new TransferSerializer(
@@ -237,9 +228,6 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Symfony\Component\Serializer\Serializer
-     */
     public function createSymfonySerializer(): SymfonySerializer
     {
         return new SymfonySerializer(
@@ -259,17 +247,11 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
         ];
     }
 
-    /**
-     * @return \Symfony\Component\Serializer\Normalizer\ArrayDenormalizer
-     */
     public function createArrayDenormalizer(): ArrayDenormalizer
     {
         return new ArrayDenormalizer();
     }
 
-    /**
-     * @return \Symfony\Component\Serializer\Normalizer\NormalizerInterface
-     */
     public function createTransferNormalizer(): NormalizerInterface
     {
         return new TransferNormalizer();
@@ -285,9 +267,6 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
         ];
     }
 
-    /**
-     * @return \Symfony\Component\Serializer\Encoder\JsonEncoder
-     */
     public function createJsonEncoder(): JsonEncoder
     {
         return new JsonEncoder();
@@ -345,9 +324,6 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \GuzzleHttp\ClientInterface
-     */
     public function getHttpClient(): ClientInterface
     {
         return $this->getProvidedDependency(MessageBrokerAwsDependencyProvider::CLIENT_HTTP);
@@ -371,17 +347,11 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
         return $this->getProvidedDependency(MessageBrokerAwsDependencyProvider::CLIENT_AWS_SQS);
     }
 
-    /**
-     * @return \Aws\Sns\SnsClient
-     */
     public function getAwsSnsClient(): SnsClient
     {
         return $this->getProvidedDependency(MessageBrokerAwsDependencyProvider::CLIENT_AWS_SNS);
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Formatter\HttpHeaderFormatterInterface
-     */
     public function createHttpHeaderFormatter(): HttpHeaderFormatterInterface
     {
         return new HttpHeaderFormatter($this->getConfig());
@@ -407,9 +377,6 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
         return $this->getProvidedDependency(MessageBrokerAwsDependencyProvider::FACADE_STORE);
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceInterface
-     */
     public function getUtilEncodingService(): MessageBrokerAwsToUtilEncodingServiceInterface
     {
         return $this->getProvidedDependency(MessageBrokerAwsDependencyProvider::SERVICE_UTIL_ENCODING);
@@ -426,9 +393,6 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
         ];
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBrokerAws\Business\MessageDataFilter\MessageDataFilterInterface
-     */
     public function createStripIdFieldsMessageDataFilter(): MessageDataFilterInterface
     {
         return new IdFieldsMessageDataFilter(
@@ -436,9 +400,6 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBrokerAws\Business\MessageDataFilter\MessageDataFilterInterface
-     */
     public function createStripNullFieldsMessageDataFilter(): MessageDataFilterInterface
     {
         return new NullFieldsMessageDataFilter(
@@ -446,9 +407,6 @@ class MessageBrokerAwsBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBrokerAws\Business\MessageDataFilter\MessageDataFilterConfigurator
-     */
     public function createMessageDataFilterConfiguration(): MessageDataFilterConfigurator
     {
         return new MessageDataFilterConfigurator(

@@ -16,17 +16,11 @@ class ChannelNameStamp implements StampInterface
      */
     protected string $channelName;
 
-    /**
-     * @param string $channelName
-     */
     public function __construct(string $channelName)
     {
         $this->channelName = $channelName;
     }
 
-    /**
-     * @return string
-     */
     public function getChannelName(): string
     {
         return $this->channelName;

@@ -32,10 +32,6 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
      */
     protected $utilEncodingService;
 
-    /**
-     * @param \Spryker\Zed\MessageBrokerAws\Dependency\Facade\MessageBrokerAwsToStoreFacadeInterface $storeFacade
-     * @param \Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceInterface $utilEncodingService
-     */
     public function __construct(
         MessageBrokerAwsToStoreFacadeInterface $storeFacade,
         MessageBrokerAwsToUtilEncodingServiceInterface $utilEncodingService
@@ -138,9 +134,6 @@ class JsonToArrayConfigFormatter implements ConfigFormatterInterface
         return $formattedConfig[static::DEFAULT_CONFIG_KEY];
     }
 
-    /**
-     * @return string
-     */
     protected function getCurrentStore(): string
     {
         return $this->storeFacade->getCurrentStore()->getNameOrFail();

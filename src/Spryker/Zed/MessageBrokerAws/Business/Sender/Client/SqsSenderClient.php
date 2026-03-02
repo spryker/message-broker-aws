@@ -41,11 +41,6 @@ class SqsSenderClient implements SenderClientInterface
      */
     protected ?array $sqsConfiguration = null;
 
-    /**
-     * @param \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig $config
-     * @param \Symfony\Component\Messenger\Transport\Serialization\SerializerInterface $serializer
-     * @param \Spryker\Zed\MessageBrokerAws\Business\Config\ConfigFormatterInterface $configFormatter
-     */
     public function __construct(MessageBrokerAwsConfig $config, SerializerInterface $serializer, ConfigFormatterInterface $configFormatter)
     {
         $this->config = $config;
@@ -53,19 +48,11 @@ class SqsSenderClient implements SenderClientInterface
         $this->configFormatter = $configFormatter;
     }
 
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     *
-     * @return \Symfony\Component\Messenger\Envelope
-     */
     public function send(Envelope $envelope): Envelope
     {
         return $this->createSenderClient()->send($envelope)->with(new SenderClientStamp(static::class));
     }
 
-    /**
-     * @return \Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsSender
-     */
     protected function createSenderClient(): AmazonSqsSender
     {
         $configuration = $this->getConfiguration();
@@ -74,9 +61,6 @@ class SqsSenderClient implements SenderClientInterface
         return new AmazonSqsSender($connection, $this->serializer);
     }
 
-    /**
-     * @return \AsyncAws\Sqs\SqsClient
-     */
     protected function createSqsClient(): SqsClient
     {
         $configuration = $this->getConfiguration();

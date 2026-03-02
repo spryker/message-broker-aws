@@ -45,9 +45,6 @@ class HttpMessageSenderPluginTest extends Unit
      */
     protected MessageBrokerAwsCommunicationTester $tester;
 
-    /**
-     * @return void
-     */
     public function testSendReturnsUnHandledEnvelopeWhenSenderConfigurationIsMissing(): void
     {
         // Arrange
@@ -76,9 +73,6 @@ class HttpMessageSenderPluginTest extends Unit
         $this->assertNull($sentStamp, sprintf('Expected not to have a "%s" but it is given.', SentStamp::class));
     }
 
-    /**
-     * @return void
-     */
     public function testSendUsesHttpSenderWhenHttpSenderIsConfiguredForChannel(): void
     {
         $pathToServer = __DIR__ . '../../../../_support/Server/200_OK.php';
@@ -174,9 +168,6 @@ class HttpMessageSenderPluginTest extends Unit
         $httpMessageSenderPlugin->send($envelope);
     }
 
-    /**
-     * @return void
-     */
     public function testGetClientNameReturnNameOfTheSupportedClient(): void
     {
         // Arrange

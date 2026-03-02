@@ -12,8 +12,5 @@ namespace Spryker\Zed\MessageBrokerAws\Business\Queue;
  */
 interface AwsSqsQueuesSubscriberInterface
 {
-    /**
-     * @return void
-     */
     public function subscribeSqsToSns(): void;
 }

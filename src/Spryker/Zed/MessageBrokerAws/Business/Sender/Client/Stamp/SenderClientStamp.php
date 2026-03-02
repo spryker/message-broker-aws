@@ -16,17 +16,11 @@ class SenderClientStamp implements StampInterface
      */
     protected string $senderClientName;
 
-    /**
-     * @param string $senderClientName
-     */
     public function __construct(string $senderClientName)
     {
         $this->senderClientName = $senderClientName;
     }
 
-    /**
-     * @return string
-     */
     public function getSenderClientName(): string
     {
         return $this->senderClientName;

@@ -56,11 +56,6 @@ class MessageBrokerAwsDependencyProvider extends AbstractBundleDependencyProvide
      */
     public const PLUGINS_HTTP_CHANNEL_MESSAGE_RECEIVER_REQUEST_EXPANDER = 'PLUGINS_HTTP_CHANNEL_MESSAGE_RECEIVER_REQUEST_EXPANDER';
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     public function provideBusinessLayerDependencies(Container $container): Container
     {
         $container = parent::provideBusinessLayerDependencies($container);
@@ -74,11 +69,6 @@ class MessageBrokerAwsDependencyProvider extends AbstractBundleDependencyProvide
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addHttpClient(Container $container): Container
     {
         $container->set(static::CLIENT_HTTP, function () {
@@ -88,11 +78,6 @@ class MessageBrokerAwsDependencyProvider extends AbstractBundleDependencyProvide
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addSqsAwsClient(Container $container): Container
     {
         $container->set(static::CLIENT_AWS_SQS, function () {
@@ -110,11 +95,6 @@ class MessageBrokerAwsDependencyProvider extends AbstractBundleDependencyProvide
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addSnsAwsClient(Container $container): Container
     {
         $container->set(static::CLIENT_AWS_SNS, function () {
@@ -132,11 +112,6 @@ class MessageBrokerAwsDependencyProvider extends AbstractBundleDependencyProvide
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addHttpChannelMessageReceiverRequestExpanderPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_HTTP_CHANNEL_MESSAGE_RECEIVER_REQUEST_EXPANDER, function () {
@@ -154,11 +129,6 @@ class MessageBrokerAwsDependencyProvider extends AbstractBundleDependencyProvide
         return [];
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addStoreFacade(Container $container): Container
     {
         $container->set(static::FACADE_STORE, function (Container $container) {
@@ -168,11 +138,6 @@ class MessageBrokerAwsDependencyProvider extends AbstractBundleDependencyProvide
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addUtilEncodingService(Container $container): Container
     {
         $container->set(static::SERVICE_UTIL_ENCODING, function (Container $container) {

@@ -14,10 +14,5 @@ use Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\ReceiverClientInterfac
  */
 interface ReceiverClientLocatorInterface
 {
-    /**
-     * @param string $channelName
-     *
-     * @return \Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\ReceiverClientInterface
-     */
     public function getReceiverClientByChannelName(string $channelName): ReceiverClientInterface;
 }

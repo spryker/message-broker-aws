@@ -43,11 +43,6 @@ class ReceiverClientLocator implements ReceiverClientLocatorInterface
         $this->configFormatter = $configFormatter;
     }
 
-    /**
-     * @param string $channelName
-     *
-     * @return \Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\ReceiverClientInterface
-     */
     public function getReceiverClientByChannelName(string $channelName): ReceiverClientInterface
     {
         $channelToReceiverClientMap = $this->config->getChannelToReceiverTransportMap();

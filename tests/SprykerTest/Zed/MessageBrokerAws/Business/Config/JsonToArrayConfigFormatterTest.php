@@ -32,9 +32,6 @@ class JsonToArrayConfigFormatterTest extends Unit
      */
     protected const STORE_NAME = 'foo';
 
-    /**
-     * @return void
-     */
     public function testFormatReturnsUnchangedConfigurationWhenSimpleConfiguration(): void
     {
         // Arrange
@@ -50,9 +47,6 @@ class JsonToArrayConfigFormatterTest extends Unit
         $this->assertSame(['foo' => 'bar'], $formatted);
     }
 
-    /**
-     * @return void
-     */
     public function testFormatMergesDefaultAndStoreConfigurationsWhenDefaultKeyExistsAndStoreKeyExists(): void
     {
         // Arrange
@@ -68,9 +62,6 @@ class JsonToArrayConfigFormatterTest extends Unit
         $this->assertSame(['foo' => sprintf('bar_%s', static::STORE_NAME), 'some' => 'value'], $formatted);
     }
 
-    /**
-     * @return void
-     */
     public function testFormatReturnsDefaultConfigurationWhenDefaultKeyExistsAndStoreKeyDoesNotExist(): void
     {
         // Arrange
@@ -86,9 +77,6 @@ class JsonToArrayConfigFormatterTest extends Unit
         $this->assertSame(['foo' => 'bar'], $formatted);
     }
 
-    /**
-     * @return void
-     */
     public function testFormatReturnsStoreConfigruationWhenDefaultKeyDoesNotExistAndStoreKeyExists(): void
     {
         // Arrange
@@ -104,9 +92,6 @@ class JsonToArrayConfigFormatterTest extends Unit
         $this->assertSame(['foo' => sprintf('bar_%s', static::STORE_NAME)], $formatted);
     }
 
-    /**
-     * @return void
-     */
     public function testFormatThrowsExceptionWhenStringCanNotBeConvertedToArray(): void
     {
         // Arrange
@@ -138,9 +123,6 @@ class JsonToArrayConfigFormatterTest extends Unit
         return $storeFacadeMock;
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceInterface
-     */
     protected function getUtilEncodingMock(): MessageBrokerAwsToUtilEncodingServiceInterface
     {
         $utilEncodingService = $this->createMock(MessageBrokerAwsToUtilEncodingServiceInterface::class);

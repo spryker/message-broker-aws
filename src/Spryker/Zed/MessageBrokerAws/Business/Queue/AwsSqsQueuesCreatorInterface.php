@@ -12,8 +12,5 @@ namespace Spryker\Zed\MessageBrokerAws\Business\Queue;
  */
 interface AwsSqsQueuesCreatorInterface
 {
-    /**
-     * @return void
-     */
     public function createQueues(): void;
 }

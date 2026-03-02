@@ -37,9 +37,6 @@ class AwsSqsMessageReceiverPluginTest extends Unit
      */
     protected MessageBrokerAwsCommunicationTester $tester;
 
-    /**
-     * @return void
-     */
     public function testGetReturnsMessageWhenMessageExist(): void
     {
         $this->tester->haveSqsMessage();
@@ -60,9 +57,6 @@ class AwsSqsMessageReceiverPluginTest extends Unit
         $awsMessageReceiverPlugin->ack($currentMessage);
     }
 
-    /**
-     * @return void
-     */
     public function testRejectReceivedMessage(): void
     {
         $this->tester->haveSqsMessage();
@@ -82,9 +76,6 @@ class AwsSqsMessageReceiverPluginTest extends Unit
         $awsMessageReceiverPlugin->reject($currentMessage);
     }
 
-    /**
-     * @return void
-     */
     public function testGetClientNameReturnNameOfTheSupportedClient(): void
     {
         // Arrange

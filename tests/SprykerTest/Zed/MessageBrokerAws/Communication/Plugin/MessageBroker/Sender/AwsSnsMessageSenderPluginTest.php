@@ -157,9 +157,6 @@ class AwsSnsMessageSenderPluginTest extends Unit
         $awsSnsMessageSenderPlugin->send($envelope);
     }
 
-    /**
-     * @return void
-     */
     public function testGetClientNameReturnNameOfTheSupportedClient(): void
     {
         // Arrange

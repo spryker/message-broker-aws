@@ -12,8 +12,5 @@ namespace Spryker\Zed\MessageBrokerAws\Business\Sns;
  */
 interface AwsSnsTopicCreatorInterface
 {
-    /**
-     * @return void
-     */
     public function createTopics(): void;
 }

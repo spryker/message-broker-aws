@@ -18,9 +18,6 @@ class IdFieldsMessageDataFilter implements MessageDataFilterInterface
      */
     protected MessageDataFilterConfigurator $configurator;
 
-    /**
-     * @param \Spryker\Zed\MessageBrokerAws\Business\MessageDataFilter\MessageDataFilterConfigurator $configurator
-     */
     public function __construct(MessageDataFilterConfigurator $configurator)
     {
         $this->configurator = $configurator;

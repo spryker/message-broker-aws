@@ -38,9 +38,6 @@ class TransferSerializerTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function testDecodeThrowsExceptionWhenBodyIsMissing(): void
     {
         // Arrange
@@ -54,9 +51,6 @@ class TransferSerializerTest extends Unit
         $transferSerializer->decode([]);
     }
 
-    /**
-     * @return void
-     */
     public function testDecodeThrowsExceptionWhenHeaderIsMissing(): void
     {
         // Arrange
@@ -70,9 +64,6 @@ class TransferSerializerTest extends Unit
         $transferSerializer->decode(['body' => 'CatFace']);
     }
 
-    /**
-     * @return void
-     */
     public function testDecodeThrowsExceptionWhenHeaderDoesNotHaveATransferNameAndName(): void
     {
         // Arrange
@@ -86,9 +77,6 @@ class TransferSerializerTest extends Unit
         $transferSerializer->decode(['body' => 'CatFace', 'headers' => ['foo']]);
     }
 
-    /**
-     * @return void
-     */
     public function testDecodeThrowsExceptionWhenClassByTransferNameCouldNotBeLoaded(): void
     {
         // Arrange
@@ -102,9 +90,6 @@ class TransferSerializerTest extends Unit
         $transferSerializer->decode(['body' => 'CatFace', 'headers' => ['transferName' => 'CatFace']]);
     }
 
-    /**
-     * @return void
-     */
     public function testDecodeThrowsExceptionWhenMessageBodyCouldNotBeDeserialized(): void
     {
         // Arrange
@@ -118,9 +103,6 @@ class TransferSerializerTest extends Unit
         $transferSerializer->decode(['body' => 'CatFace', 'headers' => ['transferName' => 'MessageBrokerTestMessage']]);
     }
 
-    /**
-     * @return void
-     */
     public function testDecodeReturnsEnvelopeWhenMessageWithPlainTransferIsSuccessfullyDeserialized(): void
     {
         // Arrange
@@ -145,9 +127,6 @@ class TransferSerializerTest extends Unit
         $this->assertSame($messageBrokerTestMessageTransfer->toArray(), $envelope->getMessage()->toArray());
     }
 
-    /**
-     * @return void
-     */
     public function testDecodeReturnsEnvelopeWhenMessageWithEmptyArrayTransferIsSuccessfullyDeserialized(): void
     {
         // Arrange
@@ -173,9 +152,6 @@ class TransferSerializerTest extends Unit
         $this->assertSame($messageBrokerTestMessageWithArrayTransfer->toArray(), $envelope->getMessage()->toArray());
     }
 
-    /**
-     * @return void
-     */
     public function testDecodeReturnsEnvelopeWhenMessageWithArrayTransferIsSuccessfullyDeserialized(): void
     {
         // Arrange
@@ -204,9 +180,6 @@ class TransferSerializerTest extends Unit
         $this->assertSame($messageBrokerTestMessageWithArrayTransfer->toArray(), $envelope->getMessage()->toArray());
     }
 
-    /**
-     * @return void
-     */
     public function testDecodeReturnsEnvelopeWhenMessageWithNestedArrayTransferIsSuccessfullyDeserialized(): void
     {
         // Arrange
@@ -242,9 +215,6 @@ class TransferSerializerTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
     public function testEncodeThrowsExceptionWhenMessageIsNotAInstanceOfAbstractTransfer(): void
     {
         // Arrange
@@ -259,9 +229,6 @@ class TransferSerializerTest extends Unit
         $transferSerializer->encode($envelope);
     }
 
-    /**
-     * @return void
-     */
     public function testEncodeThrowsExceptionWhenMessageTransferDoesNotHaveMessageAttributesAttribute(): void
     {
         // Arrange
@@ -276,9 +243,6 @@ class TransferSerializerTest extends Unit
         $transferSerializer->encode($envelope);
     }
 
-    /**
-     * @return void
-     */
     public function testEncodeThrowsExceptionWhenMessageTransferDoesNotHaveMessageAttributesSet(): void
     {
         // Arrange
@@ -293,9 +257,6 @@ class TransferSerializerTest extends Unit
         $transferSerializer->encode($envelope);
     }
 
-    /**
-     * @return void
-     */
     public function testEncodeReturnsArrayWithEncodedData(): void
     {
         // Arrange
@@ -316,9 +277,6 @@ class TransferSerializerTest extends Unit
         $this->assertArrayHasKey('headers', $decodedData);
     }
 
-    /**
-     * @return void
-     */
     public function testEncodeUsesFilterReturnValues(): void
     {
         $key = 'key';

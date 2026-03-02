@@ -50,11 +50,6 @@ class SqsReceiverClient implements ReceiverClientInterface
      */
     protected ?array $sqsConfiguration = null;
 
-    /**
-     * @param \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig $config
-     * @param \Symfony\Component\Messenger\Transport\Serialization\SerializerInterface $serializer
-     * @param \Spryker\Zed\MessageBrokerAws\Business\Config\ConfigFormatterInterface $configFormatter
-     */
     public function __construct(MessageBrokerAwsConfig $config, SerializerInterface $serializer, ConfigFormatterInterface $configFormatter)
     {
         $this->config = $config;
@@ -81,29 +76,16 @@ class SqsReceiverClient implements ReceiverClientInterface
 
     // @codeCoverageIgnoreEnd
 
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     *
-     * @return void
-     */
     public function ack(Envelope $envelope): void
     {
         $this->createReceiverClient()->ack($envelope);
     }
 
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     *
-     * @return void
-     */
     public function reject(Envelope $envelope): void
     {
         $this->createReceiverClient()->reject($envelope);
     }
 
-    /**
-     * @return \Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsReceiver
-     */
     protected function createReceiverClient(): AmazonSqsReceiver
     {
         $configuration = $this->getConfiguration();
@@ -112,9 +94,6 @@ class SqsReceiverClient implements ReceiverClientInterface
         return new AmazonSqsReceiver($connection, $this->serializer);
     }
 
-    /**
-     * @return \AsyncAws\Sqs\SqsClient
-     */
     protected function createSqsClient(): SqsClient
     {
         $configuration = $this->getConfiguration();

@@ -42,11 +42,6 @@ class MessageBrokerAwsHelper extends Module
      */
     protected string $localstackEndpoint = 'http://localhost.localstack.cloud:4566';
 
-    /**
-     * @param \Codeception\TestInterface $test
-     *
-     * @return void
-     */
     public function _before(TestInterface $test): void
     {
         parent::_before($test);
@@ -59,11 +54,6 @@ class MessageBrokerAwsHelper extends Module
         putenv('SPRYKER_MESSAGE_BROKER_SQS_RECEIVER_CONFIG');
     }
 
-    /**
-     * @param array $seed
-     *
-     * @return \Generated\Shared\Transfer\MessageAttributesTransfer
-     */
     public function createMessageAttributesTransfer(array $seed = []): MessageAttributesTransfer
     {
         return (new MessageAttributesBuilder($seed))
@@ -71,11 +61,6 @@ class MessageBrokerAwsHelper extends Module
             ->build();
     }
 
-    /**
-     * @param array $seed
-     *
-     * @return \Generated\Shared\Transfer\MessageBrokerTestMessageTransfer
-     */
     public function createMessageBrokerTestMessageTransfer(array $seed = []): MessageBrokerTestMessageTransfer
     {
         return (new MessageBrokerTestMessageBuilder($seed))->build();
@@ -143,9 +128,6 @@ class MessageBrokerAwsHelper extends Module
         return $envelope;
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\MessageBrokerTestMessageTransfer
-     */
     public function createMessageWithRequiredMessageAttributes(): MessageBrokerTestMessageTransfer
     {
         $messageBrokerTestMessageTransfer = new MessageBrokerTestMessageTransfer();
@@ -160,20 +142,11 @@ class MessageBrokerAwsHelper extends Module
         return $messageBrokerTestMessageTransfer;
     }
 
-    /**
-     * @param string $messageClassName
-     * @param string $channelName
-     *
-     * @return void
-     */
     public function setMessageToChannelMap(string $messageClassName, string $channelName): void
     {
         putenv(sprintf('SPRYKER_MESSAGE_TO_CHANNEL_MAP={"%s": "%s"}', str_replace('\\', '\\\\', $messageClassName), $channelName));
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SnsSenderClient
-     */
     public function mockSuccessfulSnsClientSendResponse(): SnsSenderClient
     {
         $publishResponseMock = Stub::make(PublishResponse::class, [
@@ -187,9 +160,6 @@ class MessageBrokerAwsHelper extends Module
         return $this->mockSnsSenderClient($awsSnsSenderClientMock);
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SnsSenderClient
-     */
     public function mockFailingSnsClient(): SnsSenderClient
     {
         $awsSnsSenderClientMock = Stub::make(SnsClient::class, [
@@ -201,9 +171,6 @@ class MessageBrokerAwsHelper extends Module
         return $this->mockSnsSenderClient($awsSnsSenderClientMock);
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SnsSenderClient
-     */
     public function mockFailingSnsClientSendResponse(): SnsSenderClient
     {
         $publishResponseMock = Stub::make(PublishResponse::class, [
@@ -216,11 +183,6 @@ class MessageBrokerAwsHelper extends Module
         return $this->mockSnsSenderClient($awsSnsSenderClientMock);
     }
 
-    /**
-     * @param \AsyncAws\Sns\SnsClient $awsSnsSenderClientMock
-     *
-     * @return \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SnsSenderClient
-     */
     protected function mockSnsSenderClient(SnsClient $awsSnsSenderClientMock): SnsSenderClient
     {
         $snsSenderClientMock = Stub::construct(
@@ -243,9 +205,6 @@ class MessageBrokerAwsHelper extends Module
         return $snsSenderClientMock;
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SqsSenderClient
-     */
     public function mockSuccessfulSqsClientSendResponse(): SqsSenderClient
     {
         $awsSqsSenderClientMock = Stub::make(AmazonSqsSender::class, [
@@ -257,11 +216,6 @@ class MessageBrokerAwsHelper extends Module
         return $this->mockSqsSenderClient($awsSqsSenderClientMock);
     }
 
-    /**
-     * @param \Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsSender $awsSqsSenderClientMock
-     *
-     * @return \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\SqsSenderClient
-     */
     protected function mockSqsSenderClient(AmazonSqsSender $awsSqsSenderClientMock): SqsSenderClient
     {
         $sqsSenderClientMock = Stub::construct(
@@ -284,9 +238,6 @@ class MessageBrokerAwsHelper extends Module
         return $sqsSenderClientMock;
     }
 
-    /**
-     * @return void
-     */
     protected function mockStoreFacade(): void
     {
         $storeFacadeMock = Stub::make(
@@ -299,9 +250,6 @@ class MessageBrokerAwsHelper extends Module
         $this->getBusinessHelper()->mockFactoryMethod('getStoreFacade', $storeFacadeMock);
     }
 
-    /**
-     * @return void
-     */
     protected function mockUtilEncodingService(): void
     {
         $encodingService = Stub::make(
@@ -319,9 +267,6 @@ class MessageBrokerAwsHelper extends Module
         $this->getBusinessHelper()->mockFactoryMethod('getUtilEncodingService', $encodingService);
     }
 
-    /**
-     * @return \Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsBusinessFactory
-     */
     protected function getFactory(): MessageBrokerAwsBusinessFactory
     {
         /** @var \Spryker\Zed\MessageBrokerAws\Business\MessageBrokerAwsBusinessFactory $messageBrokerAwsBusinessFactory */
@@ -330,104 +275,56 @@ class MessageBrokerAwsHelper extends Module
         return $messageBrokerAwsBusinessFactory;
     }
 
-    /**
-     * @param string $topic
-     *
-     * @return void
-     */
     public function setSnsSenderConfiguration(string $topic = 'arn:aws:sns:eu-central-1:000000000000:message-broker.fifo'): void
     {
         putenv(sprintf('SPRYKER_MESSAGE_BROKER_SNS_SENDER_CONFIG={"endpoint": "http://localhost.localstack.cloud:4566", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "topic": "%s"}', $topic));
     }
 
-    /**
-     * @return void
-     */
     public function resetSnsSenderConfiguration(): void
     {
         putenv('SPRYKER_MESSAGE_BROKER_SNS_SENDER_CONFIG=[]');
     }
 
-    /**
-     * @return void
-     */
     public function setInvalidSnsSenderConfiguration(): void
     {
         putenv('SPRYKER_MESSAGE_BROKER_SNS_SENDER_CONFIG={"endpoint": "invalidValue"}');
     }
 
-    /**
-     * @param string $queueName
-     *
-     * @return void
-     */
     public function setSqsSenderConfiguration(string $queueName = 'message-broker'): void
     {
         putenv(sprintf('SPRYKER_MESSAGE_BROKER_SQS_SENDER_CONFIG={"endpoint": "%s", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "queue_name": "%s", "poll_timeout": "5"}', $this->localstackEndpoint, $queueName));
     }
 
-    /**
-     * @return void
-     */
     public function resetSqsSenderConfiguration(): void
     {
         putenv('SPRYKER_MESSAGE_BROKER_SQS_SENDER_CONFIG=[]');
     }
 
-    /**
-     * @return void
-     */
     public function setInvalidSqsSenderConfiguration(): void
     {
         putenv('SPRYKER_MESSAGE_BROKER_SQS_SENDER_CONFIG={"invalidKey": "invalidValue"}');
     }
 
-    /**
-     * @param string $queueName
-     *
-     * @return void
-     */
     public function setSqsReceiverConfiguration(string $queueName = 'message-broker'): void
     {
         putenv(sprintf('SPRYKER_MESSAGE_BROKER_SQS_RECEIVER_CONFIG={"endpoint": "%s", "accessKeyId": "test", "accessKeySecret": "test", "region": "eu-central-1", "queue_name": "%s", "poll_timeout": "5"}', $this->localstackEndpoint, $queueName));
     }
 
-    /**
-     * @return void
-     */
     public function setHttpSenderConfiguration(): void
     {
         putenv(sprintf('SPRYKER_MESSAGE_BROKER_HTTP_SENDER_CONFIG={"endpoint": "0.0.0.0:8000", "timeout": 20}'));
     }
 
-    /**
-     * @param string $channelName
-     * @param string $client
-     *
-     * @return void
-     */
     public function setChannelToSenderTransportMap(string $channelName, string $client): void
     {
         putenv(sprintf('SPRYKER_CHANNEL_TO_SENDER_TRANSPORT_MAP={"%s": "%s"}', $channelName, $client));
     }
 
-    /**
-     * @param string $channelName
-     * @param string $client
-     *
-     * @return void
-     */
     public function setChannelToReceiverTransportMap(string $channelName, string $client): void
     {
         putenv(sprintf('SPRYKER_CHANNEL_TO_RECEIVER_TRANSPORT_MAP={"%s": "%s"}', $channelName, $client));
     }
 
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     * @param string $stampClass
-     *
-     * @return void
-     */
     public function assertMessageHasStamp(Envelope $envelope, string $stampClass): void
     {
         $stamp = $envelope->last($stampClass);

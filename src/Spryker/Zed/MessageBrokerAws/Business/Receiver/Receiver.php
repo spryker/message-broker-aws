@@ -32,10 +32,6 @@ class Receiver implements ReceiverInterface
      */
     protected ReceiverClientLocatorInterface $receiverClientResolver;
 
-    /**
-     * @param \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig $config
-     * @param \Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Locator\ReceiverClientLocatorInterface $receiverClientResolver
-     */
     public function __construct(MessageBrokerAwsConfig $config, ReceiverClientLocatorInterface $receiverClientResolver)
     {
         $this->config = $config;
@@ -54,11 +50,6 @@ class Receiver implements ReceiverInterface
             ->get($channelName);
     }
 
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     *
-     * @return void
-     */
     public function ack(Envelope $envelope): void
     {
         /** @var \Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Stamp\ChannelNameStamp|null $channelNameStamp */
@@ -71,11 +62,6 @@ class Receiver implements ReceiverInterface
         }
     }
 
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     *
-     * @return void
-     */
     public function reject(Envelope $envelope): void
     {
         /** @var \Spryker\Zed\MessageBrokerAws\Business\Receiver\Client\Stamp\ChannelNameStamp|null $channelNameStamp */

@@ -18,9 +18,6 @@ class MessageDataFilterConfigurator
      */
     protected MessageDataFilterConfigurationTransfer $defaultFilterConfiguration;
 
-    /**
-     * @param \Generated\Shared\Transfer\MessageDataFilterConfigurationTransfer $defaultFilterConfiguration
-     */
     public function __construct(MessageDataFilterConfigurationTransfer $defaultFilterConfiguration)
     {
         $this->defaultFilterConfiguration = $defaultFilterConfiguration;

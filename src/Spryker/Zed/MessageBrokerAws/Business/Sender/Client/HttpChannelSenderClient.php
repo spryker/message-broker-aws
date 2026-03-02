@@ -49,13 +49,6 @@ class HttpChannelSenderClient implements SenderClientInterface
      */
     protected MessageBrokerAwsToUtilEncodingServiceInterface $utilEncodingService;
 
-    /**
-     * @param \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig $config
-     * @param \Symfony\Component\Messenger\Transport\Serialization\SerializerInterface $serializer
-     * @param \Spryker\Zed\MessageBrokerAws\Business\Sender\Client\Formatter\HttpHeaderFormatterInterface $httpHeaderFormatter
-     * @param \GuzzleHttp\ClientInterface $httpClient
-     * @param \Spryker\Zed\MessageBrokerAws\Dependency\Service\MessageBrokerAwsToUtilEncodingServiceInterface $utilEncodingService
-     */
     public function __construct(
         MessageBrokerAwsConfig $config,
         SerializerInterface $serializer,
@@ -121,11 +114,6 @@ class HttpChannelSenderClient implements SenderClientInterface
         return $envelope->with(new SenderClientStamp(static::class));
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\MessageAttributesTransfer $messageAttributesTransfer
-     *
-     * @return bool
-     */
     public function areMessageAttributesValid(MessageAttributesTransfer $messageAttributesTransfer): bool
     {
         return $messageAttributesTransfer->getActorId()
@@ -133,12 +121,6 @@ class HttpChannelSenderClient implements SenderClientInterface
             && $messageAttributesTransfer->getName();
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\MessageAttributesTransfer $messageAttributesTransfer
-     * @param \Psr\Http\Message\ResponseInterface $response
-     *
-     * @return \Generated\Shared\Transfer\MessageAttributesTransfer
-     */
     protected function updateMessageAttributesMetadata(
         MessageAttributesTransfer $messageAttributesTransfer,
         ResponseInterface $response
@@ -154,11 +136,6 @@ class HttpChannelSenderClient implements SenderClientInterface
         return $messageAttributesTransfer->setMetadata($messageMetadataTransfer);
     }
 
-    /**
-     * @param \Psr\Http\Message\ResponseInterface $response
-     *
-     * @return string|null
-     */
     protected function findMessageId(ResponseInterface $response): ?string
     {
         if (!($response->getStatusCode() >= Response::HTTP_OK && $response->getStatusCode() < Response::HTTP_MULTIPLE_CHOICES)) {

@@ -120,11 +120,6 @@ class HttpChannelReceiverClient implements ReceiverClientInterface
         $this->sendReceiverRequest(Request::METHOD_DELETE, $httpRequestTransfer, []);
     }
 
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     *
-     * @return void
-     */
     public function reject(Envelope $envelope): void
     {
         $this->ack($envelope);
@@ -161,11 +156,6 @@ class HttpChannelReceiverClient implements ReceiverClientInterface
         return $messageId;
     }
 
-    /**
-     * @param string $channelName
-     *
-     * @return string
-     */
     protected function getReceiverEndpoint(string $channelName): string
     {
         return $this->config->getHttpChannelReceiverBaseUrl() . $channelName;
@@ -194,11 +184,6 @@ class HttpChannelReceiverClient implements ReceiverClientInterface
         );
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\HttpRequestTransfer $httpRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\HttpRequestTransfer
-     */
     protected function expandHttpRequestTransfer(HttpRequestTransfer $httpRequestTransfer): HttpRequestTransfer
     {
         foreach ($this->httpChannelMessageReceiverRequestExpanderPlugins as $expanderPlugin) {

@@ -18,17 +18,7 @@ interface ReceiverClientInterface
      */
     public function get(string $channelName): iterable;
 
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     *
-     * @return void
-     */
     public function ack(Envelope $envelope): void;
 
-    /**
-     * @param \Symfony\Component\Messenger\Envelope $envelope
-     *
-     * @return void
-     */
     public function reject(Envelope $envelope): void;
 }

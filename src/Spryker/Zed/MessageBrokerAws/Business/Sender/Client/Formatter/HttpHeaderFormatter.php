@@ -24,9 +24,6 @@ class HttpHeaderFormatter implements HttpHeaderFormatterInterface
      */
     protected $messageBrokerAwsConfig;
 
-    /**
-     * @param \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig $messageBrokerAwsConfig
-     */
     public function __construct(MessageBrokerAwsConfig $messageBrokerAwsConfig)
     {
         $this->messageBrokerAwsConfig = $messageBrokerAwsConfig;

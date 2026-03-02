@@ -25,10 +25,6 @@ class AwsSqsQueuesCreator implements AwsSqsQueuesCreatorInterface
      */
     protected $messageBrokerAwsConfig;
 
-    /**
-     * @param \Aws\Sqs\SqsClient $sqsClient
-     * @param \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig $messageBrokerAwsConfig
-     */
     public function __construct(
         SqsClient $sqsClient,
         MessageBrokerAwsConfig $messageBrokerAwsConfig
@@ -37,9 +33,6 @@ class AwsSqsQueuesCreator implements AwsSqsQueuesCreatorInterface
         $this->messageBrokerAwsConfig = $messageBrokerAwsConfig;
     }
 
-    /**
-     * @return void
-     */
     public function createQueues(): void
     {
         foreach ($this->messageBrokerAwsConfig->getSqsQueuesNames() as $sqsQueueName) {

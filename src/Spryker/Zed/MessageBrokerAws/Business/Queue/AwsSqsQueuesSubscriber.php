@@ -30,10 +30,6 @@ class AwsSqsQueuesSubscriber implements AwsSqsQueuesSubscriberInterface
      */
     protected $messageBrokerAwsConfig;
 
-    /**
-     * @param \Aws\Sns\SnsClient $snsClient
-     * @param \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig $messageBrokerAwsConfig
-     */
     public function __construct(
         SnsClient $snsClient,
         MessageBrokerAwsConfig $messageBrokerAwsConfig
@@ -42,9 +38,6 @@ class AwsSqsQueuesSubscriber implements AwsSqsQueuesSubscriberInterface
         $this->messageBrokerAwsConfig = $messageBrokerAwsConfig;
     }
 
-    /**
-     * @return void
-     */
     public function subscribeSqsToSns(): void
     {
         foreach ($this->messageBrokerAwsConfig->getSqsToSnsSubscriptions() as $sqsSubscription) {

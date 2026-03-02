@@ -63,9 +63,6 @@ class HttpChannelMessageReceiverPluginTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -74,9 +71,6 @@ class HttpChannelMessageReceiverPluginTest extends Unit
         $this->tester->setConfig(MessageBrokerAwsConstants::CONSUMER_ID, static::CONSUMER_ID);
     }
 
-    /**
-     * @return void
-     */
     public function testGetHttpChannelMessageEndsSuccessfullyExecutesWhenRequestIsCorrect(): void
     {
         // Arrange
@@ -138,9 +132,6 @@ class HttpChannelMessageReceiverPluginTest extends Unit
         }
     }
 
-    /**
-     * @return void
-     */
     public function testRemoveHttpChannelMessageSuccessfullyExecutesWhenRequestIsCorrect(): void
     {
         // Arrange
@@ -216,9 +207,6 @@ class HttpChannelMessageReceiverPluginTest extends Unit
         $httpChannelMessageReceiverPlugin->ack($envelope);
     }
 
-    /**
-     * @return array
-     */
     public function brokenEnvelopeTestDataProvider(): array
     {
         $wrongTypeEnvelope = Envelope::wrap(new stdClass());
@@ -230,9 +218,6 @@ class HttpChannelMessageReceiverPluginTest extends Unit
         ];
     }
 
-    /**
-     * @return void
-     */
     public function testRemoveHttpChannelMessageThrowsExceptionWhenEnvelopeHasEmptyMessageId(): void
     {
         // Arrange

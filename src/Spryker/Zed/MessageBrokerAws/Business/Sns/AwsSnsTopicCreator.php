@@ -25,10 +25,6 @@ class AwsSnsTopicCreator implements AwsSnsTopicCreatorInterface
      */
     protected $messageBrokerAwsConfig;
 
-    /**
-     * @param \Aws\Sns\SnsClient $snsClient
-     * @param \Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig $messageBrokerAwsConfig
-     */
     public function __construct(
         SnsClient $snsClient,
         MessageBrokerAwsConfig $messageBrokerAwsConfig
@@ -37,9 +33,6 @@ class AwsSnsTopicCreator implements AwsSnsTopicCreatorInterface
         $this->messageBrokerAwsConfig = $messageBrokerAwsConfig;
     }
 
-    /**
-     * @return void
-     */
     public function createTopics(): void
     {
         foreach ($this->messageBrokerAwsConfig->getSnsTopicNames() as $snsTopicName) {

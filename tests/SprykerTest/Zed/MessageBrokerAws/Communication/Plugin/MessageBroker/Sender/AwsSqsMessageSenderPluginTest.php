@@ -42,9 +42,6 @@ class AwsSqsMessageSenderPluginTest extends Unit
      */
     protected MessageBrokerAwsCommunicationTester $tester;
 
-    /**
-     * @return void
-     */
     public function testSendUsesSqsSenderWhenSqsSenderIsConfiguredForChannel(): void
     {
         // Arrange
@@ -126,9 +123,6 @@ class AwsSqsMessageSenderPluginTest extends Unit
         $awsSqsMessageSenderPlugin->send($envelope);
     }
 
-    /**
-     * @return void
-     */
     public function testGetClientNameReturnNameOfTheSupportedClient(): void
     {
         // Arrange
