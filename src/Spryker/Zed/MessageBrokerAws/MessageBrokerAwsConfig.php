@@ -15,6 +15,8 @@ use Spryker\Zed\Kernel\AbstractBundleConfig;
 class MessageBrokerAwsConfig extends AbstractBundleConfig
 {
     /**
+     * @api
+     *
      * @deprecated Will be removed without replacement.
      *
      * @var string
@@ -22,6 +24,8 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
     public const SQS_TRANSPORT = 'sqs';
 
     /**
+     * @api
+     *
      * @deprecated Will be removed without replacement.
      *
      * @var string
@@ -29,6 +33,8 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
     public const SNS_TRANSPORT = 'sns';
 
     /**
+     * @api
+     *
      * @deprecated Will be removed without replacement.
      *
      * @var string
@@ -36,11 +42,15 @@ class MessageBrokerAwsConfig extends AbstractBundleConfig
     public const HTTP_TRANSPORT = 'http';
 
     /**
+     * @api
+     *
      * @var string
      */
     public const HTTP_CHANNEL_TRANSPORT = 'http-channel';
 
     /**
+     * @api
+     *
      * @uses \Spryker\Zed\MessageBroker\Business\Receiver\Stamp\ChannelNameStamp::class
      *
      * @var string
