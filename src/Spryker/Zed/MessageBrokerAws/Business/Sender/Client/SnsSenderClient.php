@@ -107,6 +107,7 @@ class SnsSenderClient implements SenderClientInterface
         }
 
         try {
+            /** @phpstan-ignore argument.type (dynamic SNS publish payload validated by the AsyncAws SDK) */
             $result = $snsClient->publish($arguments);
             $messageId = $result->getMessageId();
         } catch (Throwable $e) {
@@ -127,6 +128,7 @@ class SnsSenderClient implements SenderClientInterface
      */
     protected function createSenderClient(array $configuration): SnsClient
     {
+        /** @phpstan-ignore argument.type (SnsClient accepts a dynamic config array validated by the AsyncAws SDK) */
         return new AsyncAwsSnsClient($configuration);
     }
 
