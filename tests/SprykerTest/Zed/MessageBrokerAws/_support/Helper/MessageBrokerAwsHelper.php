@@ -31,6 +31,7 @@ use SprykerTest\Shared\Testify\Helper\DependencyHelperTrait;
 use SprykerTest\Zed\Testify\Helper\Business\BusinessHelperTrait;
 use Symfony\Component\Messenger\Bridge\AmazonSqs\Transport\AmazonSqsSender;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Exception\TransportException;
 
 class MessageBrokerAwsHelper extends Module
 {
@@ -121,7 +122,7 @@ class MessageBrokerAwsHelper extends Module
 
         try {
             $envelope = $awsSqsMessageSenderPlugin->send($envelope);
-        } catch (NetworkException $e) {
+        } catch (NetworkException | TransportException $e) {
             $this->markTestSkipped('Localstack is not running.');
         }
 
