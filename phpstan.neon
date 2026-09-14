@@ -4,3 +4,5 @@ parameters:
         - '#Call to an undefined method Spryker\\Shared\\Kernel\\Transfer\\TransferInterface::*.#'
     excludePaths:
         - '%rootDir%/../../../src/Spryker/MessageBrokerAws/src/Spryker/Zed/MessageBrokerAws/Business/Normalizer/TransferNormalizer.php'
+    # A @phpstan-ignore only matches under the default deps, not --prefer-lowest (non-ignorable otherwise).
+    reportUnmatchedIgnoredErrors: false

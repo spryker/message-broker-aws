@@ -85,6 +85,7 @@ class HttpSenderClient implements SenderClientInterface
             'POST',
             $configuration['endpoint'],
             ['Content-Type' => 'application/json'] + $headers,
+            // @phpstan-ignore offsetAccess.notFound (bodyRaw is a Spryker-specific key added by TransferSerializer::encode(), beyond the generic SerializerInterface contract)
             (string)json_encode($encodedMessage['bodyRaw']),
         );
 

@@ -203,6 +203,7 @@ class HttpChannelReceiverClient implements ReceiverClientInterface
         $envelopes = [];
         foreach ($messages as $message) {
             try {
+                // @phpstan-ignore argument.type (messageId is a Spryker-specific key read by TransferSerializer::decode(), beyond the generic SerializerInterface contract)
                 $envelope = $this->serializer->decode([
                     'body' => $message['MessageBody'] ?? '',
                     'headers' => $message['MessageAttributes'] ?? '',
